@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Pagina Vendo</title>
+<link rel="stylesheet" href="css/vendo.css">
+</head>
+<body>
+ <h1> VENDITE</h1>
+ 
+ <div class ="lista-aste-aperte">
+ 	<h2> LISTA ASTE APERTE</h2>
+ 	<ul>
+ 		 <li>Asta #124 - Articolo3</li>
+ 	
+ 	</ul>
+ </div>
+ <div class = "lista-aste-chiuse">
+ 	<h2> LISTA ASTE CHIUSE </h2>
+ 	<ul>
+ 		<li>Asta #125 - Articolo4 (Venduta a Mario - €1000)</li>
+ 	
+ 	</ul>
+ </div>
+ 
+<div class = "form-creazione-articolo">
+	<h2> crea nuovo articolo</h2>
+	<form action="crea-articolo" method="post">
+		<label for="codice">Codice articolo:</label>
+		<input type = "text" id="codice" name="codice" required/>
+		 <label for="nome">Nome articolo:</label>
+         <input type="text" id="nome" name="nome" required />
+
+         <label for="descrizione">Descrizione:</label>
+         <textarea id="descrizione" name="descrizione" required></textarea>
+
+         <label for="prezzo">Prezzo:</label>
+         <input type="number" id="prezzo" name="prezzo" min="0" step="0.01" required />
+
+         <label for="immagine">Immagine:</label>
+         <input type="text" id="immagine" name="immagine" required />
+
+         <button type="submit">Salva Articolo</button>
+	</form>
+</div>
+
+<div class = "form-creazione-asta">
+	<h2> crea nuova asta</h2>
+	<form action="crea-asta" method="post"></form>
+	
+		<fieldset>
+			<legend> Seleziona uno o più articoli da mettere all'asta</legend>
+			 <label>
+      			<input type="checkbox" name="articoli" value="1">
+      					Smartphone (150 €)
+    			</label><br />
+			
+			
+		
+			
+			
+		
+		</fieldset>
+		
+		<label for="rialzo-minimo">rialzo minimo offerta:</label>
+		<input type="number" id="rialzo" name="rialzo" min="0.01" step="0.01" required />
+		
+		<label for="scadenza">Scadenza Asta:</label>
+		<input type="datetime-local" id="scadenza" name="scadenza" required />
+			
+	
+</div>
+
+
+</body>
+</html>
