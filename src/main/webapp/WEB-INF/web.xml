@@ -5,6 +5,13 @@
 
   <display-name>PureHTML</display-name>
 
+  <jsp-config>
+    <taglib>
+      <taglib-uri>jakarta.tags.core</taglib-uri>
+      <taglib-location>/WEB-INF/lib/jakarta.servlet.jsp.jstl-api-3.0.0.jar</taglib-location>
+    </taglib>
+  </jsp-config>
+
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
     <welcome-file>index.htm</welcome-file>
@@ -29,4 +36,5 @@
     <param-name>dbPassword</param-name>
     <param-value>TIW2025</param-value>
   </context-param>
+
 </web-app>
