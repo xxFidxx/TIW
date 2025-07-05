@@ -1,0 +1,82 @@
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #e6f2e6;
+}
+
+h1 {
+    text-align: center;
+    color: #006600;
+}
+
+.ricerca-aste {
+    background-color: #ccffcc;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.ricerca-aste form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.ricerca-aste input[type="text"] {
+    flex: 1;
+    padding: 8px;
+    font-size: 16px;
+}
+
+.ricerca-aste button {
+    background-color: #009900;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.ricerca-aste button:hover {
+    background-color: #007700;
+}
+
+.aste-aperte, .aste-aggiudicate {
+    background-color: #ffffff;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.aste-aperte h2, .aste-aggiudicate h2 {
+    color: #004d00;
+    margin-top: 0;
+}
+
+.aste-aperte ul, .aste-aggiudicate ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.aste-aperte li, .aste-aggiudicate li {
+    border-bottom: 1px solid #cccccc;
+    padding: 10px 0;
+}
+
+.aste-aperte li:last-child, .aste-aggiudicate li:last-child {
+    border-bottom: none;
+}
+
+.aste-aperte a {
+    color: #006600;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.aste-aperte a:hover {
+    text-decoration: underline;
+}
