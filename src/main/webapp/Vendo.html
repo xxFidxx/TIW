@@ -48,8 +48,9 @@
 
 		<h2>Crea nuova asta</h2>
 
-		<form th:action="@{/crea-asta}" method="post">
-			<input type="hidden" name="action" value="createAsta"/>
+	<form th:action="@{/crea-asta}" method="post">
+
+	<input type="hidden" name="action" value="createAsta"/>
 
 			<fieldset>
 				<legend>Seleziona uno o più articoli da mettere all'asta</legend>
@@ -71,6 +72,10 @@
 
 			<label for="scadenza">Scadenza Asta:</label>
 			<input type="datetime-local" id="scadenza" name="scadenza" required/><br/>
+
+			<label>Somma totale articoli disponibili:</label>
+			<p th:text="${#numbers.formatDecimal(totalePrezzoArticoli, 1, 'COMMA', 2, 'POINT')} + ' €'">0,00 €</p>
+
 
 
 			<button type="submit">Crea Asta</button>

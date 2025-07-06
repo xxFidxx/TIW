@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-@WebServlet("/CreaAsta")
+@WebServlet("/crea-asta")
 public class CreaAsta extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private Connection connection;
@@ -58,6 +58,11 @@ public class CreaAsta extends HttpServlet {
             throw new ServletException("Error during templateEngine initialization", e);
         }
     }
+    //per aggiornargli gli articoli disponibili
+
+
+
+
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -65,6 +70,28 @@ public class CreaAsta extends HttpServlet {
             response.sendRedirect("index.html");
             return;
         }
+
+        try {
+            List<Articolo> articoliDisponibili = articoloDao.findAllDisponibili();
+            System.out.println("articoli disponibili: " + articoliDisponibili.size());
+
+            BigDecimal totalePrezzoArticoli = articoliDisponibili.stream()
+                    .map(Articolo::getPrezzo)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            WebContext ctx = new WebContext(
+                    JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response),
+                    request.getLocale());
+
+
+            ctx.setVariable("articoliDisponibili", articoliDisponibili);
+            ctx.setVariable("totalePrezzoArticoli", totalePrezzoArticoli);
+
+            templateEngine.process("crea-asta", ctx, response.getWriter());
+        } catch (SQLException e) {
+            processErrorPage(request, response, "dbError");
+        }
+
 
         String[] articoliIds = request.getParameterValues("articoli");
         String rialzoStr = request.getParameter("rialzo");
