@@ -42,6 +42,9 @@ public class Login extends HttpServlet {
         }catch (Exception e) {
             throw new ServletException("Error during templateEngine initialization", e);
         }
+
+
+
     }
 
     @Override
@@ -49,6 +52,8 @@ public class Login extends HttpServlet {
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+
+        System.out.println("Login check");
 
         try {
             UserDao userDao = new UserDao(connection);
