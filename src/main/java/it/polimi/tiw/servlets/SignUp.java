@@ -19,11 +19,12 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SignUp extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Connection connection;
-	private static final int STANDARD_DIM = 35;
+	private static final int STANDARD_DIM = 45;
 	private TemplateEngine templateEngine;
+	private String contextVariable = "signUpError";
 
 	public void init() throws ServletException {
-		// Initialize database connection
+
 		try {
 			ServletContext context = getServletContext();
 			String driver = context.getInitParameter("dbDriver");
@@ -62,7 +63,7 @@ public class SignUp extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+			throws IOException {
 
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
@@ -71,23 +72,22 @@ public class SignUp extends HttpServlet {
 		String address = request.getParameter("address");
 		String addressNumberUncasted = request.getParameter("addressNumber");
 
-		// Field validation
+
 		if (username == null || password == null || name == null || surname == null ||
 				address == null || addressNumberUncasted == null ||
 				username.isEmpty() || password.isEmpty() || name.isEmpty() || surname.isEmpty() ||
 				address.isEmpty() || addressNumberUncasted.isEmpty()) {
 
-			renderErrorPage(request, response, "emptyFields");
+			processErrorPage(request, response, "emptyFields");
 			return;
 		}
 
-		// Format validation
 		if (username.length() > STANDARD_DIM || password.length() > STANDARD_DIM ||
 				name.length() > STANDARD_DIM || surname.length() > STANDARD_DIM ||
 				address.length() > 100 || addressNumberUncasted.length() > 4 ||
 				!addressNumberUncasted.matches("^[1-9][0-9]{0,3}$")) {
 
-			renderErrorPage(request, response, "invalidFormat");
+			processErrorPage(request, response, "invalidFormat");
 			return;
 		}
 
@@ -95,17 +95,17 @@ public class SignUp extends HttpServlet {
 		try {
 			addressNumber = Integer.parseInt(addressNumberUncasted);
 		} catch (NumberFormatException e) {
-			renderErrorPage(request, response, "invalidNumber");
+			processErrorPage(request, response, "invalidNumber");
 			return;
 		}
 
 		try {
 			if (checkExistingUser(username)) {
-				renderErrorPage(request, response, "usernameTaken");
+				processErrorPage(request, response, "usernameTaken");
 				return;
 			}
 		} catch (SQLException e) {
-			renderErrorPage(request, response, "dbCheckFailed");
+			processErrorPage(request, response, "dbCheckFailed");
 			return;
 		}
 
@@ -120,24 +120,23 @@ public class SignUp extends HttpServlet {
 			statement.setInt(6, addressNumber);
 			statement.executeUpdate();
 		} catch (SQLException e) {
-			renderErrorPage(request, response, "dbInsertFailed");
+			processErrorPage(request, response, "dbInsertFailed");
 			return;
 		}
 
 		// Successful registration
-		response.sendRedirect("home.html");
+		response.sendRedirect("index.html");
 	}
 
-	private void renderErrorPage(HttpServletRequest request, HttpServletResponse response, String errorType)
-			throws IOException {
+	private void processErrorPage(HttpServletRequest request, HttpServletResponse response, String errorType) throws IOException {
 		WebContext ctx = new WebContext(
 				JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response),
 				request.getLocale());
 
-		ctx.setVariable("signupError", errorType);
+		ctx.setVariable(contextVariable, errorType);
 
 		try {
-			templateEngine.process("error", ctx, response.getWriter());
+			templateEngine.process("registrationError", ctx, response.getWriter());
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}

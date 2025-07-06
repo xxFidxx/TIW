@@ -9,17 +9,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import it.polimi.tiw.beans.User;
+import it.polimi.tiw.Dao.UserDao;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
+import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 @WebServlet("/Login")
 public class Login extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private Connection connection;
+    private TemplateEngine templateEngine;
+    private String contextVariable = "loginError";
      
     public void init() throws ServletException {
         try {
@@ -31,54 +37,44 @@ public class Login extends HttpServlet {
             Class.forName(driver);
             connection = DriverManager.getConnection(url, user, password);
         } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
             throw new ServletException("Error during database initialization", e);
-        }
-    }
-     
-    public boolean checkLogin(String user, String password) throws SQLException {
-        String query = "SELECT Username,Password FROM users WHERE Username = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, user);
-            ResultSet resultSet = statement.executeQuery();
-            
-            if (resultSet.next()) {  
-                String dbUsername = resultSet.getString("Username");  
-                String dbPassword = resultSet.getString("Password");  
-                
-                return ((dbUsername.equals(user) && dbPassword.equals(password)));
-            }
-            return false;
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        // prova
-        User user = new User();
-        user.setUsername(request.getParameter("username"));
-        user.setPassword(request.getParameter("password"));
-
-        response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
 
         try {
-            if (checkLogin(user.getUsername(), user.getPassword())) {
-            	response.sendRedirect("home.html");
+            UserDao userDao = new UserDao(connection);
+            User user = userDao.checkLogin(username, password);
+
+            if (user != null) {
+                request.getSession(true).setAttribute("user", user);
+                response.sendRedirect("home.html"); // oppure "home" se è una servlet
             } else {
-                out.println("<html><body>");
-                out.println("<h2>Login fallito: username o password errati.</h2>");
-                out.println("<a href=\"index.html\">Torna al login</a>");
-                out.println("</body></html>");
+                processErrorPage(request, response, "loginFailed");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-            out.println("<html><body>");
-            out.println("Errore SQL.</h2>");
-            out.println("<a href=\"index.html\">Torna al login</a>");
-            out.println("</body></html>");
+            processErrorPage(request, response, "dbInsertFailed");
+        }
+    }
+
+    private void processErrorPage(HttpServletRequest request, HttpServletResponse response, String errorType) throws IOException {
+        WebContext ctx = new WebContext(
+                JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response),
+                request.getLocale());
+
+        ctx.setVariable(contextVariable, errorType);
+
+
+
+        try {
+            templateEngine.process("loginError", ctx, response.getWriter());
+        } catch (Exception e) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 }

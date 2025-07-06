@@ -14,14 +14,14 @@ public class UserDao {
         this.con = con;
     }
 
-    public User findUser(String username, String password) throws SQLException {
+    public User checkLogin(String username, String password) throws SQLException {
         String query = "SELECT * FROM users WHERE username = ? AND password = ?";
         try (PreparedStatement p = con.prepareStatement(query)) {
             p.setString(1, username);
             p.setString(2, password);
             try (ResultSet rs = p.executeQuery()) {
                 if (rs.next()) {
-                    return mapRowToUser(rs);
+                    return createUserBean(rs);
                 } else {
                     return null;
                 }
@@ -29,13 +29,13 @@ public class UserDao {
         }
     }
 
-    public User findUserByUsername(String username) throws SQLException {
+    public User userByUsername(String username) throws SQLException {
         String query = "SELECT * FROM users WHERE username = ?";
         try (PreparedStatement p = con.prepareStatement(query)) {
             p.setString(1, username);
             try (ResultSet rs = p.executeQuery()) {
                 if (rs.next()) {
-                    return mapRowToUser(rs);
+                    return createUserBean(rs);
                 } else {
                     return null;
                 }
@@ -43,7 +43,7 @@ public class UserDao {
         }
     }
 
-    private User mapRowToUser(ResultSet rs) throws SQLException {
+    private User createUserBean(ResultSet rs) throws SQLException {
         return new User(
                 rs.getString("username"),
                 rs.getString("password"),

@@ -18,7 +18,7 @@
 <body>
 <div class="error-box">
     <h2>Registration Error</h2>
-    <div th:switch="${signupError}">
+    <div th:switch="${signUpError}">
         <p th:case="'emptyFields'">All fields are required.</p>
         <p th:case="'invalidFormat'">One or more fields don't meet the required format.</p>
         <p th:case="'invalidNumber'">Invalid house number.</p>
