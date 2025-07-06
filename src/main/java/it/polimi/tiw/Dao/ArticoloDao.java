@@ -39,7 +39,7 @@ public class ArticoloDao {
     }
 
     public void insertArticolo(Articolo a) throws SQLException {
-        String query = "INSERT INTO articoli (nome, descrizione, immagine, prezzo, disponibile) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO articoli (nome, descrizione, immagine, prezzo, disponibile) VALUES (?, ?, ?, ?, ?, ";
         try (PreparedStatement p = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             p.setString(1, a.getNome());
             p.setString(2, a.getDescrizione());
@@ -71,7 +71,6 @@ public class ArticoloDao {
                 rs.getString("descrizione"),
                 rs.getString("immagine"),
                 rs.getBigDecimal("prezzo"),
-                rs.getBoolean("disponibile")
-        );
+                rs.getBoolean("disponibile"));
     }
 }

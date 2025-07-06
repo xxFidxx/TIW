@@ -60,24 +60,24 @@ public class Vendo extends HttpServlet {
     }
     private void handleCreateArticolo(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        String codiceStr = request.getParameter("codice");
         String nome = request.getParameter("nome");
         String descrizione = request.getParameter("descrizione");
         String prezzoStr = request.getParameter("prezzo");//arriva come stringa
         String immagine = request.getParameter("immagine");
 
         // Field validation
-        if (codiceStr == null || nome== null || descrizione == null || prezzoStr == null ||
+        if ( nome== null || descrizione == null || prezzoStr == null ||
                 immagine == null  ||
-                codiceStr.isEmpty() || nome.isEmpty() || descrizione.isEmpty() || prezzoStr.isEmpty() ||
+                 nome.isEmpty() || descrizione.isEmpty() || prezzoStr.isEmpty() ||
                 immagine.isEmpty()) {
 
-            processErrorPage(request, response, "emptyFields");
+            //renderErrorPage(request, response, "emptyFields");
             return;
         }
         //conversioni stringa numero
-        int codice = Integer.parseInt(codiceStr);
+
         BigDecimal prezzo = new BigDecimal(prezzoStr);
+        int codice = 0 ;
 
         // Crea Articolo
         Articolo articolo = new Articolo(codice,nome,descrizione,immagine,prezzo,true);
