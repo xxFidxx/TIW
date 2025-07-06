@@ -8,8 +8,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import it.polimi.tiw.Dao.ArticoloDao;
 import it.polimi.tiw.beans.User;
 import it.polimi.tiw.Dao.UserDao;
+import it.polimi.tiw.rescources.Utils;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -30,14 +32,15 @@ public class Login extends HttpServlet {
     public void init() throws ServletException {
         try {
             ServletContext context = getServletContext();
-            String driver = context.getInitParameter("dbDriver");
-            String url = context.getInitParameter("dbUrl");
-            String user = context.getInitParameter("dbUser");
-            String password = context.getInitParameter("dbPassword");
-            Class.forName(driver);
-            connection = DriverManager.getConnection(url, user, password);
+            connection = Utils.initDBConnection(context);
         } catch (ClassNotFoundException | SQLException e) {
             throw new ServletException("Error during database initialization", e);
+        }
+        try {
+            ServletContext servletContext = getServletContext();
+            templateEngine = Utils.initTemplateEngine(servletContext);
+        }catch (Exception e) {
+            throw new ServletException("Error during templateEngine initialization", e);
         }
     }
 
@@ -50,10 +53,9 @@ public class Login extends HttpServlet {
         try {
             UserDao userDao = new UserDao(connection);
             User user = userDao.checkLogin(username, password);
-
             if (user != null) {
                 request.getSession(true).setAttribute("user", user);
-                response.sendRedirect("home.html"); // oppure "home" se è una servlet
+                response.sendRedirect("home.html");
             } else {
                 processErrorPage(request, response, "loginFailed");
             }

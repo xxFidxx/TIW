@@ -21,7 +21,7 @@ public class UserDao {
             p.setString(2, password);
             try (ResultSet rs = p.executeQuery()) {
                 if (rs.next()) {
-                    return createUserBean(rs);
+                    return createUserBeanFromRes(rs);
                 } else {
                     return null;
                 }
@@ -35,7 +35,7 @@ public class UserDao {
             p.setString(1, username);
             try (ResultSet rs = p.executeQuery()) {
                 if (rs.next()) {
-                    return createUserBean(rs);
+                    return createUserBeanFromRes(rs);
                 } else {
                     return null;
                 }
@@ -43,7 +43,7 @@ public class UserDao {
         }
     }
 
-    private User createUserBean(ResultSet rs) throws SQLException {
+    private User createUserBeanFromRes(ResultSet rs) throws SQLException {
         return new User(
                 rs.getString("username"),
                 rs.getString("password"),
@@ -53,4 +53,19 @@ public class UserDao {
                 rs.getInt("addressNumber")
         );
     }
+
+    public void insertUser(User user) throws SQLException {
+        String insertQuery = "INSERT INTO users (Username, Password, Name, Surname, Address, AddressNumber) VALUES (?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement p = con.prepareStatement(insertQuery)) {
+            p.setString(1, user.getUsername());
+            p.setString(2, user.getPassword());
+            p.setString(3, user.getName());
+            p.setString(4, user.getSurname());
+            p.setString(5, user.getAddress());
+            p.setInt(6, user.getAddressNumber());
+            p.executeUpdate();
+        }
+    }
+
+
 }

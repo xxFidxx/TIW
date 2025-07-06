@@ -2,6 +2,10 @@ package it.polimi.tiw.servlets;
 
 import java.io.IOException;
 import java.sql.*;
+
+import it.polimi.tiw.Dao.UserDao;
+import it.polimi.tiw.beans.User;
+import it.polimi.tiw.rescources.Utils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -27,44 +31,21 @@ public class SignUp extends HttpServlet {
 
 		try {
 			ServletContext context = getServletContext();
-			String driver = context.getInitParameter("dbDriver");
-			String url = context.getInitParameter("dbUrl");
-			String user = context.getInitParameter("dbUser");
-			String password = context.getInitParameter("dbPassword");
-			Class.forName(driver);
-			connection = DriverManager.getConnection(url, user, password);
+			connection = Utils.initDBConnection(context);
 		} catch (ClassNotFoundException | SQLException e) {
-			throw new ServletException("Database initialization failed", e);
+			throw new ServletException("Error during database initialization", e);
 		}
 
-		// Initialize Thymeleaf
-		ServletContext servletContext = getServletContext();
-		WebApplicationTemplateResolver templateResolver =
-				new WebApplicationTemplateResolver(JakartaServletWebApplication.buildApplication(servletContext));
-		templateResolver.setTemplateMode(TemplateMode.HTML);
-		templateResolver.setPrefix("/WEB-INF/templates/");
-		templateResolver.setSuffix(".html");
-		templateResolver.setCharacterEncoding("UTF-8");
-		templateResolver.setCacheable(false); // Disable cache for development
-
-		templateEngine = new TemplateEngine();
-		templateEngine.setTemplateResolver(templateResolver);
-	}
-
-	private boolean checkExistingUser(String username) throws SQLException {
-		String query = "SELECT Username FROM users WHERE Username = ?";
-		try (PreparedStatement statement = connection.prepareStatement(query)) {
-			statement.setString(1, username);
-			try (ResultSet rs = statement.executeQuery()) {
-				return rs.next();
-			}
+		try {
+			ServletContext servletContext = getServletContext();
+			templateEngine = Utils.initTemplateEngine(servletContext);
+		}catch (Exception e) {
+			throw new ServletException("Error during templateEngine initialization", e);
 		}
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
-
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		String name = request.getParameter("name");
@@ -72,12 +53,10 @@ public class SignUp extends HttpServlet {
 		String address = request.getParameter("address");
 		String addressNumberUncasted = request.getParameter("addressNumber");
 
-
 		if (username == null || password == null || name == null || surname == null ||
 				address == null || addressNumberUncasted == null ||
 				username.isEmpty() || password.isEmpty() || name.isEmpty() || surname.isEmpty() ||
 				address.isEmpty() || addressNumberUncasted.isEmpty()) {
-
 			processErrorPage(request, response, "emptyFields");
 			return;
 		}
@@ -86,7 +65,6 @@ public class SignUp extends HttpServlet {
 				name.length() > STANDARD_DIM || surname.length() > STANDARD_DIM ||
 				address.length() > 100 || addressNumberUncasted.length() > 4 ||
 				!addressNumberUncasted.matches("^[1-9][0-9]{0,3}$")) {
-
 			processErrorPage(request, response, "invalidFormat");
 			return;
 		}
@@ -99,26 +77,17 @@ public class SignUp extends HttpServlet {
 			return;
 		}
 
+		UserDao userDao = new UserDao(connection);
+
 		try {
-			if (checkExistingUser(username)) {
+			if (userDao.userByUsername(username) != null) {
 				processErrorPage(request, response, "usernameTaken");
 				return;
 			}
-		} catch (SQLException e) {
-			processErrorPage(request, response, "dbCheckFailed");
-			return;
-		}
 
-		// Insert new user
-		String insertQuery = "INSERT INTO users (Username, Password, Name, Surname, Address, AddressNumber) VALUES (?, ?, ?, ?, ?, ?)";
-		try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
-			statement.setString(1, username);
-			statement.setString(2, password);
-			statement.setString(3, name);
-			statement.setString(4, surname);
-			statement.setString(5, address);
-			statement.setInt(6, addressNumber);
-			statement.executeUpdate();
+			User newUser = new User(username, password, name, surname, address, addressNumber);
+			userDao.insertUser(newUser);
+
 		} catch (SQLException e) {
 			processErrorPage(request, response, "dbInsertFailed");
 			return;
@@ -127,6 +96,7 @@ public class SignUp extends HttpServlet {
 		// Successful registration
 		response.sendRedirect("index.html");
 	}
+
 
 	private void processErrorPage(HttpServletRequest request, HttpServletResponse response, String errorType) throws IOException {
 		WebContext ctx = new WebContext(

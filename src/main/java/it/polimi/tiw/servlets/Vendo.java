@@ -43,7 +43,6 @@ public class Vendo extends HttpServlet {
         }catch (Exception e) {
             throw new ServletException("Error during templateEngine initialization", e);
         }
-
     }
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws  IOException {
