@@ -2,6 +2,7 @@ package it.polimi.tiw.servlets;
 
 import it.polimi.tiw.Dao.ArticoloDao;
 import it.polimi.tiw.beans.Articolo;
+import it.polimi.tiw.rescources.SessionUtils;
 import it.polimi.tiw.rescources.Utils;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
@@ -11,18 +12,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
-import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.WebApplicationTemplateResolver;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
-@WebServlet("/vendo")
-public class Vendo extends HttpServlet {
+@WebServlet("/CreaArticoloAsta")
+public class CreaArticoloAsta extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private Connection connection;
     private TemplateEngine templateEngine;
@@ -46,14 +44,19 @@ public class Vendo extends HttpServlet {
     }
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws  IOException {
-        String action = request.getParameter("action");
 
-        if ("createArticolo".equals(action)) {
-            handleCreateArticolo(request, response);
-        } else if ("createAsta".equals(action)) {
-            //handleCreateAsta(request, response);
-        } else {
-            processErrorPage(request, response, "notRecognizedAction");
+        if(!SessionUtils.isUserLogged(request)){
+            response.sendRedirect("index.html");
+        }else{
+            String action = request.getParameter("action");
+
+            if ("createArticolo".equals(action)) {
+                handleCreateArticolo(request, response);
+            } else if ("createAsta".equals(action)) {
+                //handleCreateAsta(request, response);
+            } else {
+                processErrorPage(request, response, "notRecognizedAction");
+            }
         }
 
 
@@ -63,7 +66,7 @@ public class Vendo extends HttpServlet {
         String codiceStr = request.getParameter("codice");
         String nome = request.getParameter("nome");
         String descrizione = request.getParameter("descrizione");
-        String prezzoStr = request.getParameter("prezzo");//arriva come stringa
+        String prezzoStr = request.getParameter("prezzo");
         String immagine = request.getParameter("immagine");
 
         // Field validation
