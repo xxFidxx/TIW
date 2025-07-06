@@ -47,7 +47,9 @@ public class CreaArticoloAsta extends HttpServlet {
 
         if(!SessionUtils.isUserLogged(request)){
             response.sendRedirect("index.html");
-        }else{
+            return;
+        }
+
             String action = request.getParameter("action");
 
             if ("createArticolo".equals(action)) {
@@ -57,9 +59,6 @@ public class CreaArticoloAsta extends HttpServlet {
             } else {
                 processErrorPage(request, response, "notRecognizedAction");
             }
-        }
-
-
     }
     private void handleCreateArticolo(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
