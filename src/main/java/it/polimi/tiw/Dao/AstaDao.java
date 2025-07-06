@@ -63,6 +63,14 @@ public class AstaDao {
             }
         }
     }
+    public void insertAstaArticolo(int astaId, int articoloCodice) throws SQLException {
+        String sql = "INSERT INTO asta_articolo (asta_id, articolo_codice) VALUES (?, ?)";
+        try (PreparedStatement p = connection.prepareStatement(sql)) {
+            p.setInt(1, astaId);
+            p.setInt(2, articoloCodice);
+            p.executeUpdate();
+        }
+    }
 
     private Asta mapRowToAsta(ResultSet rs) throws SQLException {
         return new Asta(

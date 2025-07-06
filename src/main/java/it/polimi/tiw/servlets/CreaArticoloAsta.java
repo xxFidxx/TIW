@@ -54,8 +54,7 @@ public class CreaArticoloAsta extends HttpServlet {
 
             if ("createArticolo".equals(action)) {
                 handleCreateArticolo(request, response);
-            } else if ("createAsta".equals(action)) {
-                //handleCreateAsta(request, response);
+
             } else {
                 processErrorPage(request, response, "notRecognizedAction");
             }
