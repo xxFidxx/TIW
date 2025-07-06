@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Registration Error</title>
+    <style>
+        .error-box {
+            padding: 20px;
+            background-color: #ffe0e0;
+            border: 1px solid red;
+            border-radius: 10px;
+            width: 400px;
+            margin: 50px auto;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+<div class="error-box">
+    <h2>Registration Error</h2>
+    <div th:switch="${errorVendo}">
+        <p th:case="'emptyFields'">All fields are required.</p>
+        <p th:case="'dbInsertFailed'">Error saving data. Please try again later.</p>
+        <p th:case="'notRecognizedAction'">Error saving data. Please try again later.</p>
+        <p th:case="*">Unknown error occurred.</p>
+    </div>
+    <p><a th:href="vendo.html">Ritorna alla pagina vendo</a></p>
+</div>
+</body>
+</html>

@@ -68,4 +68,6 @@ public class Articolo {
     public void setDisponibile(boolean disponibile) {
         this.disponibile = disponibile;
     }
+
+
 }

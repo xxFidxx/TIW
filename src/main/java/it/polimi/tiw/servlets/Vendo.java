@@ -2,6 +2,7 @@ package it.polimi.tiw.servlets;
 
 import it.polimi.tiw.Dao.ArticoloDao;
 import it.polimi.tiw.beans.Articolo;
+import it.polimi.tiw.rescources.Utils;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -26,36 +27,26 @@ public class Vendo extends HttpServlet {
     private Connection connection;
     private TemplateEngine templateEngine;
     private ArticoloDao articoloDao;
+    private String contextVariable = "errorVendo";
 
     public void init() throws ServletException {
         try {
             ServletContext context = getServletContext();
-            String driver = context.getInitParameter("dbDriver");
-            String url = context.getInitParameter("dbUrl");
-            String user = context.getInitParameter("dbUser");
-            String password = context.getInitParameter("dbPassword");
-            Class.forName(driver);
-            connection = DriverManager.getConnection(url, user, password);
+            connection = Utils.initDBConnection(context);
             articoloDao = new ArticoloDao(connection);
         } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
             throw new ServletException("Error during database initialization", e);
         }
-        ServletContext servletContext = getServletContext();
-        WebApplicationTemplateResolver templateResolver =
-                new WebApplicationTemplateResolver(JakartaServletWebApplication.buildApplication(servletContext));
-        templateResolver.setTemplateMode(TemplateMode.HTML);
-        templateResolver.setPrefix("/WEB-INF/templates/");
-        templateResolver.setSuffix(".html");
-        templateResolver.setCharacterEncoding("UTF-8");
-        templateResolver.setCacheable(false); // Disable cache for development
+        try {
+            ServletContext servletContext = getServletContext();
+            templateEngine = Utils.initTemplateEngine(servletContext);
+        }catch (Exception e) {
+            throw new ServletException("Error during templateEngine initialization", e);
+        }
 
-        templateEngine = new TemplateEngine();
-        templateEngine.setTemplateResolver(templateResolver);
     }
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws  IOException {
         String action = request.getParameter("action");
 
         if ("createArticolo".equals(action)) {
@@ -63,13 +54,13 @@ public class Vendo extends HttpServlet {
         } else if ("createAsta".equals(action)) {
             //handleCreateAsta(request, response);
         } else {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Action non riconosciuta");
+            processErrorPage(request, response, "notRecognizedAction");
         }
 
 
     }
     private void handleCreateArticolo(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws IOException {
         String codiceStr = request.getParameter("codice");
         String nome = request.getParameter("nome");
         String descrizione = request.getParameter("descrizione");
@@ -82,7 +73,7 @@ public class Vendo extends HttpServlet {
                 codiceStr.isEmpty() || nome.isEmpty() || descrizione.isEmpty() || prezzoStr.isEmpty() ||
                 immagine.isEmpty()) {
 
-            renderErrorPage(request, response, "emptyFields");
+            processErrorPage(request, response, "emptyFields");
             return;
         }
         //conversioni stringa numero
@@ -90,19 +81,12 @@ public class Vendo extends HttpServlet {
         BigDecimal prezzo = new BigDecimal(prezzoStr);
 
         // Crea Articolo
-        Articolo articolo = new Articolo();
-        articolo.setCodice(codice);
-        articolo.setNome(nome);
-        articolo.setDescrizione(descrizione);
-        articolo.setImmagine(immagine);
-        articolo.setPrezzo(prezzo);
-        articolo.setDisponibile(true);
+        Articolo articolo = new Articolo(codice,nome,descrizione,immagine,prezzo,true);
 
-
-        try {//serve gestire l eccezzione nella servlet
+        try {//serve gestire l'eccezione nella servlet
             articoloDao.insertArticolo(articolo);
         } catch (SQLException e) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore DB");
+            processErrorPage(request, response, "dbInsertFailed");
             return;
         }
         response.sendRedirect("vendo.html");
@@ -110,20 +94,34 @@ public class Vendo extends HttpServlet {
 
     }
 
-    private void renderErrorPage(HttpServletRequest request, HttpServletResponse response, String errorType)
+    private void processErrorPage(HttpServletRequest request, HttpServletResponse response, String errorType)
             throws IOException {
         WebContext ctx = new WebContext(
                 JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response),
                 request.getLocale());
 
-        ctx.setVariable("signupError", errorType);
+        ctx.setVariable(contextVariable, errorType);
 
         try {
-            templateEngine.process("error", ctx, response.getWriter());
+            templateEngine.process("vendoError", ctx, response.getWriter());
         } catch (Exception e) {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
+
+    public void destroy() {
+        if (connection != null) {
+            try {
+                if (!connection.isClosed()) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
 }
 
 
