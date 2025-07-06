@@ -25,7 +25,9 @@
  
 <div class = "form-creazione-articolo">
 	<h2> crea nuovo articolo</h2>
-	<form action="crea-articolo" method="post">
+	<form action="vendo" method="post">
+		<input type="hidden" name="action" value="createArticolo" />
+
 		<label for="codice">Codice articolo:</label>
 		<input type = "text" id="codice" name="codice" required/>
 		 <label for="nome">Nome articolo:</label>
@@ -46,7 +48,8 @@
 
 <div class = "form-creazione-asta">
 	<h2> crea nuova asta</h2>
-	<form action="crea-asta" method="post"></form>
+	<form action="vendo" method="post">
+		<input type="hidden" name="action" value="createAsta" />
 	
 		<fieldset>
 			<legend> Seleziona uno o più articoli da mettere all'asta</legend>
@@ -70,7 +73,7 @@
 
 		<label>Somma totale articoli:</label>
 		<p id="totale-articoli">0,00 €</p>
-	
+	</form>
 </div>
 
 
