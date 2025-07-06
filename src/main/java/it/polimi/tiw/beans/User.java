@@ -19,7 +19,7 @@ public class User {
         this.addressNumber = addressNumber;
     }
 
-    // Getters
+
     public String getUsername() {
         return username;
     }
@@ -44,7 +44,7 @@ public class User {
         return addressNumber;
     }
 
-    // Setters
+
     public void setUsername(String username) {
         this.username = username;
     }

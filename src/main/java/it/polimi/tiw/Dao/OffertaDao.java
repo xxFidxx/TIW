@@ -65,4 +65,9 @@ public class OffertaDao {
             }
         }
     }
+
+    public Offerta findOffertaByParolaChiave(String parolaChiave) throws SQLException {
+        String query = "SELECT (id,asta_id,utente_username,prezzo,data_ora) FROM offerta WHERE (data_ora > ? AND ( ORDER BY data_ora ASC";
+        return new Offerta();
+    }
 }

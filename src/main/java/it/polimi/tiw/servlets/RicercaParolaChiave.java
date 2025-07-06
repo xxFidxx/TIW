@@ -52,6 +52,9 @@ public class RicercaParolaChiave extends HttpServlet {
         }
 
 
+
+
+
     }
 
     private void processErrorPage(HttpServletRequest request, HttpServletResponse response, String errorType)
@@ -63,7 +66,7 @@ public class RicercaParolaChiave extends HttpServlet {
         ctx.setVariable(contextVariable, errorType);
 
         try {
-            templateEngine.process("vendoError", ctx, response.getWriter());
+            templateEngine.process("ricercaParolaChiaveError", ctx, response.getWriter());
         } catch (Exception e) {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
