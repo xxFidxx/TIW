@@ -73,7 +73,7 @@ public class SignUp extends HttpServlet {
 		try {
 			addressNumber = Integer.parseInt(addressNumberUncasted);
 		} catch (NumberFormatException e) {
-			processErrorPage(request, response, "invalidNumber");
+			processErrorPage(request, response, "invalidFormat");
 			return;
 		}
 

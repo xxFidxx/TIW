@@ -11,14 +11,19 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.UUID;
 
 @WebServlet("/CreaArticoloAsta")
 public class CreaArticoloAsta extends HttpServlet {
@@ -44,7 +49,7 @@ public class CreaArticoloAsta extends HttpServlet {
         }
     }
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws  IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         if(!SessionUtils.isUserLogged(request)){
             response.sendRedirect("index.html");
@@ -60,31 +65,70 @@ public class CreaArticoloAsta extends HttpServlet {
                 processErrorPage(request, response, "notRecognizedAction");
             }
     }
-    private void handleCreateArticolo(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-        String nome = request.getParameter("nome");
-        String descrizione = request.getParameter("descrizione");
-        String prezzoStr = request.getParameter("prezzo");
-        String immagine = request.getParameter("immagine");
-        //int astaId = Integer.parseInt(request.getParameter("astaId"));
 
-        // Field validation
-        if ( nome== null || descrizione == null || prezzoStr == null ||
-                immagine == null  ||
-                 nome.isEmpty() || descrizione.isEmpty() || prezzoStr.isEmpty() ||
-                immagine.isEmpty()) {
+    // gestire servlest exception e IOexception, non lanciarle
+    // GESTISCI ANCHE ALTRE PAGINE COSI
+    private void handleCreateArticolo(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            // Recupero parametri
+            String nome = request.getParameter("nome");
+            String descrizione = request.getParameter("descrizione");
+            String prezzoStr = request.getParameter("prezzo");
+            Part requestPart = request.getPart("immagine");
 
-            //renderErrorPage(request, response, "emptyFields");
-            return;
-        }
-        //conversioni stringa numero
+            // Validazione campi obbligatori
+            if (nome == null || descrizione == null || prezzoStr == null || requestPart == null ||
+                    nome.isEmpty() || descrizione.isEmpty() || prezzoStr.isEmpty()) {
+                processErrorPage(request, response, "emptyFields");
+                return;
+            }
 
-        BigDecimal prezzo = new BigDecimal(prezzoStr);
-        int codice = 0 ;
-        int asta_id = 0;
+            // Validazione lunghezza nome
+            if (nome.length() > 100) {
+                processErrorPage(request, response, "nameTooLong");
+                return;
+            }
+
+            // Validazione prezzo
+            int prezzo;
+            try {
+                prezzo = Integer.parseInt(prezzoStr);
+                if (prezzo <= 0) {
+                    processErrorPage(request, response, "invalidPrice");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                processErrorPage(request, response, "invalidPriceFormat");
+                return;
+            }
+
+            // Validazione immagine
+            String contentType = requestPart.getContentType();
+            if (!contentType.startsWith("image/")) {
+                processErrorPage(request, response, "invalidImageType");
+                return;
+            }
+
+            if (requestPart.getSize() > 10 * 1024 * 1024) {
+                processErrorPage(request, response, "imageTooLarge");
+                return;
+            }
+
+        String pathCartella = "immagini/";
+        String nomeImmagine = UUID.randomUUID() + ".png";
+        String immagine = pathCartella + nomeImmagine;
+
+            String uploadPath = getServletContext().getInitParameter("imagesDirectory");
+
+            try (InputStream fileContent = requestPart.getInputStream();
+                 FileOutputStream out = new FileOutputStream(uploadPath + "/" + nomeImmagine)) {
+                fileContent.transferTo(out);
+            }catch (IOException e) {
+                processErrorPage(request, response, "internalServerError");
+            }
 
         // Crea Articolo
-        Articolo articolo = new Articolo(codice,nome,descrizione,immagine,prezzo,true,asta_id);
+        Articolo articolo = new Articolo(nome,descrizione,immagine,prezzo,true);
         User u = SessionUtils.getUser(request);
 
 
@@ -95,6 +139,10 @@ public class CreaArticoloAsta extends HttpServlet {
             return;
         }
         response.sendRedirect("Vendo.html");
+
+        } catch (IOException | ServletException e) {
+            processErrorPage(request, response, "internalServerError");
+        }
 
 
     }
@@ -113,6 +161,8 @@ public class CreaArticoloAsta extends HttpServlet {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
+
+
 
     public void destroy() {
         if (connection != null) {

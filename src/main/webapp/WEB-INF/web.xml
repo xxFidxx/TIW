@@ -29,5 +29,9 @@
     <param-name>dbPassword</param-name>
     <param-value>TIW2025</param-value>
   </context-param>
+  <context-param>
+    <param-name>imagesDirectory</param-name>
+    <param-value>${webapp.root}/immagini</param-value>
+  </context-param>
 
 </web-app>

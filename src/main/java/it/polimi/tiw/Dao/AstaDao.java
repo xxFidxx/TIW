@@ -50,8 +50,8 @@ public class AstaDao {
             p.setString(1, asta.getVenditoreUsername());
             p.setTimestamp(2, Timestamp.valueOf(asta.getDataInizio()));
             p.setTimestamp(3, Timestamp.valueOf(asta.getDataFine()));
-            p.setBigDecimal(4, asta.getPrezzoIniziale());
-            p.setBigDecimal(5, asta.getPrezzoAttuale());
+            p.setInt(4, asta.getPrezzoIniziale());
+            p.setInt(5, asta.getPrezzoAttuale());
             p.setInt(6, asta.getRialzoMinimo());
             p.setBoolean(7, asta.isChiusa());
 
@@ -85,8 +85,8 @@ public class AstaDao {
                 rs.getString("venditore_username"),
                 rs.getTimestamp("data_inizio").toLocalDateTime(),
                 rs.getTimestamp("data_fine").toLocalDateTime(),
-                rs.getBigDecimal("prezzo_iniziale"),
-                rs.getBigDecimal("prezzo_attuale"),
+                rs.getInt("prezzo_iniziale"),
+                rs.getInt("prezzo_attuale"),
                 rs.getInt("rialzo_minimo"),
                 rs.getBoolean("chiusa")
         );

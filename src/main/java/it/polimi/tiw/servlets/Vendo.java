@@ -23,10 +23,25 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+// BISOGNA STARE ATTENTI CHE 1) LO USER ESISTA ( CONTROLLA SE NON E' NULL) CONTROLLA PURE CHE LO USER CHE STA OPERANDO SULL'ASTA SIA LO STESSO CHE L'HA CREATO
+// PERCHE' MAGARI E' UN ALTRO USER CHE CHIAMA L'URL ESATTO PER FARE QUELL'AZIONE MA NON POTREBBE FARLO
+// FAI SESSION INVALIDATE AL LOGOUT
+
+// TASTO DI RILANCIO OFFERTA
+//Nel server:
+//
+//Verifica che:
+//
+//l’asta sia ancora aperta,
+//
+//l’offerta sia almeno offertaMax + rialzoMinimo,
+//
+//l’utente non sia il venditore.
+// l'asta sia ancora aperta
 @WebServlet("/Vendo")
 public class Vendo extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private Connection connection;
     private TemplateEngine templateEngine;
     private ArticoloDao articoloDao;
 
@@ -34,7 +49,7 @@ public class Vendo extends HttpServlet {
     public void init() throws ServletException {
         try {
             ServletContext context = getServletContext();
-            connection = Utils.initDBConnection(context);
+            Connection connection = Utils.initDBConnection(context);
             articoloDao = new ArticoloDao(connection);
             templateEngine = Utils.initTemplateEngine(context);
         } catch (Exception e) {
@@ -51,10 +66,9 @@ public class Vendo extends HttpServlet {
                List<Articolo> articoliDisponibili = articoloDao.findAllDisponibili();
 
 
-               BigDecimal totalePrezzoArticoli = articoliDisponibili.stream()
+               int totalePrezzoIntero = articoliDisponibili.stream()
                        .map(Articolo::getPrezzo)
-                       .reduce(BigDecimal.ZERO, BigDecimal::add);
-               int totalePrezzoIntero = totalePrezzoArticoli.intValue();
+                       .reduce(0, Integer::sum);
 
                List<Articolo> articoliConPrezziInteri = articoliDisponibili.stream()
                        .map(articolo -> new Articolo(

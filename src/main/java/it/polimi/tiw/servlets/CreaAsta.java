@@ -99,11 +99,11 @@ public class CreaAsta extends HttpServlet {
 
            }
 
-            BigDecimal prezzoIniziale = articoliSelezionati.stream()
+            Integer prezzoIniziale = articoliSelezionati.stream()
                     .map(Articolo::getPrezzo)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+                    .reduce(0,Integer::sum);
 
-            int rialzoMinimo = Integer.parseInt(rialzoStr);
+            Integer rialzoMinimo = Integer.parseInt(rialzoStr);
 
             LocalDateTime scadenza = LocalDateTime.parse(scadenzaStr);
             LocalDateTime dataInizio = LocalDateTime.now();

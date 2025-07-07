@@ -1,19 +1,27 @@
 package it.polimi.tiw.beans;
 
-import java.math.BigDecimal;
-
 public class Articolo {
-    private int codice;
+    private Integer codice;
     private String nome;
     private String descrizione;
     private String immagine;
-    private BigDecimal prezzo;
+    private Integer prezzo;
     private boolean disponibile;
-    private int astaId;
+    private Integer astaId;
 
     public Articolo() {}
 
-    public Articolo(int codice, String nome, String descrizione, String immagine, BigDecimal prezzo, boolean disponibile, int astaId) {
+    public Articolo(String nome, String descrizione, String immagine, Integer prezzo, boolean disponibile) {
+        this.codice = null;
+        this.nome = nome;
+        this.descrizione = descrizione;
+        this.immagine = immagine;
+        this.prezzo = prezzo;
+        this.disponibile = disponibile;
+        this.astaId = null;
+    }
+
+    public Articolo(Integer codice, String nome, String descrizione, String immagine, Integer prezzo, boolean disponibile, Integer astaId) {
         this.codice = codice;
         this.nome = nome;
         this.descrizione = descrizione;
@@ -23,11 +31,11 @@ public class Articolo {
         this.astaId = astaId;
     }
 
-    public int getCodice() {
+    public Integer getCodice() {
         return codice;
     }
 
-    public void setCodice(int codice) {
+    public void setCodice(Integer codice) {
         this.codice = codice;
     }
 
@@ -55,14 +63,14 @@ public class Articolo {
         this.immagine = immagine;
     }
 
-    public BigDecimal getPrezzo() {
+    public Integer getPrezzo() {
         return prezzo;
     }
-    public int getPrezzoInt(){
+    public Integer getPrezzoInt(){
         return prezzo.intValue();
     }
 
-    public void setPrezzo(BigDecimal prezzo) {
+    public void setPrezzo(Integer prezzo) {
         this.prezzo = prezzo;
     }
 
@@ -74,11 +82,11 @@ public class Articolo {
         this.disponibile = disponibile;
     }
 
-    public void setAstaId(int astaId){
+    public void setAstaId(Integer astaId){
         this.astaId = astaId;
     }
 
-    public int getAstaId(){
+    public Integer getAstaId(){
         return astaId;
     }
 

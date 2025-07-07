@@ -43,12 +43,12 @@ public class OffertaDao {
         }
     }
 
-    public boolean insertOfferta(int astaId, String username, BigDecimal prezzo, LocalDateTime dataOra) throws SQLException {
+    public boolean insertOfferta(int astaId, String username, Integer prezzo, LocalDateTime dataOra) throws SQLException {
         String query = "INSERT INTO offerta (asta_id, utente_username, prezzo, data_ora) VALUES (?, ?, ?, ?)";
         try (PreparedStatement p = connection.prepareStatement(query)) {
             p.setInt(1, astaId);
             p.setString(2, username);
-            p.setBigDecimal(3, prezzo);
+            p.setInt(3, prezzo);
             p.setTimestamp(4, Timestamp.valueOf(dataOra));
             return p.executeUpdate() == 1;
         }
@@ -72,7 +72,7 @@ public class OffertaDao {
         offerta.setId(rs.getInt("id"));
         offerta.setAstaId(rs.getInt("asta_id"));
         offerta.setUtenteUsername(rs.getString("utente_username"));
-        offerta.setPrezzo(rs.getBigDecimal("prezzo"));
+        offerta.setPrezzo(rs.getInt("prezzo"));
         offerta.setDataOra(rs.getTimestamp("data_ora").toLocalDateTime());
         offerta.setAggiudicata(rs.getBoolean("aggiudicata"));
         return offerta;

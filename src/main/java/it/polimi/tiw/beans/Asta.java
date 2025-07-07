@@ -1,23 +1,21 @@
 package it.polimi.tiw.beans;
-
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class Asta {
-    private int id;
+    private Integer id;
     private String venditoreUsername;
     private LocalDateTime dataInizio;
     private LocalDateTime dataFine;
-    private BigDecimal prezzoIniziale;
-    private BigDecimal prezzoAttuale;
-    private int rialzoMinimo;
+    private Integer prezzoIniziale;
+    private Integer prezzoAttuale;
+    private Integer rialzoMinimo;
     private boolean chiusa;
 
     public Asta() {
     }
 
-    public Asta(int id, String venditoreUsername, LocalDateTime dataInizio, LocalDateTime dataFine,
-                BigDecimal prezzoIniziale,BigDecimal prezzoAttuale, int rialzoMinimo, boolean chiusa) {
+    public Asta(Integer id, String venditoreUsername, LocalDateTime dataInizio, LocalDateTime dataFine,
+                Integer prezzoIniziale,Integer prezzoAttuale, Integer rialzoMinimo, boolean chiusa) {
         this.id = id;
         this.venditoreUsername = venditoreUsername;
         this.dataInizio = dataInizio;
@@ -29,7 +27,7 @@ public class Asta {
     }
 
     // Getters
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -45,11 +43,11 @@ public class Asta {
         return dataFine;
     }
 
-    public BigDecimal getPrezzoIniziale() {
+    public Integer getPrezzoIniziale() {
         return prezzoIniziale;
     }
 
-    public int getRialzoMinimo() {
+    public Integer getRialzoMinimo() {
         return rialzoMinimo;
     }
 
@@ -57,12 +55,12 @@ public class Asta {
         return chiusa;
     }
 
-    public BigDecimal getPrezzoAttuale() {
+    public Integer getPrezzoAttuale() {
         return prezzoAttuale;
     }
 
     // Setters
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -78,11 +76,11 @@ public class Asta {
         this.dataFine = dataFine;
     }
 
-    public void setPrezzoIniziale(BigDecimal prezzoIniziale) {
+    public void setPrezzoIniziale(Integer prezzoIniziale) {
         this.prezzoIniziale = prezzoIniziale;
     }
 
-    public void setRialzoMinimo(int rialzoMinimo) {
+    public void setRialzoMinimo(Integer rialzoMinimo) {
         this.rialzoMinimo = rialzoMinimo;
     }
 
@@ -90,7 +88,7 @@ public class Asta {
         this.chiusa = chiusa;
     }
 
-    public void setPrezzoAttuale(BigDecimal prezzoAttuale) {
+    public void setPrezzoAttuale(Integer prezzoAttuale) {
         this.prezzoAttuale = prezzoAttuale;
     }
 }

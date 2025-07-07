@@ -46,7 +46,7 @@ public class ArticoloDao {
             p.setString(1, a.getNome());
             p.setString(2, a.getDescrizione());
             p.setString(3, a.getImmagine());
-            p.setBigDecimal(4, a.getPrezzo());
+            p.setInt(4, a.getPrezzo());
             p.setBoolean(5, a.isDisponibile());
             p.setString(6,u.getUsername() );
             p.setInt(7,a.getAstaId());
@@ -69,14 +69,17 @@ public class ArticoloDao {
     }
 
     private Articolo createArticoloBeanFromRes(ResultSet rs) throws SQLException {
-        return new Articolo(
-                rs.getInt("codice"),
+        Articolo articolo = new Articolo(
                 rs.getString("nome"),
                 rs.getString("descrizione"),
                 rs.getString("immagine"),
-                rs.getBigDecimal("prezzo"),
-                rs.getBoolean("disponibile"),
-                rs.getInt("asta_id"));
+                rs.getInt("prezzo"),
+                rs.getBoolean("disponibile"));
+
+        articolo.setCodice(rs.getInt("codice"));
+        articolo.setAstaId(rs.getInt("asta_id"));
+
+        return articolo;
     }
 
     public ArrayList<Articolo> articoliByAsta(int asta_id) throws SQLException {

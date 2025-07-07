@@ -25,6 +25,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
+
 @WebServlet("/Acquisto")
 public class Acquisto extends HttpServlet {
     private static final long serialVersionUID = 1L;

@@ -1,17 +1,15 @@
 package it.polimi.tiw.beans;
-
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class Offerta {
-    private int id;
-    private int astaId;
+    private Integer id;
+    private Integer astaId;
     private String utenteUsername;
-    private BigDecimal prezzo;
+    private Integer prezzo;
     private LocalDateTime dataOra;
     private boolean aggiudicata;
 
-    public Offerta(int id, int astaId, String utenteUsername, BigDecimal prezzo, LocalDateTime dataOra, boolean aggiudicata) {
+    public Offerta(Integer id, Integer astaId, String utenteUsername, Integer prezzo, LocalDateTime dataOra, boolean aggiudicata) {
         this.id = id;
         this.astaId = astaId;
         this.utenteUsername = utenteUsername;
@@ -23,16 +21,16 @@ public class Offerta {
     public Offerta() {
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
-    public int getAstaId() {
+    public Integer getAstaId() {
         return astaId;
     }
-    public void setAstaId(int astaId) {
+    public void setAstaId(Integer astaId) {
         this.astaId = astaId;
     }
     public String getUtenteUsername() {
@@ -41,10 +39,10 @@ public class Offerta {
     public void setUtenteUsername(String utenteUsername) {
         this.utenteUsername = utenteUsername;
     }
-    public BigDecimal getPrezzo() {
+    public Integer getPrezzo() {
         return prezzo;
     }
-    public void setPrezzo(BigDecimal prezzo) {
+    public void setPrezzo(Integer prezzo) {
         this.prezzo = prezzo;
     }
     public LocalDateTime getDataOra() {

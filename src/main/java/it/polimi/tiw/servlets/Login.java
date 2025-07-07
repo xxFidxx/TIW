@@ -59,6 +59,7 @@ public class Login extends HttpServlet {
             UserDao userDao = new UserDao(connection);
             User user = userDao.checkLogin(username, password);
             if (user != null) {
+                // richiedo una nuova sessione
                 request.getSession(true).setAttribute("user", user);
                 response.sendRedirect("home.html");
             } else {
