@@ -58,6 +58,9 @@ public class Articolo {
     public BigDecimal getPrezzo() {
         return prezzo;
     }
+    public int getPrezzoInt(){
+        return prezzo.intValue();
+    }
 
     public void setPrezzo(BigDecimal prezzo) {
         this.prezzo = prezzo;

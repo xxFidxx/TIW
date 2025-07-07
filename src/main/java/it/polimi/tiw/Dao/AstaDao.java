@@ -43,7 +43,7 @@ public class AstaDao {
 
     public void createAsta(Asta asta) throws SQLException {
         String query = """
-                INSERT INTO asta (venditore_username, data_inizio, data_fine, prezzo_iniziale, rialzo_minimo, chiusa)
+                INSERT INTO asta (venditore_username, data_inizio, data_fine, prezzo_iniziale,prezzo_attuale, rialzo_minimo, chiusa)
                 VALUES (?, ?, ?, ?, ?, ?)
                 """;
         try (PreparedStatement p = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -51,8 +51,9 @@ public class AstaDao {
             p.setTimestamp(2, Timestamp.valueOf(asta.getDataInizio()));
             p.setTimestamp(3, Timestamp.valueOf(asta.getDataFine()));
             p.setBigDecimal(4, asta.getPrezzoIniziale());
-            p.setInt(5, asta.getRialzoMinimo());
-            p.setBoolean(6, asta.isChiusa());
+            p.setBigDecimal(5, asta.getPrezzoAttuale());
+            p.setInt(6, asta.getRialzoMinimo());
+            p.setBoolean(7, asta.isChiusa());
 
             p.executeUpdate();
             try (ResultSet rs = p.getGeneratedKeys()) {

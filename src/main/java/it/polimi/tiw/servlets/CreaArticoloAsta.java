@@ -81,9 +81,10 @@ public class CreaArticoloAsta extends HttpServlet {
 
         BigDecimal prezzo = new BigDecimal(prezzoStr);
         int codice = 0 ;
+        int asta_id = 0;
 
         // Crea Articolo
-        Articolo articolo = new Articolo(codice,nome,descrizione,immagine,prezzo,true);
+        Articolo articolo = new Articolo(codice,nome,descrizione,immagine,prezzo,true,asta_id);
         User u = SessionUtils.getUser(request);
 
 

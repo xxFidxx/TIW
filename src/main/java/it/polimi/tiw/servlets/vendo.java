@@ -19,7 +19,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @WebServlet("/vendo")
 public class vendo extends HttpServlet {
@@ -44,25 +46,43 @@ public class vendo extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        try {
-            List<Articolo> articoliDisponibili = articoloDao.findAllDisponibili();
 
-            BigDecimal totalePrezzoArticoli = articoliDisponibili.stream()
-                    .map(Articolo::getPrezzo)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-            WebContext ctx = new WebContext(
-                    JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response),
-                    request.getLocale());
-
-            ctx.setVariable("articoliDisponibili", articoliDisponibili);
-            ctx.setVariable("totalePrezzoArticoli", totalePrezzoArticoli);
-            response.setContentType("text/html;charset=UTF-8");
+           try {
+               List<Articolo> articoliDisponibili = articoloDao.findAllDisponibili();
 
 
-            templateEngine.process("vendo", ctx, response.getWriter());
-        } catch (SQLException e) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error");
-        }
+               BigDecimal totalePrezzoArticoli = articoliDisponibili.stream()
+                       .map(Articolo::getPrezzo)
+                       .reduce(BigDecimal.ZERO, BigDecimal::add);
+               int totalePrezzoIntero = totalePrezzoArticoli.intValue();
+
+               List<Articolo> articoliConPrezziInteri = articoliDisponibili.stream()
+                       .map(articolo -> new Articolo(
+                               articolo.getCodice(),
+                               articolo.getNome(),
+                               articolo.getDescrizione(),
+                               articolo.getImmagine(),
+                               articolo.getPrezzo(),
+                               articolo.isDisponibile(),
+                               articolo.getAstaId()
+                       ))
+                       .toList();
+
+
+
+               WebContext ctx = new WebContext(
+                       JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response),
+                       request.getLocale());
+
+               ctx.setVariable("articoliDisponibili", articoliConPrezziInteri);
+               ctx.setVariable("totalePrezzoArticoli", totalePrezzoIntero);
+               response.setContentType("text/html;charset=UTF-8");
+
+
+               templateEngine.process("vendo", ctx, response.getWriter());
+           }catch (SQLException e){
+               response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error");
+           }
     }
 }
+//
