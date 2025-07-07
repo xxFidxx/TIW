@@ -66,4 +66,27 @@ public class OffertaDao {
         }
     }
 
+    public Offerta createOffertaBeanFromRes(ResultSet rs) throws SQLException {
+        Offerta offerta = new Offerta();
+        offerta.setId(rs.getInt("id"));
+        offerta.setAstaId(rs.getInt("asta_id"));
+        offerta.setUtenteUsername(rs.getString("utente_username"));
+        offerta.setPrezzo(rs.getBigDecimal("prezzo"));
+        offerta.setDataOra(rs.getTimestamp("data_ora").toLocalDateTime());
+        return offerta;
+    }
+
+    public ArrayList <Offerta> logOfferteByAstaId(int astaId) throws SQLException {
+        ArrayList<Offerta> offerte = new ArrayList<>();
+        String query = "SELECT * FROM offerta WHERE asta_id = ? ORDER BY data_ora DESC";
+        try (PreparedStatement p = connection.prepareStatement(query)) {
+            p.setInt(1, astaId);
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) {
+                offerte.add(createOffertaBeanFromRes(rs));
+            }
+        }
+        return offerte;
+    }
+
 }
