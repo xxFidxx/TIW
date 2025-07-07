@@ -2,6 +2,7 @@ package it.polimi.tiw.servlets;
 
 import it.polimi.tiw.Dao.ArticoloDao;
 import it.polimi.tiw.beans.Articolo;
+import it.polimi.tiw.beans.User;
 import it.polimi.tiw.rescources.SessionUtils;
 import it.polimi.tiw.rescources.Utils;
 import jakarta.servlet.ServletContext;
@@ -82,14 +83,15 @@ public class CreaArticoloAsta extends HttpServlet {
 
         // Crea Articolo
         Articolo articolo = new Articolo(codice,nome,descrizione,immagine,prezzo,true);
+        User u = SessionUtils.getUser(request);
 
         try {//serve gestire l'eccezione nella servlet
-            articoloDao.insertArticolo(articolo);
+            articoloDao.insertArticolo(articolo,u);
         } catch (SQLException e) {
             processErrorPage(request, response, "dbInsertFailed");
             return;
         }
-        response.sendRedirect("vendo.html");
+        response.sendRedirect("vendo");
 
 
     }

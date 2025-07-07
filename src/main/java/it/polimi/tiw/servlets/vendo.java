@@ -57,6 +57,8 @@ public class vendo extends HttpServlet {
 
             ctx.setVariable("articoliDisponibili", articoliDisponibili);
             ctx.setVariable("totalePrezzoArticoli", totalePrezzoArticoli);
+            response.setContentType("text/html;charset=UTF-8");
+
 
             templateEngine.process("vendo", ctx, response.getWriter());
         } catch (SQLException e) {

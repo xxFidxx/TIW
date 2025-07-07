@@ -18,6 +18,13 @@ h1 {
   letter-spacing: 2px;
 }
 
+/* Container principale */
+.form-container {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
 /* Liste aste aperte e chiuse */
 .lista-aste-aperte, .lista-aste-chiuse {
   background-color: #27ae60;
@@ -25,6 +32,7 @@ h1 {
   padding: 20px 25px;
   margin-bottom: 40px;
   box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+  width: 100%;
 }
 
 .lista-aste-aperte h2, .lista-aste-chiuse h2 {
@@ -67,6 +75,8 @@ h1 {
   padding: 25px 30px;
   box-shadow: 0 6px 12px rgba(0,0,0,0.25);
   margin-bottom: 40px;
+  flex: 1;
+  min-width: 300px;
 }
 
 .form-creazione-articolo h2, .form-creazione-asta h2 {
@@ -77,9 +87,13 @@ h1 {
   padding-bottom: 8px;
 }
 
+.form-group {
+  margin-bottom: 20px;
+}
+
 label {
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   font-weight: bold;
   font-size: 1em;
   color: #ecf0f1;
@@ -92,7 +106,6 @@ input[type="datetime-local"],
 textarea {
   width: 100%;
   padding: 10px 14px;
-  margin-bottom: 18px;
   border-radius: 6px;
   border: none;
   font-size: 1em;
@@ -134,6 +147,7 @@ button[type="submit"] {
   cursor: pointer;
   transition: background-color 0.3s ease;
   display: inline-block;
+  width: 100%;
 }
 
 button[type="submit"]:hover {
@@ -154,4 +168,35 @@ legend {
   font-weight: bold;
   font-size: 1.1em;
   color: #1abc9c;
+}
+
+/* Stile per gli articoli */
+.articoli-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.articolo-item {
+  background-color: #3cb371;
+  padding: 10px 15px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+  flex: 1 1 200px;
+}
+
+.articolo-item:hover {
+  background-color: #2e8b57;
+}
+
+.articolo-item label {
+  display: inline;
+  cursor: pointer;
+}
+
+.totale {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #f1c40f;
+  margin-top: 5px;
 }

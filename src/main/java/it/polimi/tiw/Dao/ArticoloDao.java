@@ -1,6 +1,8 @@
 package it.polimi.tiw.Dao;
 
 import it.polimi.tiw.beans.Articolo;
+import it.polimi.tiw.beans.User;
+import it.polimi.tiw.rescources.SessionUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -38,14 +40,15 @@ public class ArticoloDao {
         return articoli;
     }
 
-    public void insertArticolo(Articolo a) throws SQLException {
-        String query = "INSERT INTO articoli (nome, descrizione, immagine, prezzo, disponibile) VALUES (?, ?, ?, ?, ?,) ";
+    public void insertArticolo(Articolo a,User u) throws SQLException {
+        String query = "INSERT INTO articoli (nome, descrizione, immagine, prezzo, disponibile,venditore_username) VALUES (?, ?, ?, ?, ?, ?) ";
         try (PreparedStatement p = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             p.setString(1, a.getNome());
             p.setString(2, a.getDescrizione());
             p.setString(3, a.getImmagine());
             p.setBigDecimal(4, a.getPrezzo());
             p.setBoolean(5, a.isDisponibile());
+            p.setString(6,u.getUsername() );
             p.executeUpdate();
             try (ResultSet rs = p.getGeneratedKeys()) {
                 if (rs.next()) {
