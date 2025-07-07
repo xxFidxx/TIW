@@ -1,13 +1,13 @@
 @charset "UTF-8";
+
 /* Stile base */
 body {
-  background-color: #2ecc71; 
+  background-color: #2ecc71;
   font-family: Arial, sans-serif;
   color: #fff;
   margin: 0;
   padding: 30px 40px;
 }
-
 
 h1 {
   text-align: center;
@@ -18,9 +18,9 @@ h1 {
   letter-spacing: 2px;
 }
 
-
+/* Liste aste aperte e chiuse */
 .lista-aste-aperte, .lista-aste-chiuse {
-  background-color: #27ae60; 
+  background-color: #27ae60;
   border-radius: 12px;
   padding: 20px 25px;
   margin-bottom: 40px;
@@ -35,9 +35,8 @@ h1 {
   margin-bottom: 20px;
 }
 
-
 .lista-aste-aperte ul, .lista-aste-chiuse ul {
-  list-style-type: none;
+  list-style: none;
   margin: 0;
   padding: 0;
   max-height: 180px;
@@ -61,7 +60,7 @@ h1 {
   background-color: #145a32;
 }
 
-
+/* Form creazione articolo e asta */
 .form-creazione-articolo, .form-creazione-asta {
   background-color: #27ae60;
   border-radius: 12px;
@@ -69,7 +68,6 @@ h1 {
   box-shadow: 0 6px 12px rgba(0,0,0,0.25);
   margin-bottom: 40px;
 }
-
 
 .form-creazione-articolo h2, .form-creazione-asta h2 {
   margin-top: 0;
@@ -79,7 +77,6 @@ h1 {
   padding-bottom: 8px;
 }
 
-
 label {
   display: block;
   margin-bottom: 6px;
@@ -88,7 +85,7 @@ label {
   color: #ecf0f1;
 }
 
-
+/* Input text, number, datetime, textarea */
 input[type="text"],
 input[type="number"],
 input[type="datetime-local"],
@@ -101,6 +98,17 @@ textarea {
   font-size: 1em;
   box-sizing: border-box;
   font-family: Arial, sans-serif;
+  background-color: #3cb371;
+  color: #fff;
+  transition: background-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="datetime-local"]:focus,
+textarea:focus {
+  background-color: #2e8b57;
+  outline: none;
 }
 
 textarea {
@@ -108,7 +116,14 @@ textarea {
   min-height: 80px;
 }
 
+/* Checkbox styling */
+input[type="checkbox"] {
+  margin-right: 8px;
+  transform: scale(1.2);
+  cursor: pointer;
+}
 
+/* Pulsanti submit */
 button[type="submit"] {
   background-color: #1abc9c;
   color: white;
@@ -125,7 +140,7 @@ button[type="submit"]:hover {
   background-color: #16a085;
 }
 
-
+/* Fieldset e legend */
 fieldset {
   border: 2px solid #16a085;
   border-radius: 10px;

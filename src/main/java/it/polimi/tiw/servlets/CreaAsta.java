@@ -71,27 +71,6 @@ public class CreaAsta extends HttpServlet {
             return;
         }
 
-        try {
-            List<Articolo> articoliDisponibili = articoloDao.findAllDisponibili();
-            System.out.println("articoli disponibili: " + articoliDisponibili.size());
-
-            BigDecimal totalePrezzoArticoli = articoliDisponibili.stream()
-                    .map(Articolo::getPrezzo)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-            WebContext ctx = new WebContext(
-                    JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response),
-                    request.getLocale());
-
-
-            ctx.setVariable("articoliDisponibili", articoliDisponibili);
-            ctx.setVariable("totalePrezzoArticoli", totalePrezzoArticoli);
-
-            templateEngine.process("crea-asta", ctx, response.getWriter());
-        } catch (SQLException e) {
-            processErrorPage(request, response, "dbError");
-        }
-
 
         String[] articoliIds = request.getParameterValues("articoli");
         String rialzoStr = request.getParameter("rialzo");
