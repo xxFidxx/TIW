@@ -9,16 +9,18 @@ public class Articolo {
     private String immagine;
     private BigDecimal prezzo;
     private boolean disponibile;
+    private int astaId;
 
     public Articolo() {}
 
-    public Articolo(int codice, String nome, String descrizione, String immagine, BigDecimal prezzo, boolean disponibile) {
+    public Articolo(int codice, String nome, String descrizione, String immagine, BigDecimal prezzo, boolean disponibile, int astaId) {
         this.codice = codice;
         this.nome = nome;
         this.descrizione = descrizione;
         this.immagine = immagine;
         this.prezzo = prezzo;
         this.disponibile = disponibile;
+        this.astaId = astaId;
     }
 
     public int getCodice() {
@@ -67,6 +69,14 @@ public class Articolo {
 
     public void setDisponibile(boolean disponibile) {
         this.disponibile = disponibile;
+    }
+
+    public void setAstaId(int astaId){
+        this.astaId = astaId;
+    }
+
+    public int getAstaId(){
+        return astaId;
     }
 
 

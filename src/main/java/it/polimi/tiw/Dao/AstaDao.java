@@ -6,7 +6,6 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.math.BigDecimal;
 
 public class AstaDao {
     private final Connection connection;
@@ -21,7 +20,7 @@ public class AstaDao {
             p.setInt(1, id);
             try (ResultSet rs = p.executeQuery()) {
                 if (rs.next()) {
-                    return mapRowToAsta(rs);
+                    return createAstaBeanFromRes(rs);
                 }
             }
         }
@@ -35,7 +34,7 @@ public class AstaDao {
             try (ResultSet rs = p.executeQuery()) {
                 List<Asta> aste = new ArrayList<>();
                 while (rs.next()) {
-                    aste.add(mapRowToAsta(rs));
+                    aste.add(createAstaBeanFromRes(rs));
                 }
                 return aste;
             }
@@ -63,6 +62,7 @@ public class AstaDao {
             }
         }
     }
+
     public void insertAstaArticolo(int astaId, int articoloCodice) throws SQLException {
         String sql = "INSERT INTO asta_articolo (asta_id, articolo_codice) VALUES (?, ?)";
         try (PreparedStatement p = connection.prepareStatement(sql)) {
@@ -72,15 +72,44 @@ public class AstaDao {
         }
     }
 
-    private Asta mapRowToAsta(ResultSet rs) throws SQLException {
+    private Asta createAstaBeanFromRes(ResultSet rs) throws SQLException {
         return new Asta(
                 rs.getInt("id"),
                 rs.getString("venditore_username"),
                 rs.getTimestamp("data_inizio").toLocalDateTime(),
                 rs.getTimestamp("data_fine").toLocalDateTime(),
                 rs.getBigDecimal("prezzo_iniziale"),
+                rs.getBigDecimal("prezzo_attuale"),
                 rs.getInt("rialzo_minimo"),
                 rs.getBoolean("chiusa")
         );
+    }
+
+    public ArrayList<Asta> findAstaByParolaChiave(String parolaChiave, LocalDateTime loginTime) throws SQLException {
+        String sql = "SELECT (pv.asta_id, at.venditore_username, at.data_inizio, at.data_fine, at.prezzo_iniziale, at.prezzo_attuale,at.rialzo_minimo, at.chiusa" +
+                "FROM prodottoinVendita pv " +
+                "JOIN articoli a ON pv.articolo_id = a.codice " +
+                "JOIN asta at ON pv.asta_id = at.id " +
+                "WHERE (a.nome LIKE ? OR a.descrizione LIKE ?) " +
+                "AND at.chiusa = 0 " +
+                "AND at.data_fine > ? " +
+                "GROUP BY pv.asta_id " +
+                "HAVING COUNT(*) > 0";
+
+        PreparedStatement stmt = connection.prepareStatement(sql);
+
+        String keyword = "%" + parolaChiave + "%";
+
+        stmt.setString(1, keyword);
+        stmt.setString(2, keyword);
+        stmt.setTimestamp(3, Timestamp.valueOf(loginTime));
+
+        ResultSet rs = stmt.executeQuery();
+        ArrayList<Asta> aste = new ArrayList<>();
+        while (rs.next()) {
+            aste.add(createAstaBeanFromRes(rs));
+        }
+
+        return aste;
     }
 }

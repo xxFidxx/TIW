@@ -111,7 +111,7 @@ public class CreaAsta extends HttpServlet {
             String venditoreUsername = SessionUtils.getUser(request).getUsername();
 
             // Inserisci l'asta
-            Asta asta = new Asta(0, venditoreUsername, dataInizio, scadenza, prezzoIniziale, rialzoMinimo, false);
+            Asta asta = new Asta(0, venditoreUsername, dataInizio, scadenza, prezzoIniziale,prezzoIniziale, rialzoMinimo, false);
             astaDao.createAsta(asta);
             int astaId = asta.getId();
 
