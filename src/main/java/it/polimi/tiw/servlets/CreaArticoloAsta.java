@@ -66,6 +66,7 @@ public class CreaArticoloAsta extends HttpServlet {
         String descrizione = request.getParameter("descrizione");
         String prezzoStr = request.getParameter("prezzo");
         String immagine = request.getParameter("immagine");
+        int astaId = Integer.parseInt(request.getParameter("astaId"));
 
         // Field validation
         if ( nome== null || descrizione == null || prezzoStr == null ||
@@ -84,6 +85,7 @@ public class CreaArticoloAsta extends HttpServlet {
         // Crea Articolo
         Articolo articolo = new Articolo(codice,nome,descrizione,immagine,prezzo,true);
         User u = SessionUtils.getUser(request);
+
 
         try {//serve gestire l'eccezione nella servlet
             articoloDao.insertArticolo(articolo,u);

@@ -9,6 +9,7 @@ public class Asta {
     private LocalDateTime dataInizio;
     private LocalDateTime dataFine;
     private BigDecimal prezzoIniziale;
+    private BigDecimal prezzoAttuale;
     private int rialzoMinimo;
     private boolean chiusa;
 
@@ -16,12 +17,13 @@ public class Asta {
     }
 
     public Asta(int id, String venditoreUsername, LocalDateTime dataInizio, LocalDateTime dataFine,
-                BigDecimal prezzoIniziale, int rialzoMinimo, boolean chiusa) {
+                BigDecimal prezzoIniziale,BigDecimal prezzoAttuale, int rialzoMinimo, boolean chiusa) {
         this.id = id;
         this.venditoreUsername = venditoreUsername;
         this.dataInizio = dataInizio;
         this.dataFine = dataFine;
         this.prezzoIniziale = prezzoIniziale;
+        this.prezzoAttuale = prezzoAttuale;
         this.rialzoMinimo = rialzoMinimo;
         this.chiusa = chiusa;
     }
@@ -55,6 +57,10 @@ public class Asta {
         return chiusa;
     }
 
+    public BigDecimal getPrezzoAttuale() {
+        return prezzoAttuale;
+    }
+
     // Setters
     public void setId(int id) {
         this.id = id;
@@ -82,5 +88,9 @@ public class Asta {
 
     public void setChiusa(boolean chiusa) {
         this.chiusa = chiusa;
+    }
+
+    public void setPrezzoAttuale(BigDecimal prezzoAttuale) {
+        this.prezzoAttuale = prezzoAttuale;
     }
 }

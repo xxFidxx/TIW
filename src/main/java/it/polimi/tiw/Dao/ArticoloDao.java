@@ -21,7 +21,7 @@ public class ArticoloDao {
             p.setInt(1, codice);
             try (ResultSet rs = p.executeQuery()) {
                 if (rs.next()) {
-                    return mapRowToArticolo(rs);
+                    return createArticoloBeanFromRes(rs);
                 }
             }
         }
@@ -34,7 +34,7 @@ public class ArticoloDao {
         try (PreparedStatement p = con.prepareStatement(query);
              ResultSet rs = p.executeQuery()) {
             while (rs.next()) {
-                articoli.add(mapRowToArticolo(rs));
+                articoli.add(createArticoloBeanFromRes(rs));
             }
         }
         return articoli;
@@ -67,13 +67,14 @@ public class ArticoloDao {
         }
     }
 
-    private Articolo mapRowToArticolo(ResultSet rs) throws SQLException {
+    private Articolo createArticoloBeanFromRes(ResultSet rs) throws SQLException {
         return new Articolo(
                 rs.getInt("codice"),
                 rs.getString("nome"),
                 rs.getString("descrizione"),
                 rs.getString("immagine"),
                 rs.getBigDecimal("prezzo"),
-                rs.getBoolean("disponibile"));
+                rs.getBoolean("disponibile"),
+                rs.getInt("asta_id"));
     }
 }
