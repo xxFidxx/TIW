@@ -66,7 +66,7 @@ public class CreaArticoloAsta extends HttpServlet {
         String descrizione = request.getParameter("descrizione");
         String prezzoStr = request.getParameter("prezzo");
         String immagine = request.getParameter("immagine");
-        int astaId = Integer.parseInt(request.getParameter("astaId"));
+        //int astaId = Integer.parseInt(request.getParameter("astaId"));
 
         // Field validation
         if ( nome== null || descrizione == null || prezzoStr == null ||
