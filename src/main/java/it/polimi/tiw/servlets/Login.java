@@ -65,7 +65,7 @@ public class Login extends HttpServlet {
                 processErrorPage(request, response, "loginFailed");
             }
         } catch (SQLException e) {
-            processErrorPage(request, response, "dbInsertFailed");
+            processErrorPage(request, response, "dbFailure");
         }
     }
 

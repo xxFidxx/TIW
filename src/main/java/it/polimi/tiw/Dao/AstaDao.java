@@ -28,7 +28,7 @@ public class AstaDao {
     }
 
     public List<Asta> findAsteByVenditore(String venditoreUsername) throws SQLException {
-        String query = "SELECT * FROM asta WHERE venditore_username = ? ORDER BY data_fine ASC";
+        String query = "SELECT DISTINCT * FROM asta WHERE venditore_username = ? ORDER BY data_fine ASC";
         try (PreparedStatement p = connection.prepareStatement(query)) {
             p.setString(1, venditoreUsername);
             try (ResultSet rs = p.executeQuery()) {
@@ -110,9 +110,8 @@ public class AstaDao {
                 aste.add(createAstaBeanFromRes(rs));
             }
         }
-
-
-
         return aste;
     }
+
+
 }

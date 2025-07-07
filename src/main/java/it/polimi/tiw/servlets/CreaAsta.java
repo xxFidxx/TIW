@@ -123,10 +123,10 @@ public class CreaAsta extends HttpServlet {
                 articoloDao.setDisponibile(codiceArticolo, false);
             }
 
-            response.sendRedirect("vendo");
+            response.sendRedirect("Vendo.html");
 
         } catch (SQLException | NumberFormatException e) {
-            processErrorPage(request, response, "dbInsertFailed");
+            processErrorPage(request, response, "dbFailure");
         }
     }
 

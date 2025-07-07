@@ -20,7 +20,7 @@
     <h2>Login Error</h2>
     <div th:switch="${loginError}">
         <p th:case="'loginFailed'">Your username or you password are incorrect</p>
-        <p th:case="'dbInsertFailed'">Error saving data. Please try again later.</p>
+        <p th:case="'dbFailure'">Error saving data. Please try again later.</p>
         <p th:case="*">Unknown error occurred.</p>
     </div>
     <p><a th:href="index.html">Back to log page</a></p>

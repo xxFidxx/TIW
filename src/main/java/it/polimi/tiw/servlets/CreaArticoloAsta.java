@@ -91,10 +91,10 @@ public class CreaArticoloAsta extends HttpServlet {
         try {//serve gestire l'eccezione nella servlet
             articoloDao.insertArticolo(articolo,u);
         } catch (SQLException e) {
-            processErrorPage(request, response, "dbInsertFailed");
+            processErrorPage(request, response, "dbFailure");
             return;
         }
-        response.sendRedirect("vendo");
+        response.sendRedirect("Vendo.html");
 
 
     }

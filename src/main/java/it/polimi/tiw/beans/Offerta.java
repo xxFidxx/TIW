@@ -9,13 +9,15 @@ public class Offerta {
     private String utenteUsername;
     private BigDecimal prezzo;
     private LocalDateTime dataOra;
+    private boolean aggiudicata;
 
-    public Offerta(int id, int astaId, String utenteUsername, BigDecimal prezzo, LocalDateTime dataOra) {
+    public Offerta(int id, int astaId, String utenteUsername, BigDecimal prezzo, LocalDateTime dataOra, boolean aggiudicata) {
         this.id = id;
         this.astaId = astaId;
         this.utenteUsername = utenteUsername;
         this.prezzo = prezzo;
         this.dataOra = dataOra;
+        this.aggiudicata = aggiudicata;
     }
 
     public Offerta() {
@@ -50,6 +52,14 @@ public class Offerta {
     }
     public void setDataOra(LocalDateTime dataOra) {
         this.dataOra = dataOra;
+    }
+
+    public void setAggiudicata(boolean aggiudicata) {
+        this.aggiudicata = aggiudicata;
+    }
+
+    public boolean isAggiudicata() {
+        return aggiudicata;
     }
 
 }

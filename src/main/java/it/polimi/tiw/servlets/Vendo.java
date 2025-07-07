@@ -23,8 +23,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@WebServlet("/vendo")
-public class vendo extends HttpServlet {
+@WebServlet("/Vendo")
+public class Vendo extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private Connection connection;
     private TemplateEngine templateEngine;
@@ -68,8 +68,6 @@ public class vendo extends HttpServlet {
                        ))
                        .toList();
 
-
-
                WebContext ctx = new WebContext(
                        JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response),
                        request.getLocale());
@@ -85,4 +83,3 @@ public class vendo extends HttpServlet {
            }
     }
 }
-//

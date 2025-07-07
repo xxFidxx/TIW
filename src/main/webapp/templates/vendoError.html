@@ -20,7 +20,7 @@
     <h2>Registration Error</h2>
     <div th:switch="${errorVendo}">
         <p th:case="'emptyFields'">All fields are required.</p>
-        <p th:case="'dbInsertFailed'">Error saving data. Please try again later.</p>
+        <p th:case="'dbFailure'">Error saving data. Please try again later.</p>
         <p th:case="'notRecognizedAction'">Error saving data. Please try again later.</p>
         <p th:case="*">Unknown error occurred.</p>
     </div>

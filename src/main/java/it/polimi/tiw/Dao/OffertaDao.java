@@ -22,14 +22,21 @@ public class OffertaDao {
             try (ResultSet rs = p.executeQuery()) {
                 List<Offerta> offerte = new ArrayList<>();
                 while (rs.next()) {
-                    Offerta offerta = new Offerta(
-                            rs.getInt("id"),
-                            rs.getInt("asta_id"),
-                            rs.getString("utente_username"),
-                            rs.getBigDecimal("prezzo"),
-                            rs.getTimestamp("data_ora").toLocalDateTime()
-                    );
-                    offerte.add(offerta);
+                    offerte.add(createOffertaBeanFromRes(rs));
+                }
+                return offerte;
+            }
+        }
+    }
+
+    public ArrayList<Offerta> findOfferteAggiudicateByUser(String user) throws SQLException {
+        String query = "SELECT * FROM offerta WHERE (utente_username = ? AND aggiudicata=1) ORDER BY data_ora DESC";
+        try (PreparedStatement p = connection.prepareStatement(query)) {
+            p.setString(1, user);
+            try (ResultSet rs = p.executeQuery()) {
+                ArrayList<Offerta> offerte = new ArrayList<>();
+                while (rs.next()) {
+                    offerte.add(createOffertaBeanFromRes(rs));
                 }
                 return offerte;
             }
@@ -53,13 +60,7 @@ public class OffertaDao {
             p.setInt(1, astaId);
             try (ResultSet rs = p.executeQuery()) {
                 if (rs.next()) {
-                    return new Offerta(
-                            rs.getInt("id"),
-                            rs.getInt("asta_id"),
-                            rs.getString("utente_username"),
-                            rs.getBigDecimal("prezzo"),
-                            rs.getTimestamp("data_ora").toLocalDateTime()
-                    );
+                    return createOffertaBeanFromRes(rs);
                 }
                 return null;
             }
@@ -73,6 +74,7 @@ public class OffertaDao {
         offerta.setUtenteUsername(rs.getString("utente_username"));
         offerta.setPrezzo(rs.getBigDecimal("prezzo"));
         offerta.setDataOra(rs.getTimestamp("data_ora").toLocalDateTime());
+        offerta.setAggiudicata(rs.getBoolean("aggiudicata"));
         return offerta;
     }
 
@@ -88,5 +90,11 @@ public class OffertaDao {
         }
         return offerte;
     }
+
+
+    //tra tutte le offerte, guardo quelle dello user, trovo tutte le offerte dello user, aggiudicate.
+    //dalle offerte mi ricavo gli articoli a cui sono collegate ( for each asta, fai articoliByAsta();
+
+
 
 }

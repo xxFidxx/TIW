@@ -89,7 +89,7 @@ public class SignUp extends HttpServlet {
 			userDao.insertUser(newUser);
 
 		} catch (SQLException e) {
-			processErrorPage(request, response, "dbInsertFailed");
+			processErrorPage(request, response, "dbFailure");
 			return;
 		}
 

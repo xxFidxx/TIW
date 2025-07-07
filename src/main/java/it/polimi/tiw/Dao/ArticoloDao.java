@@ -79,7 +79,7 @@ public class ArticoloDao {
                 rs.getInt("asta_id"));
     }
 
-    private ArrayList<Articolo> articoliByAsta(int asta_id) throws SQLException {
+    public ArrayList<Articolo> articoliByAsta(int asta_id) throws SQLException {
         ArrayList<Articolo> articoli = new ArrayList<>();
 
         String query = "SELECT * FROM articoli WHERE asta_id = ?";
@@ -93,4 +93,21 @@ public class ArticoloDao {
 
         return articoli;
     }
+
+    private ArrayList<Articolo> articoliByOfferta(int asta_id) throws SQLException {
+        ArrayList<Articolo> articoli = new ArrayList<>();
+
+        String query = "SELECT * FROM articoli WHERE asta_id = ?";
+        try (PreparedStatement p = con.prepareStatement(query)) {
+            p.setInt(2, asta_id);
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) {
+                articoli.add(createArticoloBeanFromRes(rs));
+            }
+        }
+
+        return articoli;
+    }
+
+
 }
