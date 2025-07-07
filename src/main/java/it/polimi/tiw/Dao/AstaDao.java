@@ -86,29 +86,31 @@ public class AstaDao {
     }
 
     public ArrayList<Asta> findAstaByParolaChiave(String parolaChiave, LocalDateTime loginTime) throws SQLException {
-        String sql = "SELECT (pv.asta_id, at.venditore_username, at.data_inizio, at.data_fine, at.prezzo_iniziale, at.prezzo_attuale,at.rialzo_minimo, at.chiusa" +
-                "FROM prodottoinVendita pv " +
-                "JOIN articoli a ON pv.articolo_id = a.codice " +
-                "JOIN asta at ON pv.asta_id = at.id " +
+
+        ArrayList<Asta> aste = new ArrayList<>();
+
+        String query = "SELECT DISTINCT at.id, at.venditore_username, at.data_inizio, at.data_fine, " +
+                "at.prezzo_iniziale, at.prezzo_attuale, at.rialzo_minimo, at.chiusa " +
+                "FROM articoli a " +
+                "JOIN asta at ON a.asta_id = at.id " +
                 "WHERE (a.nome LIKE ? OR a.descrizione LIKE ?) " +
                 "AND at.chiusa = 0 " +
-                "AND at.data_fine > ? " +
-                "GROUP BY pv.asta_id " +
-                "HAVING COUNT(*) > 0";
+                "AND at.data_fine > ?";
 
-        PreparedStatement stmt = connection.prepareStatement(sql);
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            String keyword = "%" + parolaChiave + "%";
 
-        String keyword = "%" + parolaChiave + "%";
+            ps.setString(1, keyword);
+            ps.setString(2, keyword);
+            ps.setTimestamp(3, Timestamp.valueOf(loginTime));
+            ResultSet rs = ps.executeQuery();
 
-        stmt.setString(1, keyword);
-        stmt.setString(2, keyword);
-        stmt.setTimestamp(3, Timestamp.valueOf(loginTime));
-
-        ResultSet rs = stmt.executeQuery();
-        ArrayList<Asta> aste = new ArrayList<>();
-        while (rs.next()) {
-            aste.add(createAstaBeanFromRes(rs));
+            while (rs.next()) {
+                aste.add(createAstaBeanFromRes(rs));
+            }
         }
+
+
 
         return aste;
     }

@@ -77,4 +77,19 @@ public class ArticoloDao {
                 rs.getBoolean("disponibile"),
                 rs.getInt("asta_id"));
     }
+
+    private ArrayList<Articolo> articoliByAsta(int asta_id) throws SQLException {
+        ArrayList<Articolo> articoli = new ArrayList<>();
+
+        String query = "SELECT * FROM articoli WHERE asta_id = ?";
+        try (PreparedStatement p = con.prepareStatement(query)) {
+            p.setInt(2, asta_id);
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) {
+                articoli.add(createArticoloBeanFromRes(rs));
+            }
+        }
+
+        return articoli;
+    }
 }
