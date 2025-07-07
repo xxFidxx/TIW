@@ -123,7 +123,7 @@ public class CreaAsta extends HttpServlet {
                 articoloDao.setDisponibile(codiceArticolo, false);
             }
 
-            response.sendRedirect("Vendo.html");
+            response.sendRedirect("Vendo");
 
         } catch (SQLException | NumberFormatException e) {
             processErrorPage(request, response, "dbFailure");

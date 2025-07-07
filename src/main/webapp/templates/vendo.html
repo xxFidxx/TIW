@@ -11,7 +11,8 @@
 <div class="lista-aste-aperte">
 	<h2>LISTA ASTE APERTE</h2>
 	<ul>
-		<li>Asta #124 - Articolo3</li>
+		<li th:each="asta : ${asteAperte}"></li>
+
 	</ul>
 </div>
 
@@ -67,6 +68,7 @@
 							   id="articolo_${articolo.codice}"/>
 						<label th:for="'articolo_' + ${articolo.codice}">
 							<span th:text="${articolo.nome}"></span>
+							(<span th:text="${articolo.prezzo}"></span> €)
 
 						</label>
 					</div>
