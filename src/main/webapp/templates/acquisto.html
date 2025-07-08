@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="it">
 <head>
     <meta charset="UTF-8">
     <title>Pagina Acquisto</title>
@@ -11,7 +11,7 @@
 
     <div class="ricerca-aste">
         <h2>Ricerca aste</h2>
-        <form action="RicercaParolaChiave" method="post">
+        <form action="@{/ParolaChiave}" method="post">
             <label for="keyword">Parola chiave:</label>
             <input type="text" id="keyword" name="keyword" required>
             <button type="submit">Cerca</button>
@@ -30,12 +30,34 @@
 
     <div class="aste-aggiudicate">
         <h2>Aste aggiudicate</h2>
-        <ul>
-            <li>
+        <div th:if="${articolixOfferta != null and !#maps.isEmpty(articolixOfferta)}">
+            <ul>
+                <li th:each="entry : ${articolixOfferta}">
+                    <h3>Asta ID: <span th:text="${entry.key.astaId}"></span></h3>
+                    <p>Prezzo aggiudicato: <span th:text="${entry.key.prezzo}"></span> €</p>
 
-            </li>
-        </ul>
-
+                    <h4>Articoli:</h4>
+                    <ul>
+                        <li th:each="articolo : ${entry.value}">
+                            <div class="articolo">
+                                <div th:if="${articolo.immagine != null}">
+                                    <img th:src="@{'/images/' + ${articolo.immagine}}" alt="Immagine Articolo">
+                                </div>
+                                <div class="articolo-details">
+                                    <p><strong>Codice:</strong> <span th:text="${articolo.codice}"></span></p>
+                                    <p><strong>Nome:</strong> <span th:text="${articolo.nome}"></span></p>
+                                    <p><strong>Descrizione:</strong> <span th:text="${articolo.descrizione}"></span></p>
+                                    <p><strong>Prezzo:</strong> <span th:text="${articolo.prezzo}"></span> €</p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div th:if="${articolixOfferta == null or #maps.isEmpty(articolixOfferta)}">
+            <p class="empty-message">Non hai ancora aste aggiudicate.</p>
+        </div>
     </div>
 
 </body>
