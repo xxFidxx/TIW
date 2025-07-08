@@ -4,6 +4,9 @@ package it.polimi.tiw.servlets;
 
 import it.polimi.tiw.beans.Articolo;
 import it.polimi.tiw.Dao.ArticoloDao;
+import it.polimi.tiw.Dao.AstaDao;
+import it.polimi.tiw.beans.Asta;
+import it.polimi.tiw.rescources.SessionUtils;
 import it.polimi.tiw.rescources.Utils;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
@@ -19,8 +22,11 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -44,6 +50,7 @@ public class Vendo extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private TemplateEngine templateEngine;
     private ArticoloDao articoloDao;
+    private AstaDao astaDao;
 
     @Override
     public void init() throws ServletException {
@@ -51,6 +58,7 @@ public class Vendo extends HttpServlet {
             ServletContext context = getServletContext();
             Connection connection = Utils.initDBConnection(context);
             articoloDao = new ArticoloDao(connection);
+            astaDao = new AstaDao(connection);
             templateEngine = Utils.initTemplateEngine(context);
         } catch (Exception e) {
             throw new ServletException("Error initializing servlet vendo", e);
@@ -60,9 +68,18 @@ public class Vendo extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        if(!SessionUtils.isUserLogged(request)){
+            response.sendRedirect("index.html");
+            return;
+        }
+        try {
+                List<Asta> asteAperte = astaDao.findAllAsteAperte(LocalDateTime.now());
+                Map<Integer, List<Articolo>> mappaArticoli = new HashMap<>();
 
-
-           try {
+                for (Asta asta : asteAperte) {
+                    List<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
+                    mappaArticoli.put(asta.getId(), articoli);
+                }
                List<Articolo> articoliDisponibili = articoloDao.findAllDisponibili();
 
 
@@ -86,14 +103,16 @@ public class Vendo extends HttpServlet {
                        JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response),
                        request.getLocale());
 
+               ctx.setVariable("asteAperte", asteAperte);
+               ctx.setVariable("mappaArticoli", mappaArticoli);
                ctx.setVariable("articoliDisponibili", articoliConPrezziInteri);
                ctx.setVariable("totalePrezzoArticoli", totalePrezzoIntero);
                response.setContentType("text/html;charset=UTF-8");
 
 
                templateEngine.process("vendo", ctx, response.getWriter());
-           }catch (SQLException e){
+        }catch (SQLException e){
                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error");
-           }
+        }
     }
 }

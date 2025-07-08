@@ -3,17 +3,46 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Pagina Vendo</title>
-	<link rel="stylesheet" th:href="@{/css/vendo.css}" />
+	<link rel="stylesheet" th:href="@{/templates/css/vendo.css}" />
 </head>
 <body>
 <h1>VENDITE</h1>
 
 <div class="lista-aste-aperte">
 	<h2>LISTA ASTE APERTE</h2>
-	<ul>
-		<li th:each="asta : ${asteAperte}"></li>
+	<table>
+		<thead>
+		<tr>
+			<th>ID Asta</th>
+			<th>Articoli</th>
+			<th>Offerta Max</th>
+			<th>Tempo Mancante</th>
+			<th>Dettagli</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr th:each="asta : ${asteAperte}">
+			<td th:text="${asta.id}"></td>
+			<td class="td-articoli">
+			<div class="articoli-list">
+				<div class="articolo-item" th:each="articolo : ${mappaArticoli[asta.idAsta]}">
+					<span class="codice" th:text="${articolo.codice}"></span>
+					<span class="nome" th:text="${articolo.nome}"></span>
+				</div>
+			</div>
+			</td>
+			<td th:text="${asta.prezzoAttuale}"></td>
+			<td>
+				<span th:text="${T(java.time.Duration).between(T(java.time.LocalDateTime).now(), asta.dataFine).toDays()}"></span> giorni
+				<span th:text="${T(java.time.Duration).between(T(java.time.LocalDateTime).now(), asta.dataFine).toHoursPart()}"></span> ore
 
-	</ul>
+			</td>
+			<td>
+				<a th:href="@{/dettaglioAsta(id=${asta.idAsta})}">Vai al dettaglio</a>
+			</td>
+		</tr>
+		</tbody>
+	</table>
 </div>
 
 <div class="lista-aste-chiuse">
@@ -48,9 +77,6 @@
 					<label for="immagine">Immagine:</label>
 					<input type="file" id="immagine" name="immagine" accept="image/*" required />
 				</div>
-				<button type="submit">Salva Articolo</button>
-			</form>
-
 
 			<button type="submit">Salva Articolo</button>
 		</form>

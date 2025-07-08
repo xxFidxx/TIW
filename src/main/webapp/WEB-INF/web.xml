@@ -6,12 +6,7 @@
   <display-name>PureHTML</display-name>
 
   <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
-    <welcome-file>index.htm</welcome-file>
-    <welcome-file>index.jsp</welcome-file>
-    <welcome-file>default.html</welcome-file>
-    <welcome-file>default.htm</welcome-file>
-    <welcome-file>default.jsp</welcome-file>
+    <welcome-file>templates/index.html</welcome-file>
   </welcome-file-list>
   <context-param>
     <param-name>dbDriver</param-name>
@@ -19,15 +14,15 @@
   </context-param>
   <context-param>
     <param-name>dbUrl</param-name>
-    <param-value>jdbc:mariadb://localhost:3306/tiw</param-value>
+    <param-value>jdbc:mariadb://localhost:3307/tiw</param-value>
   </context-param>
   <context-param>
     <param-name>dbUser</param-name>
-    <param-value>root</param-value>
+    <param-value>prova</param-value>
   </context-param>
   <context-param>
     <param-name>dbPassword</param-name>
-    <param-value>TIW2025</param-value>
+    <param-value>prova123</param-value>
   </context-param>
   <context-param>
     <param-name>imagesDirectory</param-name>

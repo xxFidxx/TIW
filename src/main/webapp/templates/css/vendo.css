@@ -66,7 +66,57 @@ h1 {
 
 .lista-aste-aperte ul li:hover, .lista-aste-chiuse ul li:hover {
   background-color: #145a32;
+}/* Tabella */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
 }
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+  width: 30%;
+  min-width: 250px;
+}
+
+/* Contenitore articoli */
+.td-articoli {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.articoli-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.articolo-item {
+  background-color: #3cb371;
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 0.95em;
+  word-wrap: break-word;
+}
+
+.articolo-item .codice {
+  font-weight: bold;
+  margin-right: 8px;
+  display: inline-block;
+}
+
+.articolo-item .nome {
+  color: #ecf0f1;
+  display: inline-block;
+}
+
 
 /* Form creazione articolo e asta */
 .form-creazione-articolo, .form-creazione-asta {
