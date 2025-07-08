@@ -34,7 +34,6 @@ public class CreaAsta extends HttpServlet {
     private TemplateEngine templateEngine;
     private AstaDao astaDao;
     private ArticoloDao articoloDao;
-    private String contextVariable = "errorAsta";
     private ServletContext servletContext;
 
     public void init() throws ServletException {

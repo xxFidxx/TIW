@@ -33,7 +33,6 @@ public class CreaArticoloAsta extends HttpServlet {
     private Connection connection;
     private TemplateEngine templateEngine;
     private ArticoloDao articoloDao;
-    private String contextVariable = "errorVendo";
     private ServletContext servletContext;
 
     public void init() throws ServletException {

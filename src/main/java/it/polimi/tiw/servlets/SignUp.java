@@ -27,7 +27,6 @@ public class SignUp extends HttpServlet {
 	private Connection connection;
 	private static final int STANDARD_DIM = 45;
 	private TemplateEngine templateEngine;
-	private String contextVariable = "signUpError";
 	private ServletContext servletContext;
 
 	public void init() throws ServletException {

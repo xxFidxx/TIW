@@ -35,7 +35,6 @@ public class Acquisto extends HttpServlet {
     private TemplateEngine templateEngine;
     private OffertaDao offertaDao;
     private ArticoloDao articoloDao;
-    private String contextVariable = "erroreAcquisto";
     private ServletContext servletContext;
 
 

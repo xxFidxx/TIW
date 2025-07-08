@@ -6,6 +6,7 @@ import it.polimi.tiw.Dao.AstaDao;
 import it.polimi.tiw.Dao.OffertaDao;
 import it.polimi.tiw.Dao.ArticoloDao;
 import it.polimi.tiw.beans.Articolo;
+import it.polimi.tiw.beans.Asta;
 import it.polimi.tiw.beans.Offerta;
 import it.polimi.tiw.beans.User;
 import it.polimi.tiw.rescources.SessionUtils;
@@ -23,9 +24,11 @@ import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static it.polimi.tiw.rescources.Utils.processErrorPage;
 
 
 @WebServlet("/ParolaChiave")
@@ -35,17 +38,16 @@ public class ParolaChiave extends HttpServlet {
     private TemplateEngine templateEngine;
     private AstaDao astaDao;
     private ArticoloDao articoloDao;
-    private String contextVariable = "erroreAcquisto";
-
+    private ServletContext servletContext;
 
     @Override
     public void init() throws ServletException {
         try {
-            ServletContext context = getServletContext();
-            connection = Utils.initDBConnection(context);
+            servletContext = getServletContext();
+            connection = Utils.initDBConnection(servletContext);
             astaDao = new AstaDao(connection);
             articoloDao = new ArticoloDao(connection);
-            templateEngine = Utils.initTemplateEngine(context);
+            templateEngine = Utils.initTemplateEngine(servletContext);
         } catch (Exception e) {
             throw new ServletException("Error initializing servlet vendo", e);
         }
@@ -63,23 +65,41 @@ public class ParolaChiave extends HttpServlet {
        String parolaChiave = request.getParameter("parolaChiave");
 
         if(parolaChiave == null){
+            processErrorPage(request,response,templateEngine,servletContext, "invalidFormat");
+            return;
+        }
 
+        try {
+            ArrayList<Asta> aste = astaDao.findAstaByParolaChiave(parolaChiave, LocalDateTime.now());
+            HashMap<Asta, ArrayList<Articolo> > articolixAsta = new HashMap<>();
+
+            for(Asta asta : aste){
+                ArrayList<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
+                articolixAsta.put(asta, articoli);
+            }
+
+            WebContext ctx = new WebContext(
+                    JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response),
+                    request.getLocale());
+
+            ctx.setVariable("articolixAsta", articolixAsta);
+
+        } catch (SQLException e) {
+            processErrorPage(request,response,templateEngine,servletContext, "dbFailure");
         }
 
 
     }
 
-    private void processErrorPage(HttpServletRequest request, HttpServletResponse response, String errorType) throws IOException {
-        WebContext ctx = new WebContext(
-                JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response),
-                request.getLocale());
-
-        ctx.setVariable(contextVariable, errorType);
-
-        try {
-            templateEngine.process("error", ctx, response.getWriter());
-        } catch (Exception e) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+    public void destroy() {
+        if (connection != null) {
+            try {
+                if (!connection.isClosed()) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -29,7 +29,6 @@ public class Login extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private Connection connection;
     private TemplateEngine templateEngine;
-    private String contextVariable = "error";
     private ServletContext servletContext;
      
     public void init() throws ServletException {
