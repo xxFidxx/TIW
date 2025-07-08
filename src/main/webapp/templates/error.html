@@ -35,7 +35,19 @@
         <p th:case="'imageTooLarge'">Image size cannot exceed 10MB.</p>
         <p th:case="*">Unknown error occurred.</p>
     </div>
-    <p><a th:href="@{/}">Back to login page</a></p>
+    <p th:switch="${servletPath}">
+        <a th:case="'/Login'" href="index.html">Back to Login</a>
+        <a th:case="'/Register'" href="signUp.html">Back to Registration</a>
+        <a th:case="'/Acquisto'" href="acquisto.html">Back to Acquisto</a>
+        <a th:case="'/CreaArticoloAsta'" href="vendo.html">Back to Vendo</a>
+        <a th:case="'/OffertaServlet'" href="index.html">Back to acquisto</a>
+        <a th:case="'/ParolaChiave'" href="acquisto.html">Back to acquisto</a>
+        <a th:case="'/OffertaServlet'" href="index.html">Back to login</a>
+        <a th:case="'/Vendo'" href="vendo.html">Back to Vendo</a>
+        <a th:case="'/crea-asta'" href="vendo.html">Back to Vendo</a>
+        <a th:case="*" href="index.html">Back to Home</a>
+    </p>
+
 </div>
 
 </body>

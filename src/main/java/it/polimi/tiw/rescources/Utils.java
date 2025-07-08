@@ -38,13 +38,18 @@ public class Utils {
         return templateEngine;
     }
 
-    public static void processErrorPage(HttpServletRequest request, HttpServletResponse response, TemplateEngine engine, ServletContext context, String errorType)
+    public static void processErrorPage(HttpServletRequest request, HttpServletResponse response,
+                                        TemplateEngine engine, ServletContext context, String errorType)
             throws IOException {
+
         WebContext ctx = new WebContext(
                 JakartaServletWebApplication.buildApplication(context).buildExchange(request, response),
                 request.getLocale());
 
         ctx.setVariable("error", errorType);
+
+        String path = request.getServletPath();
+        ctx.setVariable("servletPath", path);
 
         try {
             engine.process("error", ctx, response.getWriter());
