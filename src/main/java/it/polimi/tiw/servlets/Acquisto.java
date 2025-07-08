@@ -28,7 +28,7 @@ import java.util.HashMap;
 import static it.polimi.tiw.rescources.Utils.processErrorPage;
 
 
-@WebServlet("/Acquisto")
+@WebServlet("/acquisto-dinamic")
 public class Acquisto extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private Connection connection;
@@ -75,6 +75,7 @@ public class Acquisto extends HttpServlet {
 
             ctx.setVariable("articolixOfferta", articolixOfferta);
             response.setContentType("text/html;charset=UTF-8");
+            templateEngine.process("acquisto", ctx, response.getWriter());
         } catch (SQLException e) {
             processErrorPage(request, response,templateEngine,servletContext,  "dbFailure");
         }
