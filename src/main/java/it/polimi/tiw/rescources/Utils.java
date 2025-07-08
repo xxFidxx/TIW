@@ -1,12 +1,15 @@
 package it.polimi.tiw.rescources;
 
 import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.WebApplicationTemplateResolver;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -33,6 +36,21 @@ public class Utils {
         TemplateEngine templateEngine = new TemplateEngine();
         templateEngine.setTemplateResolver(templateResolver);
         return templateEngine;
+    }
+
+    public static void processErrorPage(HttpServletRequest request, HttpServletResponse response, TemplateEngine engine, ServletContext context, String errorType)
+            throws IOException {
+        WebContext ctx = new WebContext(
+                JakartaServletWebApplication.buildApplication(context).buildExchange(request, response),
+                request.getLocale());
+
+        ctx.setVariable("error", errorType);
+
+        try {
+            engine.process("error", ctx, response.getWriter());
+        } catch (Exception e) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
     }
 
 

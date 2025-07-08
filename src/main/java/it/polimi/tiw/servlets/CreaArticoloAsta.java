@@ -25,6 +25,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.UUID;
 
+import static it.polimi.tiw.rescources.Utils.processErrorPage;
+
 @WebServlet("/CreaArticoloAsta")
 public class CreaArticoloAsta extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -32,11 +34,12 @@ public class CreaArticoloAsta extends HttpServlet {
     private TemplateEngine templateEngine;
     private ArticoloDao articoloDao;
     private String contextVariable = "errorVendo";
+    private ServletContext servletContext;
 
     public void init() throws ServletException {
         try {
-            ServletContext context = getServletContext();
-            connection = Utils.initDBConnection(context);
+            servletContext = getServletContext();
+            connection = Utils.initDBConnection(servletContext);
             articoloDao = new ArticoloDao(connection);
         } catch (ClassNotFoundException | SQLException e) {
             throw new ServletException("Error during database initialization", e);
@@ -62,7 +65,7 @@ public class CreaArticoloAsta extends HttpServlet {
                 handleCreateArticolo(request, response);
 
             } else {
-                processErrorPage(request, response, "notRecognizedAction");
+                processErrorPage(request, response,templateEngine,servletContext, "notRecognizedAction");
             }
     }
 
@@ -79,13 +82,13 @@ public class CreaArticoloAsta extends HttpServlet {
             // Validazione campi obbligatori
             if (nome == null || descrizione == null || prezzoStr == null || requestPart == null ||
                     nome.isEmpty() || descrizione.isEmpty() || prezzoStr.isEmpty()) {
-                processErrorPage(request, response, "emptyFields");
+                processErrorPage(request, response,templateEngine,servletContext, "emptyFields");
                 return;
             }
 
             // Validazione lunghezza nome
             if (nome.length() > 100) {
-                processErrorPage(request, response, "nameTooLong");
+                processErrorPage(request, response,templateEngine,servletContext, "nameTooLong");
                 return;
             }
 
@@ -94,23 +97,23 @@ public class CreaArticoloAsta extends HttpServlet {
             try {
                 prezzo = Integer.parseInt(prezzoStr);
                 if (prezzo <= 0) {
-                    processErrorPage(request, response, "invalidPrice");
+                    processErrorPage(request, response,templateEngine,servletContext, "invalidPrice");
                     return;
                 }
             } catch (NumberFormatException e) {
-                processErrorPage(request, response, "invalidPriceFormat");
+                processErrorPage(request, response,templateEngine,servletContext, "invalidPriceFormat");
                 return;
             }
 
             // Validazione immagine
             String contentType = requestPart.getContentType();
             if (!contentType.startsWith("image/")) {
-                processErrorPage(request, response, "invalidImageType");
+                processErrorPage(request, response,templateEngine,servletContext, "invalidImageType");
                 return;
             }
 
             if (requestPart.getSize() > 10 * 1024 * 1024) {
-                processErrorPage(request, response, "imageTooLarge");
+                processErrorPage(request, response,templateEngine,servletContext, "imageTooLarge");
                 return;
             }
 
@@ -124,7 +127,7 @@ public class CreaArticoloAsta extends HttpServlet {
                  FileOutputStream out = new FileOutputStream(uploadPath + "/" + nomeImmagine)) {
                 fileContent.transferTo(out);
             }catch (IOException e) {
-                processErrorPage(request, response, "internalServerError");
+                processErrorPage(request, response,templateEngine,servletContext, "internalServerError");
             }
 
         // Crea Articolo
@@ -135,31 +138,16 @@ public class CreaArticoloAsta extends HttpServlet {
         try {//serve gestire l'eccezione nella servlet
             articoloDao.insertArticolo(articolo,u);
         } catch (SQLException e) {
-            processErrorPage(request, response, "dbFailure");
+            processErrorPage(request, response,templateEngine,servletContext, "dbFailure");
             return;
         }
         response.sendRedirect("Vendo.html");
 
         } catch (IOException | ServletException e) {
-            processErrorPage(request, response, "internalServerError");
+            processErrorPage(request, response,templateEngine,servletContext, "internalServerError");
         }
 
 
-    }
-
-    private void processErrorPage(HttpServletRequest request, HttpServletResponse response, String errorType)
-            throws IOException {
-        WebContext ctx = new WebContext(
-                JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response),
-                request.getLocale());
-
-        ctx.setVariable(contextVariable, errorType);
-
-        try {
-            templateEngine.process("vendoError", ctx, response.getWriter());
-        } catch (Exception e) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
     }
 
 

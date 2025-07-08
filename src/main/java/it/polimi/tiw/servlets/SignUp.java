@@ -19,6 +19,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import static it.polimi.tiw.rescources.Utils.processErrorPage;
+
 @WebServlet("/SignUp")
 public class SignUp extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -26,12 +28,13 @@ public class SignUp extends HttpServlet {
 	private static final int STANDARD_DIM = 45;
 	private TemplateEngine templateEngine;
 	private String contextVariable = "signUpError";
+	private ServletContext servletContext;
 
 	public void init() throws ServletException {
 
 		try {
-			ServletContext context = getServletContext();
-			connection = Utils.initDBConnection(context);
+			servletContext = getServletContext();
+			connection = Utils.initDBConnection(servletContext);
 		} catch (ClassNotFoundException | SQLException e) {
 			throw new ServletException("Error during database initialization", e);
 		}
@@ -57,7 +60,7 @@ public class SignUp extends HttpServlet {
 				address == null || addressNumberUncasted == null ||
 				username.isEmpty() || password.isEmpty() || name.isEmpty() || surname.isEmpty() ||
 				address.isEmpty() || addressNumberUncasted.isEmpty()) {
-			processErrorPage(request, response, "emptyFields");
+			processErrorPage(request, response,templateEngine,servletContext, "emptyFields");
 			return;
 		}
 
@@ -65,7 +68,7 @@ public class SignUp extends HttpServlet {
 				name.length() > STANDARD_DIM || surname.length() > STANDARD_DIM ||
 				address.length() > 100 || addressNumberUncasted.length() > 4 ||
 				!addressNumberUncasted.matches("^[1-9][0-9]{0,3}$")) {
-			processErrorPage(request, response, "invalidFormat");
+			processErrorPage(request, response,templateEngine,servletContext, "invalidFormat");
 			return;
 		}
 
@@ -73,7 +76,7 @@ public class SignUp extends HttpServlet {
 		try {
 			addressNumber = Integer.parseInt(addressNumberUncasted);
 		} catch (NumberFormatException e) {
-			processErrorPage(request, response, "invalidFormat");
+			processErrorPage(request, response,templateEngine,servletContext, "invalidFormat");
 			return;
 		}
 
@@ -81,7 +84,7 @@ public class SignUp extends HttpServlet {
 
 		try {
 			if (userDao.userByUsername(username) != null) {
-				processErrorPage(request, response, "usernameTaken");
+				processErrorPage(request, response,templateEngine,servletContext, "usernameTaken");
 				return;
 			}
 
@@ -89,27 +92,12 @@ public class SignUp extends HttpServlet {
 			userDao.insertUser(newUser);
 
 		} catch (SQLException e) {
-			processErrorPage(request, response, "dbFailure");
+			processErrorPage(request, response,templateEngine,servletContext, "dbFailure");
 			return;
 		}
 
 		// Successful registration
 		response.sendRedirect("index.html");
-	}
-
-
-	private void processErrorPage(HttpServletRequest request, HttpServletResponse response, String errorType) throws IOException {
-		WebContext ctx = new WebContext(
-				JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response),
-				request.getLocale());
-
-		ctx.setVariable(contextVariable, errorType);
-
-		try {
-			templateEngine.process("registrationError", ctx, response.getWriter());
-		} catch (Exception e) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
 	}
 
 	public void destroy() {

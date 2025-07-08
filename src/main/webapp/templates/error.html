@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="">
 <head>
-    <title>Registration Error</title>
+    <title>Error Page</title>
     <style>
         .error-box {
             padding: 20px;
@@ -16,19 +16,27 @@
     </style>
 </head>
 <body>
-<div class="error-box">
-    <h2>Registration Error</h2>
-    <div th:switch="${signUpError}">
+
+<div class="error-box" th:if="${error != null}">
+    <h2>Error</h2>
+    <div th:switch="${error}">
+        <p th:case="'loginFailed'">Your username or your password are incorrect.</p>
         <p th:case="'emptyFields'">All fields are required.</p>
         <p th:case="'invalidFormat'">One or more fields don't meet the required format.</p>
         <p th:case="'invalidNumber'">Invalid house number.</p>
         <p th:case="'usernameTaken'">Username already taken. Please choose another.</p>
         <p th:case="'dbCheckFailed'">Error checking username availability. Please try again.</p>
         <p th:case="'dbFailure'">Error saving data. Please try again later.</p>
+        <p th:case="'internalServerError'">Error saving data. Please try again later.</p>
+        <p th:case="'nameTooLong'">Article name cannot exceed 100 characters.</p>
+        <p th:case="'invalidPrice'">Price must be a positive number.</p>
+        <p th:case="'invalidPriceFormat'">Invalid price format.</p>
+        <p th:case="'invalidImageType'">Only image files are allowed.</p>
+        <p th:case="'imageTooLarge'">Image size cannot exceed 10MB.</p>
         <p th:case="*">Unknown error occurred.</p>
     </div>
-    <p><a th:href="signUp.html">Back to registration</a></p>
-    <p><a th:href="index.html">Back to login</a></p>
+    <p><a th:href="@{/}">Back to login page</a></p>
 </div>
+
 </body>
 </html>

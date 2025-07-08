@@ -5,7 +5,6 @@ import it.polimi.tiw.beans.Articolo;
 import it.polimi.tiw.Dao.ArticoloDao;
 import it.polimi.tiw.Dao.AstaDao;
 import it.polimi.tiw.beans.Asta;
-import it.polimi.tiw.beans.User;
 
 import it.polimi.tiw.rescources.SessionUtils;
 import it.polimi.tiw.rescources.Utils;
@@ -16,21 +15,16 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
-import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static it.polimi.tiw.rescources.Utils.processErrorPage;
 
 
 @WebServlet("/crea-asta")
@@ -41,11 +35,12 @@ public class CreaAsta extends HttpServlet {
     private AstaDao astaDao;
     private ArticoloDao articoloDao;
     private String contextVariable = "errorAsta";
+    private ServletContext servletContext;
 
     public void init() throws ServletException {
         try {
-            ServletContext context = getServletContext();
-            connection = Utils.initDBConnection(context);
+            servletContext = getServletContext();
+            connection = Utils.initDBConnection(servletContext);
             astaDao = new AstaDao(connection);
             articoloDao = new ArticoloDao(connection);
         } catch (ClassNotFoundException | SQLException e) {
@@ -79,7 +74,7 @@ public class CreaAsta extends HttpServlet {
         if (articoliIds == null || articoliIds.length == 0 ||
                 rialzoStr == null || scadenzaStr == null ||
                 rialzoStr.isEmpty() || scadenzaStr.isEmpty()) {
-            processErrorPage(request, response, "emptyFields");
+            processErrorPage(request, response,templateEngine,servletContext,  "emptyFields");
             return;
         }
 
@@ -126,23 +121,10 @@ public class CreaAsta extends HttpServlet {
             response.sendRedirect("Vendo");
 
         } catch (SQLException | NumberFormatException e) {
-            processErrorPage(request, response, "dbFailure");
+            processErrorPage(request, response,templateEngine,servletContext, "dbFailure");
         }
     }
-
-    private void processErrorPage(HttpServletRequest request, HttpServletResponse response, String errorType) throws IOException {
-        WebContext ctx = new WebContext(
-                JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response),
-                request.getLocale());
-
-        ctx.setVariable(contextVariable, errorType);
-
-        try {
-            templateEngine.process("astaError", ctx, response.getWriter());
-        } catch (Exception e) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
-    }
+    
 
     public void destroy() {
         if (connection != null) {

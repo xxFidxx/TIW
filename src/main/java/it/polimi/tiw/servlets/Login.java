@@ -22,17 +22,20 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
+import static it.polimi.tiw.rescources.Utils.processErrorPage;
+
 @WebServlet("/Login")
 public class Login extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private Connection connection;
     private TemplateEngine templateEngine;
-    private String contextVariable = "loginError";
+    private String contextVariable = "error";
+    private ServletContext servletContext;
      
     public void init() throws ServletException {
         try {
-            ServletContext context = getServletContext();
-            connection = Utils.initDBConnection(context);
+            servletContext = getServletContext();
+            connection = Utils.initDBConnection(servletContext);
         } catch (ClassNotFoundException | SQLException e) {
             throw new ServletException("Error during database initialization", e);
         }
@@ -48,7 +51,7 @@ public class Login extends HttpServlet {
     }
 
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
@@ -63,26 +66,10 @@ public class Login extends HttpServlet {
                 request.getSession(true).setAttribute("user", user);
                 response.sendRedirect("home.html");
             } else {
-                processErrorPage(request, response, "loginFailed");
+                processErrorPage(request, response,templateEngine,servletContext, "loginFailed");
             }
         } catch (SQLException e) {
-            processErrorPage(request, response, "dbFailure");
-        }
-    }
-
-    private void processErrorPage(HttpServletRequest request, HttpServletResponse response, String errorType) throws IOException {
-        WebContext ctx = new WebContext(
-                JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response),
-                request.getLocale());
-
-        ctx.setVariable(contextVariable, errorType);
-
-
-
-        try {
-            templateEngine.process("loginError", ctx, response.getWriter());
-        } catch (Exception e) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            processErrorPage(request, response,templateEngine,servletContext, "dbFailure");
         }
     }
 

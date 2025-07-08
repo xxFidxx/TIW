@@ -25,6 +25,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static it.polimi.tiw.rescources.Utils.processErrorPage;
 
 
 @WebServlet("/Acquisto")
@@ -35,16 +36,17 @@ public class Acquisto extends HttpServlet {
     private OffertaDao offertaDao;
     private ArticoloDao articoloDao;
     private String contextVariable = "erroreAcquisto";
+    private ServletContext servletContext;
 
 
     @Override
     public void init() throws ServletException {
         try {
-            ServletContext context = getServletContext();
-            connection = Utils.initDBConnection(context);
+            servletContext = getServletContext();
+            connection = Utils.initDBConnection(servletContext);
             offertaDao = new OffertaDao(connection);
             articoloDao = new ArticoloDao(connection);
-            templateEngine = Utils.initTemplateEngine(context);
+            templateEngine = Utils.initTemplateEngine(servletContext);
         } catch (Exception e) {
             throw new ServletException("Error initializing servlet vendo", e);
         }
@@ -75,23 +77,20 @@ public class Acquisto extends HttpServlet {
             ctx.setVariable("articolixOfferta", articolixOfferta);
             response.setContentType("text/html;charset=UTF-8");
         } catch (SQLException e) {
-            processErrorPage(request, response, "dbFailure");
+            processErrorPage(request, response,templateEngine,servletContext,  "dbFailure");
         }
     }
 
-    private void processErrorPage(HttpServletRequest request, HttpServletResponse response, String errorType) throws IOException {
-        WebContext ctx = new WebContext(
-                JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response),
-                request.getLocale());
-
-        ctx.setVariable(contextVariable, errorType);
-
-        try {
-            templateEngine.process("loginError", ctx, response.getWriter());
-        } catch (Exception e) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+    public void destroy() {
+        if (connection != null) {
+            try {
+                if (!connection.isClosed()) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
-
 
 }
