@@ -38,7 +38,6 @@ public class doOfferta extends HttpServlet {
     private Connection connection;
     private TemplateEngine templateEngine;
     private OffertaDao offertaDao;
-    private ArticoloDao articoloDao;
     private AstaDao astaDao;
     private ServletContext servletContext;
 
@@ -49,7 +48,6 @@ public class doOfferta extends HttpServlet {
             servletContext = getServletContext();
             connection = Utils.initDBConnection(servletContext);
             offertaDao = new OffertaDao(connection);
-            articoloDao = new ArticoloDao(connection);
             astaDao = new AstaDao(connection);
             templateEngine = Utils.initTemplateEngine(servletContext);
         } catch (Exception e) {
