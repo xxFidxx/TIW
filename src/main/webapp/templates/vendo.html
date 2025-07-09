@@ -18,6 +18,7 @@
 			<th>Scadenza</th>
 			<th>Tempo Mancante</th>
 			<th>Offerta Max</th>
+			<th>Dettagli</th>
 		</tr>
 		</thead>
 		<tbody>
@@ -27,7 +28,7 @@
 			<td th:text="${asta.key.id}"></td>
 
 
-			<td>
+			<td th:inline="text">
 				<div th:each="articolo : ${asta.value}">
 					[[${articolo.codice}]] - [[${articolo.nome}]]
 				</div>
@@ -41,6 +42,10 @@
 
 
 			<td th:text="${asta.key.prezzoAttuale} + ' €'"></td>
+
+			<td>
+				<a th:href="@{/dettaglioAsta(id=${asta.key.id})}">Vai al dettaglio</a>
+			</td>
 		</tr>
 		</tbody>
 	</table>
@@ -48,9 +53,38 @@
 
 <div class="lista-aste-chiuse">
 	<h2>LISTA ASTE CHIUSE</h2>
-	<ul>
-		<li>Asta #125 - Articolo4 (Venduta a Mario - €1000)</li>
-	</ul>
+	<table>
+		<thead>
+		<tr>
+			<th>ID Asta</th>
+			<th>Articoli</th>
+			<th>Prezzo Finale</th>
+			<th>Dettagli</th>
+		</tr>
+		</thead>
+		<tbody>
+
+		<tr th:each="asta : ${asteChiuseConArticoli}">
+
+			<td th:text="${asta.key.id}"></td>
+
+
+			<td th:inline="text">
+				<div th:each="articolo : ${asta.value}">
+					[[${articolo.codice}]] - [[${articolo.nome}]]
+				</div>
+			</td>
+
+
+			<td th:text="${asta.key.prezzoAttuale} + ' €'"></td>
+
+			<td>
+				<a th:href="@{/dettaglioAsta(id=${asta.idAsta})}">Vai al dettaglio</a>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+
 </div>
 
 <div class="form-container">

@@ -78,6 +78,7 @@ public class Vendo extends HttpServlet {
                 List<Asta> asteAperte = astaDao.findAllAsteAperte();
                 List<Asta> asteChiuse = astaDao.findAllAsteChiuse();
                 Map<Asta, List<Articolo>> asteConArticoli = new HashMap<>();
+                Map<Asta,List<Articolo>> asteChiuseconArticoli = new HashMap<>();
 
                 for (Asta asta : asteAperte) {
                     List<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
@@ -86,7 +87,7 @@ public class Vendo extends HttpServlet {
 
             for (Asta asta : asteChiuse) {
                 List<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
-                asteConArticoli.put(asta, articoli);
+                asteChiuseconArticoli.put(asta, articoli);
             }
 
                List<Articolo> articoliDisponibili = articoloDao.findAllDisponibili();

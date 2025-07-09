@@ -11,49 +11,90 @@
 
     <div class="ricerca-aste">
         <h2>Ricerca aste</h2>
-        <form action="/ParolaChiave" method="post">
-            <label for="keyword">Parola chiave:</label>
-            <input type="text" id="keyword" name="keyword" required>
+        <form method="get" th:action="@{/Acquisto}">
+            <label for="parolaChiave">Parola chiave:</label>
+            <input type="text" id="parolaChiave" name="parolaChiave" required>
             <button type="submit">Cerca</button>
         </form>
     </div>
     <div class="aste-aperte">
-    <h2>Aste aperte trovate</h2>
-        <ul>
-            <li>
+    <h2>ASTE APERTE TROVATE</h2>
+    <table>
+    <thead>
+        <tr>
+            <th>ID Asta</th>
+            <th>Articoli</th>
+            <th>Scadenza</th>
+            <th>Tempo Mancante</th>
+            <th>offerte</th>
+        </tr>
+    </thead>
+    <tbody>
 
-            </li>
-        </ul>
+        <tr th:each="asta : ${articolixAsta}">
+
+            <td th:text="${asta.key.id}"></td>
+
+
+            <td th:inline="text">
+                <div th:each="articolo : ${asta.value}">
+                    [[${articolo.codice}]] - [[${articolo.nome}]]
+                </div>
+            </td>
+
+
+            <td th:text="${dateFormattateMap.get(asta.key.id)}"></td>
+
+
+            <td th:text="${tempoMancanteMap.get(asta.key.id)}"></td>
+
+
+
+            <td>
+                <a th:href="@{/offerta(id=${asta.key.id})}">Vai alla pagina offerte</a>
+            </td>
+        </tr>
+    </tbody>
+    </table>
 
     </div>
 
 
     <div class="aste-aggiudicate">
-        <h2>Aste aggiudicate</h2>
+        <h2>ASTE AGGIUDICATE</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>ID Asta</th>
+                <th>Articoli</th>
+                <th>Prezzo Finale</th>
 
-            <ul>
-                <li th:each="entry : ${articolixOfferta}">
-                    <h3>Asta ID: <span th:text="${entry.key.astaId}"></span></h3>
-                    <p>Prezzo aggiudicato: <span th:text="${entry.key.prezzo}"></span> €</p>
 
-                    <h4>Articoli:</h4>
-                    <ul>
-                        <li th:each="articolo : ${entry.value}">
-                            <div class="articolo">
-                                <div th:if="${articolo.immagine != null}">
-                                    <img th:src="@{'/images/' + ${articolo.immagine}}" alt="Immagine Articolo">
-                                </div>
-                                <div class="articolo-details">
-                                    <p><strong>Codice:</strong> <span th:text="${articolo.codice}"></span></p>
-                                    <p><strong>Nome:</strong> <span th:text="${articolo.nome}"></span></p>
-                                    <p><strong>Descrizione:</strong> <span th:text="${articolo.descrizione}"></span></p>
-                                    <p><strong>Prezzo:</strong> <span th:text="${articolo.prezzo}"></span> €</p>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
+
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr th:each="asta : ${articolixOfferta}">
+
+                <td th:text="${asta.key.id}"></td>
+
+
+                <td th:inline="text">
+                    <div th:each="articolo : ${asta.value}">
+                        [[${articolo.codice}]] - [[${articolo.nome}]]
+                    </div>
+                </td>
+
+                <td th:text="${asta.key.prezzoAttuale} + ' €'"></td>
+
+
+            </tr>
+            </tbody>
+        </table>
+
+
+
 
 
 
