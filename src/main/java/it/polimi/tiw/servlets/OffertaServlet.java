@@ -70,7 +70,7 @@ public class OffertaServlet extends HttpServlet {
 
     private void handleOfferta(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            int astaId = Integer.parseInt(request.getParameter("astaId"));
+            int astaId = Integer.parseInt(request.getParameter("id"));
 
             if(astaId < 0){
                 processErrorPage(request, response,templateEngine,servletContext,  "invalidNumber");

@@ -44,7 +44,7 @@
 			<td th:text="${asta.key.prezzoAttuale} + ' €'"></td>
 
 			<td>
-				<a th:href="@{/dettaglioAsta(id=${asta.key.id})}">Vai al dettaglio</a>
+				<a th:href="@{/DettaglioAsta(id=${asta.key.id})}">Vai al dettaglio</a>
 			</td>
 		</tr>
 		</tbody>
@@ -156,5 +156,6 @@
 		</form>
 	</div>
 </div>
+<p><a th:href="@{/Home}">Torna alla pagina home</a></p>
 </body>
 </html>

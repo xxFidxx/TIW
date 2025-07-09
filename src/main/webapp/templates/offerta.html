@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="it">
 <head>
     <meta charset="UTF-8">
     <title>Offerta</title>
@@ -10,7 +10,9 @@
 
 <div class="dati-asta">
     <p><strong>Scadenza:</strong>
-        <span th:text="${#dates.format(asta.dataFine, 'dd/MM/yyyy HH:mm')}"></span></p>
+        <span th:text="${#temporals.format(asta.dataFine, 'dd/MM/yyyy HH:mm')}"></span>
+
+
     <p><strong>Prezzo Attuale:</strong>
         <span th:text="${asta.prezzoAttuale}"></span> €</p>
     <p><strong>Rialzo Minimo:</strong>
@@ -39,9 +41,9 @@
     </thead>
     <tbody>
     <tr th:each="offerta : ${offerte}">
-        <td th:text="${offerta.utenteNome}"></td>
+        <td th:text="${offerta.utenteUsername}"></td>
         <td th:text="${offerta.prezzo}"></td>
-        <td th:text="${#dates.format(offerta.dataOra, 'dd/MM/yyyy HH:mm:ss')}"></td>
+        <td th:text="${#temporals.format(offerta.dataOra, 'dd/MM/yyyy HH:mm')}"></td>
     </tr>
 
     </tbody>

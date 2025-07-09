@@ -66,7 +66,7 @@ public class DettaglioAsta extends HttpServlet {
         }
     }
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         if(!SessionUtils.isUserLogged(request)){
             response.sendRedirect("index.html");
@@ -82,7 +82,7 @@ public class DettaglioAsta extends HttpServlet {
     private void handleCreateDettagliAsta(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
 
-            String astaIdParam = request.getParameter("astaId");
+            String astaIdParam = request.getParameter("id");
 
 
             if (astaIdParam == null || astaIdParam.isEmpty() ) {
@@ -114,7 +114,7 @@ public class DettaglioAsta extends HttpServlet {
                 response.setContentType("text/html;charset=UTF-8");
 
 
-                templateEngine.process("vendo", ctx, response.getWriter());
+                templateEngine.process("dettaglioAsta", ctx, response.getWriter());
 
 
         } catch (NumberFormatException e) {
