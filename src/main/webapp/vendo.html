@@ -15,30 +15,23 @@
 		<tr>
 			<th>ID Asta</th>
 			<th>Articoli</th>
-			<th>Offerta Max</th>
-			<th>Tempo Mancante</th>
-			<th>Dettagli</th>
+			<th>Scadenza</th>
 		</tr>
 		</thead>
 		<tbody>
-		<tr th:each="asta : ${asteAperte}">
-			<td th:text="${asta.id}"></td>
-			<td class="td-articoli">
-			<div class="articoli-list">
-				<div class="articolo-item" th:each="articolo : ${mappaArticoli[asta.idAsta]}">
-					<span class="codice" th:text="${articolo.codice}"></span>
-					<span class="nome" th:text="${articolo.nome}"></span>
+		<tr th:each="entry : ${asteConArticoli}">
+			<td th:text="${entry.key.id}"></td>
+			<td>
+				<div th:each="articolo : ${entry.value}">
+					[[${articolo.codice}]] - [[${articolo.nome}]]
 				</div>
-			</div>
-			</td>
-			<td th:text="${asta.prezzoAttuale}"></td>
-			<td>
-				<span th:text="${T(java.time.Duration).between(T(java.time.LocalDateTime).now(), asta.dataFine).toDays()}"></span> giorni
-				<span th:text="${T(java.time.Duration).between(T(java.time.LocalDateTime).now(), asta.dataFine).toHoursPart()}"></span> ore
-
 			</td>
 			<td>
-				<a th:href="@{/dettaglioAsta(id=${asta.idAsta})}">Vai al dettaglio</a>
+				<!-- Formattazione manuale della data -->
+				<span th:text="${entry.key.dataFineCompletaFormattata != null} ?
+                          ${entry.key.dataFineCompletaFormattata.dayOfMonth + '/' +
+                           entry.key.dataFineCompletaFormattata.monthValue + '/' +
+                           entry.key.dataFineCompletaFormattata.year} : 'N/D'"></span>
 			</td>
 		</tr>
 		</tbody>

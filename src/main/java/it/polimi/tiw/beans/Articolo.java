@@ -41,7 +41,7 @@ public class Articolo {
         this.immagine = immagine;
         this.prezzo = prezzo;
         this.disponibile = disponibile;
-        this.astaId = astaId;
+        this.astaId = null;
     }
 
     public Integer getCodice() {

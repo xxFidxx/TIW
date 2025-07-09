@@ -1,5 +1,7 @@
 package it.polimi.tiw.beans;
+
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Asta {
     private Integer id;
@@ -10,12 +12,11 @@ public class Asta {
     private Integer prezzoAttuale;
     private Integer rialzoMinimo;
     private boolean chiusa;
-
     public Asta() {
     }
 
     public Asta(Integer id, String venditoreUsername, LocalDateTime dataInizio, LocalDateTime dataFine,
-                Integer prezzoIniziale,Integer prezzoAttuale, Integer rialzoMinimo, boolean chiusa) {
+                Integer prezzoIniziale, Integer prezzoAttuale, Integer rialzoMinimo, boolean chiusa) {
         this.id = id;
         this.venditoreUsername = venditoreUsername;
         this.dataInizio = dataInizio;
@@ -24,6 +25,12 @@ public class Asta {
         this.prezzoAttuale = prezzoAttuale;
         this.rialzoMinimo = rialzoMinimo;
         this.chiusa = chiusa;
+    }
+
+    // Costruttore per aste non ancora nel DB
+    public Asta(String venditoreUsername, LocalDateTime dataInizio, LocalDateTime dataFine,
+                Integer prezzoIniziale, Integer prezzoAttuale, Integer rialzoMinimo) {
+        this(null, venditoreUsername, dataInizio, dataFine, prezzoIniziale, prezzoAttuale, rialzoMinimo, false);
     }
 
     // Getters
@@ -68,14 +75,6 @@ public class Asta {
         this.venditoreUsername = venditoreUsername;
     }
 
-    public void setDataInizio(LocalDateTime dataInizio) {
-        this.dataInizio = dataInizio;
-    }
-
-    public void setDataFine(LocalDateTime dataFine) {
-        this.dataFine = dataFine;
-    }
-
     public void setPrezzoIniziale(Integer prezzoIniziale) {
         this.prezzoIniziale = prezzoIniziale;
     }
@@ -91,4 +90,5 @@ public class Asta {
     public void setPrezzoAttuale(Integer prezzoAttuale) {
         this.prezzoAttuale = prezzoAttuale;
     }
+
 }

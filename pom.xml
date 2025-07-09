@@ -14,10 +14,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.target>21</maven.compiler.target>
         <maven.compiler.source>21</maven.compiler.source>
-        <junit.version>5.11.0-M2</junit.version>
-        <jakarta.servlet.version>6.1.0</jakarta.servlet.version>
+        <junit.version>5.10.0</junit.version>
+        <jakarta.servlet.version>6.0.0</jakarta.servlet.version>
         <thymeleaf.version>3.1.2.RELEASE</thymeleaf.version>
+        <thymeleaf-spring6.version>3.1.2.RELEASE</thymeleaf-spring6.version>
         <thymeleaf-extras-java8time.version>3.0.4.RELEASE</thymeleaf-extras-java8time.version>
+        <spring.version>6.0.8</spring.version>
+        <jersey.version>3.1.2</jersey.version>
     </properties>
 
     <dependencies>
@@ -25,10 +28,10 @@
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
-            <version>3.4.1</version>
+            <version>3.3.0</version>
         </dependency>
 
-        <!-- Jakarta EE (Servlet) -->
+        <!-- Jakarta EE -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
@@ -36,7 +39,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Thymeleaf -->
+        <!-- Thymeleaf con Spring 6 -->
         <dependency>
             <groupId>org.thymeleaf</groupId>
             <artifactId>thymeleaf</artifactId>
@@ -44,8 +47,8 @@
         </dependency>
         <dependency>
             <groupId>org.thymeleaf</groupId>
-            <artifactId>thymeleaf-spring5</artifactId>
-            <version>${thymeleaf.version}</version>
+            <artifactId>thymeleaf-spring6</artifactId>
+            <version>${thymeleaf-spring6.version}</version>
         </dependency>
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
@@ -53,35 +56,33 @@
             <version>${thymeleaf-extras-java8time.version}</version>
         </dependency>
 
+        <!-- Spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-expression</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
 
-
-        <!-- Jersey -->
+        <!-- Jersey (versione stabile) -->
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-servlet</artifactId>
-            <version>4.0.0-M1</version>
+            <version>${jersey.version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jackson</artifactId>
-            <version>4.0.0-M1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.inject</groupId>
-            <artifactId>jersey-cdi2-se</artifactId>
-            <version>4.0.0-M1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-client</artifactId>
-            <version>4.0.0-M1</version>
-        </dependency>
-
-        <!-- CDI -->
-        <dependency>
-            <groupId>org.jboss.weld.se</groupId>
-            <artifactId>weld-se-core</artifactId>
-            <version>6.0.0.Beta1</version>
+            <version>${jersey.version}</version>
         </dependency>
 
         <!-- Testing -->

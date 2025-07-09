@@ -3,12 +3,9 @@ package it.polimi.tiw.servlets;
 
 
 import it.polimi.tiw.Dao.AstaDao;
-import it.polimi.tiw.Dao.OffertaDao;
 import it.polimi.tiw.Dao.ArticoloDao;
 import it.polimi.tiw.beans.Articolo;
 import it.polimi.tiw.beans.Asta;
-import it.polimi.tiw.beans.Offerta;
-import it.polimi.tiw.beans.User;
 import it.polimi.tiw.rescources.SessionUtils;
 import it.polimi.tiw.rescources.Utils;
 import jakarta.servlet.ServletContext;

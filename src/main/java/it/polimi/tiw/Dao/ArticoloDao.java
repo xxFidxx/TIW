@@ -85,7 +85,7 @@ public class ArticoloDao {
 
         String query = "SELECT * FROM articoli WHERE asta_id = ?";
         try (PreparedStatement p = con.prepareStatement(query)) {
-            p.setInt(2, asta_id);
+            p.setInt(1, asta_id);
             ResultSet rs = p.executeQuery();
             while (rs.next()) {
                 articoli.add(createArticoloBeanFromRes(rs));
@@ -108,6 +108,15 @@ public class ArticoloDao {
         }
 
         return articoli;
+    }
+
+    public void setIdAsta(int codice, int asta_id) throws SQLException{
+        String query = "UPDATE articoli SET asta_id = ? WHERE codice = ?";
+        try (PreparedStatement p = con.prepareStatement(query)) {
+            p.setInt(1, asta_id);
+            p.setInt(2, codice);
+            p.executeUpdate();
+        }
     }
 
 

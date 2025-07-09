@@ -54,6 +54,7 @@ public class Utils {
         try {
             engine.process("error", ctx, response.getWriter());
         } catch (Exception e) {
+            e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }

@@ -59,7 +59,7 @@ public class CreaAsta extends HttpServlet {
 
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (!SessionUtils.isUserLogged(request)) {
             response.sendRedirect("index.html");
             return;
@@ -104,22 +104,20 @@ public class CreaAsta extends HttpServlet {
 
             String venditoreUsername = SessionUtils.getUser(request).getUsername();
 
-            // Inserisci l'asta
-            Asta asta = new Asta(0, venditoreUsername, dataInizio, scadenza,prezzoIniziale,prezzoIniziale, rialzoMinimo, false);
-            astaDao.createAsta(asta);
-            int astaId = asta.getId();
 
-            // Inserisci record asta_articolo
+            Asta asta = new Asta(venditoreUsername, dataInizio, scadenza,prezzoIniziale,prezzoIniziale, rialzoMinimo);
+            int idAsta = astaDao.createAsta(asta);
+
+
             for (int codiceArticolo : articoloCodici) {
-                astaDao.insertAstaArticolo(astaId, codiceArticolo);
-
-
+                articoloDao.setIdAsta(codiceArticolo, idAsta);
                 articoloDao.setDisponibile(codiceArticolo, false);
             }
 
-            response.sendRedirect("Vendo");
+            response.sendRedirect(request.getContextPath() + "/Vendo");
 
         } catch (SQLException | NumberFormatException e) {
+            e.printStackTrace(response.getWriter());
             processErrorPage(request, response,templateEngine,servletContext, "dbFailure");
         }
     }

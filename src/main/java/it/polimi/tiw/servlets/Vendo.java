@@ -19,15 +19,14 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static it.polimi.tiw.rescources.Utils.processErrorPage;
 
@@ -70,18 +69,18 @@ public class Vendo extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws IOException {
         if(!SessionUtils.isUserLogged(request)){
             response.sendRedirect("index.html");
             return;
         }
         try {
                 List<Asta> asteAperte = astaDao.findAllAsteAperte(LocalDateTime.now());
-                Map<Integer, List<Articolo>> mappaArticoli = new HashMap<>();
+                Map<Asta, List<Articolo>> asteConArticoli = new HashMap<>();
 
                 for (Asta asta : asteAperte) {
                     List<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
-                    mappaArticoli.put(asta.getId(), articoli);
+                    asteConArticoli.put(asta, articoli);
                 }
                List<Articolo> articoliDisponibili = articoloDao.findAllDisponibili();
 
@@ -101,14 +100,70 @@ public class Vendo extends HttpServlet {
                        ))
                        .toList();
 
-               WebContext ctx = new WebContext(
-                       JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response),
-                       request.getLocale());
 
-               ctx.setVariable("asteAperte", asteAperte);
-               ctx.setVariable("mappaArticoli", mappaArticoli);
-               ctx.setVariable("articoliDisponibili", articoliConPrezziInteri);
-               ctx.setVariable("totalePrezzoArticoli", totalePrezzoIntero);
+            LocalDateTime now = LocalDateTime.now();
+            Map<Integer, String> tempoMancanteMap = new HashMap<>();
+            Map<Integer, String> dateFormattateMap = new HashMap<>();
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+// Debug: stampa l'ora corrente
+            System.out.println("Ora corrente: " + now.format(formatter));
+
+            for (Asta asta : asteAperte) {
+                System.out.println("\nAnalisi asta ID: " + asta.getId());
+
+                if (asta.getDataFine() != null) {
+                    String dataFormattata = asta.getDataFine().format(formatter);
+                    dateFormattateMap.put(asta.getId(), dataFormattata);
+                    System.out.println("Data fine: " + dataFormattata);
+
+                    if (asta.getDataFine().isAfter(now)) {
+                        Duration duration = Duration.between(now, asta.getDataFine());
+                        long giorni = duration.toDays();
+                        long ore = duration.toHours() % 24;
+                        long minuti = duration.toMinutes() % 60;
+
+                        String tempoMancante = giorni + "g " + ore + "h " + minuti + "m";
+                        tempoMancanteMap.put(asta.getId(), tempoMancante);
+
+                        System.out.println("Tempo mancante: " + tempoMancante);
+                        System.out.println("Total hours: " + duration.toHours());
+                        System.out.println("Total minutes: " + duration.toMinutes());
+                    } else {
+                        tempoMancanteMap.put(asta.getId(), "SCADUTA");
+                        System.out.println("Asta scaduta");
+                    }
+                } else {
+                    dateFormattateMap.put(asta.getId(), "NON SPECIFICATA");
+                    tempoMancanteMap.put(asta.getId(), "NON SPECIFICATA");
+                    System.out.println("Data fine non specificata");
+                }
+            }
+
+// Debug delle aste con articoli
+            System.out.println("\nDebug aste con articoli:");
+            asteConArticoli.forEach((asta, articoli) -> {
+                System.out.println("\nAsta ID: " + asta.getId());
+                System.out.println("Numero articoli: " + articoli.size());
+                articoli.forEach(articolo ->
+                        System.out.println(" - " + articolo.getCodice() + ": " + articolo.getNome()));
+
+                // Verifica coerenza con tempoMancanteMap
+                System.out.println("Tempo mancante: " + tempoMancanteMap.get(asta.getId()));
+                System.out.println("Data fine: " + dateFormattateMap.get(asta.getId()));
+            });
+
+            WebContext ctx = new WebContext(
+                    JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response),
+                    request.getLocale());
+
+            ctx.setVariable("asteAperte", asteAperte);
+            ctx.setVariable("asteConArticoli", asteConArticoli);
+            ctx.setVariable("tempoMancanteMap", tempoMancanteMap);
+            ctx.setVariable("dateFormattateMap", dateFormattateMap);
+            ctx.setVariable("articoliDisponibili", articoliConPrezziInteri);
+            ctx.setVariable("totalePrezzoArticoli", totalePrezzoIntero);
                response.setContentType("text/html;charset=UTF-8");
 
 
