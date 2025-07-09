@@ -22,25 +22,25 @@
 		</thead>
 		<tbody>
 
-		<tr th:each="entry : ${asteConArticoli}">
+		<tr th:each="asta : ${asteConArticoli}">
 
-			<td th:text="${entry.key.id}"></td>
+			<td th:text="${asta.key.id}"></td>
 
 
 			<td>
-				<div th:each="articolo : ${entry.value}">
+				<div th:each="articolo : ${asta.value}">
 					[[${articolo.codice}]] - [[${articolo.nome}]]
 				</div>
 			</td>
 
 
-			<td th:text="${dateFormattateMap.get(entry.key.id)}"></td>
+			<td th:text="${dateFormattateMap.get(asta.key.id)}"></td>
 
 
-			<td th:text="${tempoMancanteMap.get(entry.key.id)}"></td>
+			<td th:text="${tempoMancanteMap.get(asta.key.id)}"></td>
 
 
-			<td th:text="${entry.key.prezzoAttuale} + ' €'"></td>
+			<td th:text="${asta.key.prezzoAttuale} + ' €'"></td>
 		</tr>
 		</tbody>
 	</table>

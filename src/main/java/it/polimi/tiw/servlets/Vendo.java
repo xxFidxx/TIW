@@ -75,13 +75,20 @@ public class Vendo extends HttpServlet {
             return;
         }
         try {
-                List<Asta> asteAperte = astaDao.findAllAsteAperte(LocalDateTime.now());
+                List<Asta> asteAperte = astaDao.findAllAsteAperte();
+                List<Asta> asteChiuse = astaDao.findAllAsteChiuse();
                 Map<Asta, List<Articolo>> asteConArticoli = new HashMap<>();
 
                 for (Asta asta : asteAperte) {
                     List<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
                     asteConArticoli.put(asta, articoli);
                 }
+
+            for (Asta asta : asteChiuse) {
+                List<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
+                asteConArticoli.put(asta, articoli);
+            }
+
                List<Articolo> articoliDisponibili = articoloDao.findAllDisponibili();
 
 
@@ -107,7 +114,7 @@ public class Vendo extends HttpServlet {
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-// Debug: stampa l'ora corrente
+
             System.out.println("Ora corrente: " + now.format(formatter));
 
             for (Asta asta : asteAperte) {
@@ -141,7 +148,9 @@ public class Vendo extends HttpServlet {
                 }
             }
 
-// Debug delle aste con articoli
+
+
+
             System.out.println("\nDebug aste con articoli:");
             asteConArticoli.forEach((asta, articoli) -> {
                 System.out.println("\nAsta ID: " + asta.getId());
@@ -149,16 +158,22 @@ public class Vendo extends HttpServlet {
                 articoli.forEach(articolo ->
                         System.out.println(" - " + articolo.getCodice() + ": " + articolo.getNome()));
 
-                // Verifica coerenza con tempoMancanteMap
+
                 System.out.println("Tempo mancante: " + tempoMancanteMap.get(asta.getId()));
                 System.out.println("Data fine: " + dateFormattateMap.get(asta.getId()));
             });
+
+
+
+
+
 
             WebContext ctx = new WebContext(
                     JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response),
                     request.getLocale());
 
             ctx.setVariable("asteAperte", asteAperte);
+            ctx.setVariable("asteChiuse", asteChiuse);
             ctx.setVariable("asteConArticoli", asteConArticoli);
             ctx.setVariable("tempoMancanteMap", tempoMancanteMap);
             ctx.setVariable("dateFormattateMap", dateFormattateMap);

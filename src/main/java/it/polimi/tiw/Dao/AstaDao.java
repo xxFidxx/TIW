@@ -110,17 +110,37 @@ public class AstaDao {
         }
         return aste;
     }
-    public List<Asta> findAllAsteAperte(LocalDateTime loginTime) throws SQLException {
+
+
+    public List<Asta> findAllAsteAperte() throws SQLException {
         List<Asta> aste = new ArrayList<>();
 
         String query = "SELECT at.id, at.venditore_username, at.data_inizio, at.data_fine, " +
                 "at.prezzo_iniziale, at.prezzo_attuale, at.rialzo_minimo, at.chiusa " +
                 "FROM asta at " +
-                "WHERE at.chiusa = 0 AND at.data_fine > ? " +
+                "WHERE at.chiusa = 0" +
                 "ORDER BY at.data_fine ASC";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setTimestamp(1, Timestamp.valueOf(loginTime));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    aste.add(createAstaBeanFromRes(rs));
+                }
+            }
+        }
+        return aste;
+    }
+
+    public List<Asta> findAllAsteChiuse() throws SQLException {
+        List<Asta> aste = new ArrayList<>();
+
+        String query = "SELECT at.id, at.venditore_username, at.data_inizio, at.data_fine, " +
+                "at.prezzo_iniziale, at.prezzo_attuale, at.rialzo_minimo, at.chiusa " +
+                "FROM asta at " +
+                "WHERE at.chiusa = 1" +
+                "ORDER BY at.data_fine ASC";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     aste.add(createAstaBeanFromRes(rs));
