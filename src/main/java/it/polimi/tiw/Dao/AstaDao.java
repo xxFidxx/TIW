@@ -114,11 +114,10 @@ public class AstaDao {
 
     public List<Asta> findAllAsteAperte() throws SQLException {
         List<Asta> aste = new ArrayList<>();
-
         String query = "SELECT at.id, at.venditore_username, at.data_inizio, at.data_fine, " +
                 "at.prezzo_iniziale, at.prezzo_attuale, at.rialzo_minimo, at.chiusa " +
                 "FROM asta at " +
-                "WHERE at.chiusa = 0" +
+                "WHERE at.chiusa = 0 " +
                 "ORDER BY at.data_fine ASC";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -137,7 +136,7 @@ public class AstaDao {
         String query = "SELECT at.id, at.venditore_username, at.data_inizio, at.data_fine, " +
                 "at.prezzo_iniziale, at.prezzo_attuale, at.rialzo_minimo, at.chiusa " +
                 "FROM asta at " +
-                "WHERE at.chiusa = 1" +
+                "WHERE at.chiusa = 1 " +
                 "ORDER BY at.data_fine ASC";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
