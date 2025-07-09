@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 import it.polimi.tiw.Dao.ArticoloDao;
 import it.polimi.tiw.beans.User;
@@ -63,6 +64,10 @@ public class Login extends HttpServlet {
             if (user != null) {
                 // richiedo una nuova sessione
                 request.getSession(true).setAttribute("user", user);
+
+                LocalDateTime loginTime = LocalDateTime.now();
+                request.getSession(false).setAttribute("loginTime", loginTime);
+
                 response.sendRedirect("home.html");
             } else {
                 processErrorPage(request, response,templateEngine,servletContext, "loginFailed");

@@ -109,14 +109,14 @@ public class Vendo extends HttpServlet {
                        .toList();
 
 
-            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime now = (LocalDateTime) request.getSession().getAttribute("loginTime");
             Map<Integer, String> tempoMancanteMap = new HashMap<>();
             Map<Integer, String> dateFormattateMap = new HashMap<>();
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
 
-            System.out.println("Ora corrente: " + now.format(formatter));
+            System.out.println("Ora login: " + now.format(formatter));
 
             for (Asta asta : asteAperte) {
                 System.out.println("\nAnalisi asta ID: " + asta.getId());
@@ -180,10 +180,10 @@ public class Vendo extends HttpServlet {
             ctx.setVariable("dateFormattateMap", dateFormattateMap);
             ctx.setVariable("articoliDisponibili", articoliConPrezziInteri);
             ctx.setVariable("totalePrezzoArticoli", totalePrezzoIntero);
-               response.setContentType("text/html;charset=UTF-8");
+            response.setContentType("text/html;charset=UTF-8");
 
 
-               templateEngine.process("vendo", ctx, response.getWriter());
+            templateEngine.process("vendo", ctx, response.getWriter());
         }catch (SQLException e){
             e.printStackTrace();
             processErrorPage(request, response,templateEngine,servletContext, "dbFailure");
