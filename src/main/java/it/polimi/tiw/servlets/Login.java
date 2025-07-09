@@ -31,11 +31,12 @@ public class Login extends HttpServlet {
     private Connection connection;
     private TemplateEngine templateEngine;
     private ServletContext servletContext;
-     
+    private UserDao userDao;
     public void init() throws ServletException {
         try {
             servletContext = getServletContext();
             connection = Utils.initDBConnection(servletContext);
+            userDao = new UserDao(connection);
         } catch (ClassNotFoundException | SQLException e) {
             throw new ServletException("Error during database initialization", e);
         }
@@ -53,13 +54,17 @@ public class Login extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+        if(request.getSession() != null && request.getSession().getAttribute("user") != null) {
+            response.sendRedirect("home.html");
+        }
+
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
         System.out.println("Login check");
 
         try {
-            UserDao userDao = new UserDao(connection);
+            userDao = new UserDao(connection);
             User user = userDao.checkLogin(username, password);
             if (user != null) {
                 // richiedo una nuova sessione
@@ -68,7 +73,7 @@ public class Login extends HttpServlet {
                 LocalDateTime loginTime = LocalDateTime.now();
                 request.getSession(false).setAttribute("loginTime", loginTime);
 
-                response.sendRedirect("home.html");
+                response.sendRedirect("/Home");
             } else {
                 processErrorPage(request, response,templateEngine,servletContext, "loginFailed");
             }
