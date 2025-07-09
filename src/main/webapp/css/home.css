@@ -1,43 +1,79 @@
 @charset "UTF-8";
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f2f2f2;
     margin: 0;
     padding: 20px;
+    text-align: center;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 h1 {
     color: #333;
+    margin-bottom: 40px;
+    font-size: 2.2em;
+}
+
+nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 300px;
 }
 
 nav ul {
-    list-style-type: none;
+    list-style: none;
     padding: 0;
     margin: 0;
-    display: flex;              
-    justify-content: center;    
-    gap: 30px;                  
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
-nav a {
-    display: inline-block;
+nav a, nav form button {
+    display: block;
     background-color: white;
     color: #4CAF50;
-    padding: 20px 40px;          
-    font-size: 20px;             
+    padding: 15px 0;
+    font-size: 18px;
     text-decoration: none;
-    border-radius: 10px;
+    border-radius: 8px;
     font-weight: bold;
     border: 2px solid #4CAF50;
+    width: 100%;
+    box-sizing: border-box;
+    cursor: pointer;
     transition: all 0.3s ease;
+    text-align: center;
 }
 
-nav a:hover {
+nav a:hover, nav form button:hover {
     background-color: #45a049;
     color: white;
-}
-nav {
-    margin-top: 100px; 
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+nav form {
+    margin: 20px 0 0 0;
+    width: 100%;
+}
 
+nav form button {
+    background-color: #f44336;
+    color: white;
+    border-color: #f44336;
+}
+
+nav form button:hover {
+    background-color: #d32f2f;
+    border-color: #d32f2f;
+}

@@ -2,9 +2,70 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Offerta</title>
+    <link rel="stylesheet" href="css/offerta.css">
 </head>
 <body>
+<h1>Dettaglio Asta - ID: <span th:text="${asta.id}"></span></h1>
+
+<div class="dati-asta">
+    <p><strong>Scadenza:</strong>
+        <span th:text="${#dates.format(asta.dataFine, 'dd/MM/yyyy HH:mm')}"></span></p>
+    <p><strong>Prezzo Attuale:</strong>
+        <span th:text="${asta.prezzoAttuale}"></span> €</p>
+    <p><strong>Rialzo Minimo:</strong>
+        <span th:text="${asta.rialzoMinimo}"></span> €</p>
+</div>
+
+<hr/>
+<h2>Articoli in Asta</h2>
+<ul>
+    <li th:each="articolo : ${articoli}">
+        <strong th:text="${articolo.nome}"></strong> -
+        <span th:text="${articolo.descrizione}"></span>
+        (<span th:text="${articolo.prezzo}"></span> €)
+    </li>
+</ul>
+<hr/>
+
+<h2>Offerte</h2>
+<table>
+    <thead>
+    <tr>
+        <th>Utente</th>
+        <th>Prezzo Offerto (€)</th>
+        <th>Data e Ora</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="offerta : ${offerte}">
+        <td th:text="${offerta.utenteNome}"></td>
+        <td th:text="${offerta.prezzo}"></td>
+        <td th:text="${#dates.format(offerta.dataOra, 'dd/MM/yyyy HH:mm:ss')}"></td>
+    </tr>
+
+    </tbody>
+</table>
+
+<hr/>
+
+<h2>Fai una nuova offerta</h2>
+
+    <form th:action="@{/DoOfferta(id=${asta.id})}" method="post">
+        <div class="form-group">
+            <label for="offerta">Importo Offerta</label>
+            <input type="number" id="offerta" name="offerta" min="0" step="0.01" required>
+        </div>
+
+        <button type="submit">Offri</button>
+
+    </form>
+
+<p><a th:href="@{/Acquisto}">Torna alla pagina acquisto</a></p>
+
+
+
+
 
 </body>
 </html>

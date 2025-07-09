@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta charset="UTF-8">
+    <title>dettaglioAsta</title>
+  <link rel="stylesheet" href="css/dettaglioAsta.css">
+</head>
+<body>
+<h1>Dettaglio Asta - ID: <span th:text="${asta.id}"></span></h1>
+<div class="dati-asta">
+  <p><strong>Scadenza:</strong> <span th:text="${#dates.format(asta.dataFine, 'dd/MM/yyyy HH:mm')}"></span></p>
+  <p><strong>Prezzo Attuale:</strong> <span th:text="${asta.prezzoAttuale}"></span> €</p>
+  <p><strong>Rialzo Minimo:</strong> <span th:text="${asta.rialzoMinimo}"></span> €</p>
+</div>
+
+<hr/>
+<h2>Articoli in Asta</h2>
+<ul>
+  <li th:each="articolo : ${articoli}">
+    <strong th:text="${articolo.nome}"></strong> -
+    <span th:text="${articolo.descrizione}"></span>
+    (<span th:text="${articolo.prezzo}"></span> €)
+  </li>
+</ul>
+<hr/>
+
+<h2>Offerte</h2>
+<table>
+  <thead>
+  <tr>
+    <th>Nome Utente</th>
+    <th>Prezzo Offerto </th>
+    <th>Data e Ora</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="offerta : ${offerte}">
+    <td th:text="${offerta.utenteUsername}"></td>
+    <td th:text="${offerta.prezzo}"></td>
+    <td th:text="${#dates.format(offerta.dataOra, 'dd/MM/yyyy HH:mm:ss')}"></td>
+  </tr>
+
+
+  </tbody>
+</table>
+
+<form th:action="@{/ChiudiAsta}" method="post">
+  <input type="hidden" name="idAsta" th:value="${asta.id}" />
+  <button type="submit" class="chiudi-asta">
+    Chiudi Asta
+  </button>
+</form>
+
+<p><a th:href="@{/Vendo}">Torna alla pagina vendo</a></p>
+
+</body>
+</html>

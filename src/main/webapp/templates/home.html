@@ -6,12 +6,17 @@
 <link rel="stylesheet" href="css/home.css">
 </head>
 <body>
-<h1> BENVENUTO SU ASTE ONLINE</h1>
+<h1>BENVENUTO SU ASTE ONLINE, <span th:text="${username}"></span>!</h1>
 <nav>
     <ul>
         <li><a href="Vendo">VENDO </a></li>
         <li><a href="Acquisto">ACQUISTO</a></li>
     </ul>
+
+
+<form th:action="@{/Logout}" method="post">
+    <button type="submit">Logout</button>
+</form>
 </nav>
 
 
