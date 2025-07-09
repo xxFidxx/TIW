@@ -2,6 +2,7 @@ package it.polimi.tiw.servlets;
 
 
 
+import it.polimi.tiw.Dao.AstaDao;
 import it.polimi.tiw.Dao.OffertaDao;
 import it.polimi.tiw.Dao.ArticoloDao;
 import it.polimi.tiw.beans.Articolo;
@@ -37,6 +38,7 @@ public class OffertaServlet extends HttpServlet {
     private TemplateEngine templateEngine;
     private OffertaDao offertaDao;
     private ArticoloDao articoloDao;
+    private AstaDao astaDao;
     private ServletContext servletContext;
 
 
@@ -47,6 +49,7 @@ public class OffertaServlet extends HttpServlet {
             connection = Utils.initDBConnection(servletContext);
             offertaDao = new OffertaDao(connection);
             articoloDao = new ArticoloDao(connection);
+            astaDao = new AstaDao(connection);
             templateEngine = Utils.initTemplateEngine(servletContext);
         } catch (Exception e) {
             throw new ServletException("Error initializing servlet vendo", e);
@@ -62,31 +65,33 @@ public class OffertaServlet extends HttpServlet {
             return;
         }
 
-        User user = (User) request.getSession().getAttribute("user");
+        handleOfferta(request, response);
+    }
 
+    private void handleOfferta(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             int astaId = Integer.parseInt(request.getParameter("astaId"));
 
-        }catch (NumberFormatException e){
-            processErrorPage(request, response,templateEngine,servletContext,  "dbFailure");
-            return;
-        }
-        try {
-            ArrayList<Offerta> offerte = offertaDao.findOfferteAggiudicateByUser(user.getUsername());
-            HashMap<Offerta,ArrayList<Articolo>> articolixOfferta = new HashMap<>();
-            for(Offerta offerta : offerte){
-                ArrayList<Articolo> articoli = articoloDao.articoliByAsta(offerta.getAstaId());
-                articolixOfferta.put(offerta, articoli);
+            if(astaId < 0){
+                processErrorPage(request, response,templateEngine,servletContext,  "invalidNumber");
             }
+            Asta asta = astaDao.findAstaById(astaId);
+            ArrayList<Offerta> offerte = offertaDao.findOfferteByAstaId(astaId);
+            ArrayList<Articolo> articoli = articoloDao.articoliByAsta(astaId);
 
             WebContext ctx = new WebContext(
                     JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response),
                     request.getLocale());
 
-            ctx.setVariable("articolixOfferta", articolixOfferta);
+            ctx.setVariable("asta", asta);
+            ctx.setVariable("offerta", offerte);
+            ctx.setVariable("articoli", articoli);
             response.setContentType("text/html;charset=UTF-8");
+            templateEngine.process("offerta", ctx, response.getWriter());
         } catch (SQLException e) {
             processErrorPage(request, response,templateEngine,servletContext,  "dbFailure");
+        }catch (NumberFormatException e){
+            processErrorPage(request, response,templateEngine,servletContext,  "invalidNumber");
         }
     }
 

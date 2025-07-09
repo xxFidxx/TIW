@@ -2,7 +2,6 @@ package it.polimi.tiw.servlets;
 
 
 
-import it.polimi.tiw.Dao.AstaDao;
 import it.polimi.tiw.Dao.OffertaDao;
 import it.polimi.tiw.Dao.ArticoloDao;
 import it.polimi.tiw.beans.Articolo;
@@ -17,6 +16,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.glassfish.jersey.process.internal.AbstractChainableStage;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
@@ -24,22 +24,19 @@ import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import static it.polimi.tiw.rescources.Utils.processErrorPage;
 
 
-@WebServlet("/acquisto-dinamic")
-public class Acquisto extends HttpServlet {
+@WebServlet("/OfferteAggiudicateUser")
+public class OfferteAggiudicateUser extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private Connection connection;
     private TemplateEngine templateEngine;
     private OffertaDao offertaDao;
     private ArticoloDao articoloDao;
-    private AstaDao astaDao;
     private ServletContext servletContext;
 
 
@@ -50,7 +47,6 @@ public class Acquisto extends HttpServlet {
             connection = Utils.initDBConnection(servletContext);
             offertaDao = new OffertaDao(connection);
             articoloDao = new ArticoloDao(connection);
-            astaDao = new AstaDao(connection);
             templateEngine = Utils.initTemplateEngine(servletContext);
         } catch (Exception e) {
             throw new ServletException("Error initializing servlet vendo", e);
@@ -68,18 +64,14 @@ public class Acquisto extends HttpServlet {
 
         User user = (User) request.getSession().getAttribute("user");
 
-        String parolaChiave = request.getParameter("parolaChiave");
-        ArrayList<Asta> aste;
-        Map<Asta,ArrayList<Articolo>> articolixAsta = new HashMap<>();
         try {
-            if(parolaChiave != null && !parolaChiave.isBlank()){
-                aste = astaDao.findAstaByParolaChiave(parolaChiave, LocalDateTime.now());
-                for(Asta asta : aste){
-                    ArrayList<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
-                    articolixAsta.put(asta, articoli);
-                }
-            }
+            int astaId = Integer.parseInt(request.getParameter("astaId"));
 
+        }catch (NumberFormatException e){
+            processErrorPage(request, response,templateEngine,servletContext,  "dbFailure");
+            return;
+        }
+        try {
             ArrayList<Offerta> offerte = offertaDao.findOfferteAggiudicateByUser(user.getUsername());
             HashMap<Offerta,ArrayList<Articolo>> articolixOfferta = new HashMap<>();
             for(Offerta offerta : offerte){
@@ -92,10 +84,7 @@ public class Acquisto extends HttpServlet {
                     request.getLocale());
 
             ctx.setVariable("articolixOfferta", articolixOfferta);
-            ctx.setVariable("articolixAsta", articolixAsta);
-            ctx.setVariable("parolaChiave", parolaChiave);
             response.setContentType("text/html;charset=UTF-8");
-            templateEngine.process("acquisto", ctx, response.getWriter());
         } catch (SQLException e) {
             processErrorPage(request, response,templateEngine,servletContext,  "dbFailure");
         }

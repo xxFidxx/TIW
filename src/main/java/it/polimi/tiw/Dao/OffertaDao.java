@@ -15,12 +15,12 @@ public class OffertaDao {
         this.connection = connection;
     }
 
-    public List<Offerta> findOfferteByAstaId(int astaId) throws SQLException {
+    public ArrayList<Offerta> findOfferteByAstaId(int astaId) throws SQLException {
         String query = "SELECT * FROM offerta WHERE asta_id = ? ORDER BY data_ora DESC";
         try (PreparedStatement p = connection.prepareStatement(query)) {
             p.setInt(1, astaId);
             try (ResultSet rs = p.executeQuery()) {
-                List<Offerta> offerte = new ArrayList<>();
+                ArrayList<Offerta> offerte = new ArrayList<>();
                 while (rs.next()) {
                     offerte.add(createOffertaBeanFromRes(rs));
                 }
@@ -89,6 +89,13 @@ public class OffertaDao {
             }
         }
         return offerte;
+    }
+
+    public void setAggiudicata(int offertaId) throws SQLException {
+        String query = "UPDATE offerta SET aggiudicata = 1 WHERE id = ?";
+        try (PreparedStatement p = connection.prepareStatement(query)) {
+            p.setInt(1, offertaId);
+        }
     }
 
 
