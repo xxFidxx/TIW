@@ -112,8 +112,8 @@ public class AstaDao {
     }
 
 
-    public List<Asta> findAllAsteAperte() throws SQLException {
-        List<Asta> aste = new ArrayList<>();
+    public ArrayList<Asta> findAllAsteAperte() throws SQLException {
+        ArrayList<Asta> aste = new ArrayList<>();
         String query = "SELECT at.id, at.venditore_username, at.data_inizio, at.data_fine, " +
                 "at.prezzo_iniziale, at.prezzo_attuale, at.rialzo_minimo, at.chiusa " +
                 "FROM asta at " +
@@ -130,8 +130,8 @@ public class AstaDao {
         return aste;
     }
 
-    public List<Asta> findAllAsteChiuse() throws SQLException {
-        List<Asta> aste = new ArrayList<>();
+    public ArrayList<Asta> findAllAsteChiuse() throws SQLException {
+        ArrayList<Asta> aste = new ArrayList<>();
 
         String query = "SELECT at.id, at.venditore_username, at.data_inizio, at.data_fine, " +
                 "at.prezzo_iniziale, at.prezzo_attuale, at.rialzo_minimo, at.chiusa " +

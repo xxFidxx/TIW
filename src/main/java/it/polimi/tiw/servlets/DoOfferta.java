@@ -80,8 +80,8 @@ public class DoOfferta extends HttpServlet {
                 return;
             }
 
-            Offerta offerta = offertaDao.findMaxOffertaByAstaId(astaId);
-            if(offertaUser <= offerta.getPrezzo()){
+            Offerta offertaMax = offertaDao.findMaxOffertaByAstaId(astaId);
+            if(offertaUser < offertaMax.getPrezzo() + asta.getRialzoMinimo()){
                 processErrorPage(request, response,templateEngine,servletContext,  "invalidOffer");
                 return;
             }

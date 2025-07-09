@@ -24,7 +24,9 @@ import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -74,10 +76,13 @@ public class Acquisto extends HttpServlet {
         try {
             if(parolaChiave != null && !parolaChiave.isBlank()){
                 aste = astaDao.findAstaByParolaChiave(parolaChiave, LocalDateTime.now());
-                for(Asta asta : aste){
-                    ArrayList<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
-                    articolixAsta.put(asta, articoli);
-                }
+            }else{
+                aste = astaDao.findAllAsteAperte();
+            }
+
+            for(Asta asta : aste){
+                ArrayList<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
+                articolixAsta.put(asta, articoli);
             }
 
             ArrayList<Offerta> offerte = offertaDao.findOfferteAggiudicateByUser(user.getUsername());
@@ -87,6 +92,46 @@ public class Acquisto extends HttpServlet {
                 articolixOfferta.put(offerta, articoli);
             }
 
+            LocalDateTime now = (LocalDateTime) request.getSession().getAttribute("loginTime");
+            Map<Integer, String> tempoMancanteMap = new HashMap<>();
+            Map<Integer, String> dateFormattateMap = new HashMap<>();
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+
+            System.out.println("Ora login: " + now.format(formatter));
+
+            for (Asta asta : aste) {
+                System.out.println("\nAnalisi asta ID: " + asta.getId());
+
+                if (asta.getDataFine() != null) {
+                    String dataFormattata = asta.getDataFine().format(formatter);
+                    dateFormattateMap.put(asta.getId(), dataFormattata);
+                    System.out.println("Data fine: " + dataFormattata);
+
+                    if (asta.getDataFine().isAfter(now)) {
+                        Duration duration = Duration.between(now, asta.getDataFine());
+                        long giorni = duration.toDays();
+                        long ore = duration.toHours() % 24;
+                        long minuti = duration.toMinutes() % 60;
+
+                        String tempoMancante = giorni + "g " + ore + "h " + minuti + "m";
+                        tempoMancanteMap.put(asta.getId(), tempoMancante);
+
+                        System.out.println("Tempo mancante: " + tempoMancante);
+                        System.out.println("Total hours: " + duration.toHours());
+                        System.out.println("Total minutes: " + duration.toMinutes());
+                    } else {
+                        tempoMancanteMap.put(asta.getId(), "SCADUTA");
+                        System.out.println("Asta scaduta");
+                    }
+                } else {
+                    dateFormattateMap.put(asta.getId(), "NON SPECIFICATA");
+                    tempoMancanteMap.put(asta.getId(), "NON SPECIFICATA");
+                    System.out.println("Data fine non specificata");
+                }
+            }
+
             WebContext ctx = new WebContext(
                     JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response),
                     request.getLocale());
@@ -94,6 +139,8 @@ public class Acquisto extends HttpServlet {
             ctx.setVariable("articolixOfferta", articolixOfferta);
             ctx.setVariable("articolixAsta", articolixAsta);
             ctx.setVariable("parolaChiave", parolaChiave);
+            ctx.setVariable("tempoMancanteMap", tempoMancanteMap);
+            ctx.setVariable("dateFormattateMap", dateFormattateMap);
             response.setContentType("text/html;charset=UTF-8");
             templateEngine.process("acquisto", ctx, response.getWriter());
         } catch (SQLException e) {
