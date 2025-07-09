@@ -6,6 +6,7 @@ import it.polimi.tiw.beans.Articolo;
 import it.polimi.tiw.Dao.ArticoloDao;
 import it.polimi.tiw.Dao.AstaDao;
 import it.polimi.tiw.beans.Asta;
+import it.polimi.tiw.beans.User;
 import it.polimi.tiw.rescources.SessionUtils;
 import it.polimi.tiw.rescources.Utils;
 import jakarta.servlet.ServletContext;
@@ -37,11 +38,13 @@ public class Home extends HttpServlet {
     private TemplateEngine templateEngine;
     private ServletContext servletContext;
 
+
     @Override
     public void init() throws ServletException {
         try {
             servletContext = getServletContext();
             templateEngine = Utils.initTemplateEngine(servletContext);
+
         } catch (Exception e) {
             throw new ServletException("Error initializing servlet vendo", e);
         }
@@ -55,7 +58,8 @@ public class Home extends HttpServlet {
             return;
         }
 
-        String username = (String) request.getSession().getAttribute("user");
+        User user = (User) request.getSession().getAttribute("user");
+        String username = user.getUsername();
 
         WebContext ctx = new WebContext(
                 JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response),

@@ -73,7 +73,7 @@ public class Login extends HttpServlet {
                 LocalDateTime loginTime = LocalDateTime.now();
                 request.getSession(false).setAttribute("loginTime", loginTime);
 
-                response.sendRedirect("/Home");
+                response.sendRedirect(request.getContextPath() + "/Home");
             } else {
                 processErrorPage(request, response,templateEngine,servletContext, "loginFailed");
             }
