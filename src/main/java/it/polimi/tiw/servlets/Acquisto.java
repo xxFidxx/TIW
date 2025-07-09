@@ -32,7 +32,7 @@ import java.util.Map;
 import static it.polimi.tiw.rescources.Utils.processErrorPage;
 
 
-@WebServlet("/acquisto-dinamic")
+@WebServlet("/Acquisto")
 public class Acquisto extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private Connection connection;

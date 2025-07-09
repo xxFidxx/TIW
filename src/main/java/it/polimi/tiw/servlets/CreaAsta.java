@@ -27,7 +27,7 @@ import java.util.List;
 import static it.polimi.tiw.rescources.Utils.processErrorPage;
 
 
-@WebServlet("/crea-asta")
+@WebServlet("/CreaAsta")
 public class CreaAsta extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private Connection connection;
