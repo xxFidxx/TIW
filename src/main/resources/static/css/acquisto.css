@@ -1,0 +1,129 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #e6f2e6;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    color: #006600;
+    margin-bottom: 40px;
+}
+
+.ricerca-aste {
+    background-color: #ccffcc;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 40px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ricerca-aste form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.ricerca-aste input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+}
+
+.ricerca-aste button {
+    background-color: #009900;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.ricerca-aste button:hover {
+    background-color: #007700;
+}
+
+.aste-aperte,
+.aste-aggiudicate {
+    background-color: #ffffff;
+    padding: 20px;
+    margin-bottom: 40px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.aste-aperte h2,
+.aste-aggiudicate h2 {
+    color: #004d00;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.aste-aperte ul,
+.aste-aggiudicate ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.aste-aperte li,
+.aste-aggiudicate li {
+    border-bottom: 1px solid #cccccc;
+    padding: 15px 0;
+}
+
+.aste-aperte li:last-child,
+.aste-aggiudicate li:last-child {
+    border-bottom: none;
+}
+
+.aste-aperte a {
+    color: #006600;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.aste-aperte a:hover {
+    text-decoration: underline;
+}
+
+.articolo {
+    background-color: #f2fff2;
+    border: 1px solid #b3e6b3;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: flex-start;
+}
+
+.articolo img {
+    max-width: 200px;
+    height: auto;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.articolo p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.articolo strong {
+    color: #004d00;
+}
+
+.articolo-details {
+    flex: 1;
+    min-width: 200px;
+}
+
+

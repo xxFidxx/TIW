@@ -1,12 +1,17 @@
-<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee" 
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd" 
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
          version="5.0" id="WebApp_ID">
 
   <display-name>PureHTML</display-name>
 
   <welcome-file-list>
-    <welcome-file>templates/index.html</welcome-file>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
   <context-param>
     <param-name>dbDriver</param-name>
@@ -14,19 +19,19 @@
   </context-param>
   <context-param>
     <param-name>dbUrl</param-name>
-    <param-value>jdbc:mariadb://localhost:3307/tiw</param-value>
+    <param-value>jdbc:mariadb://localhost:3306/tiw</param-value>
   </context-param>
   <context-param>
     <param-name>dbUser</param-name>
-    <param-value>prova</param-value>
+    <param-value>root</param-value>
   </context-param>
   <context-param>
     <param-name>dbPassword</param-name>
-    <param-value>prova123</param-value>
+    <param-value>TIW2025</param-value>
   </context-param>
   <context-param>
     <param-name>imagesDirectory</param-name>
-    <param-value>${webapp.root}/immagini</param-value>
+    <param-value>C:\Users\fidel\OneDrive\Desktop\TIW\TIW\src\main\webapp\immagini</param-value>
   </context-param>
 
 </web-app>

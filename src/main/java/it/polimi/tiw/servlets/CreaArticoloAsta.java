@@ -7,6 +7,7 @@ import it.polimi.tiw.rescources.SessionUtils;
 import it.polimi.tiw.rescources.Utils;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +22,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.UUID;
@@ -28,6 +33,7 @@ import java.util.UUID;
 import static it.polimi.tiw.rescources.Utils.processErrorPage;
 
 @WebServlet("/CreaArticoloAsta")
+@MultipartConfig
 public class CreaArticoloAsta extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private Connection connection;
@@ -41,31 +47,25 @@ public class CreaArticoloAsta extends HttpServlet {
             connection = Utils.initDBConnection(servletContext);
             articoloDao = new ArticoloDao(connection);
         } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
             throw new ServletException("Error during database initialization", e);
         }
         try {
             ServletContext servletContext = getServletContext();
             templateEngine = Utils.initTemplateEngine(servletContext);
         }catch (Exception e) {
+            e.printStackTrace();
             throw new ServletException("Error during templateEngine initialization", e);
         }
     }
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         if(!SessionUtils.isUserLogged(request)){
             response.sendRedirect("index.html");
             return;
         }
-
-            String action = request.getParameter("action");
-
-            if ("createArticolo".equals(action)) {
                 handleCreateArticolo(request, response);
-
-            } else {
-                processErrorPage(request, response,templateEngine,servletContext, "notRecognizedAction");
-            }
     }
 
     // gestire servlest exception e IOexception, non lanciarle
@@ -80,14 +80,14 @@ public class CreaArticoloAsta extends HttpServlet {
 
             // Validazione campi obbligatori
             if (nome == null || descrizione == null || prezzoStr == null || requestPart == null ||
-                    nome.isEmpty() || descrizione.isEmpty() || prezzoStr.isEmpty()) {
-                processErrorPage(request, response,templateEngine,servletContext, "emptyFields");
+                    nome.isEmpty() || descrizione.isEmpty() || prezzoStr.isEmpty() || requestPart.getSize() == 0) {
+                processErrorPage(request, response, templateEngine, servletContext, "emptyFields");
                 return;
             }
 
             // Validazione lunghezza nome
             if (nome.length() > 100) {
-                processErrorPage(request, response,templateEngine,servletContext, "nameTooLong");
+                processErrorPage(request, response, templateEngine, servletContext, "nameTooLong");
                 return;
             }
 
@@ -96,57 +96,66 @@ public class CreaArticoloAsta extends HttpServlet {
             try {
                 prezzo = Integer.parseInt(prezzoStr);
                 if (prezzo <= 0) {
-                    processErrorPage(request, response,templateEngine,servletContext, "invalidPrice");
+                    processErrorPage(request, response, templateEngine, servletContext, "invalidPrice");
                     return;
                 }
             } catch (NumberFormatException e) {
-                processErrorPage(request, response,templateEngine,servletContext, "invalidPriceFormat");
+                e.printStackTrace();
+                processErrorPage(request, response, templateEngine, servletContext, "invalidPriceFormat");
                 return;
             }
 
             // Validazione immagine
             String contentType = requestPart.getContentType();
             if (!contentType.startsWith("image/")) {
-                processErrorPage(request, response,templateEngine,servletContext, "invalidImageType");
+                processErrorPage(request, response, templateEngine, servletContext, "invalidImageType");
                 return;
             }
 
             if (requestPart.getSize() > 10 * 1024 * 1024) {
-                processErrorPage(request, response,templateEngine,servletContext, "imageTooLarge");
+                processErrorPage(request, response, templateEngine, servletContext, "imageTooLarge");
                 return;
             }
 
-        String pathCartella = "immagini/";
-        String nomeImmagine = UUID.randomUUID() + ".png";
-        String immagine = pathCartella + nomeImmagine;
+            String nomeImmagine = UUID.randomUUID() + ".png";
 
+// Ottieni il percorso della cartella immagini (configurato in web.xml o default)
             String uploadPath = getServletContext().getInitParameter("imagesDirectory");
 
-            try (InputStream fileContent = requestPart.getInputStream();
-                 FileOutputStream out = new FileOutputStream(uploadPath + "/" + nomeImmagine)) {
-                fileContent.transferTo(out);
-            }catch (IOException e) {
-                processErrorPage(request, response,templateEngine,servletContext, "internalServerError");
+
+            if (uploadPath == null || uploadPath.isEmpty()) {
+                uploadPath = getServletContext().getRealPath("/immagini");
             }
 
-        // Crea Articolo
-        Articolo articolo = new Articolo(nome,descrizione,immagine,prezzo,true);
-        User u = SessionUtils.getUser(request);
+
+            File uploadDir = new File(uploadPath);
+            if (!uploadDir.exists()) {
+                uploadDir.mkdirs();
+            }
 
 
-        try {//serve gestire l'eccezione nella servlet
-            articoloDao.insertArticolo(articolo,u);
-        } catch (SQLException e) {
-            processErrorPage(request, response,templateEngine,servletContext, "dbFailure");
-            return;
-        }
-        response.sendRedirect("Vendo.html");
+            Path destination = Paths.get(uploadPath, nomeImmagine);
 
+            try (InputStream fileContent = requestPart.getInputStream()) {
+
+                Files.copy(fileContent, destination, StandardCopyOption.REPLACE_EXISTING);
+
+
+                String percorsoRelativo = "immagini/" + nomeImmagine;
+
+                Articolo articolo = new Articolo(nome, descrizione, percorsoRelativo, prezzo, true);
+                User u = SessionUtils.getUser(request);
+                articoloDao.insertArticolo(articolo, u);
+
+                response.sendRedirect(request.getContextPath() + "/Vendo");
+            }
         } catch (IOException | ServletException e) {
-            processErrorPage(request, response,templateEngine,servletContext, "internalServerError");
+            e.printStackTrace();
+            processErrorPage(request, response, templateEngine, servletContext, "internalServerError");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            processErrorPage(request, response, templateEngine, servletContext, "dbFailure");
         }
-
-
     }
 
 

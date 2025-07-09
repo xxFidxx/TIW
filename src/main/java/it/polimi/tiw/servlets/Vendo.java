@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static it.polimi.tiw.rescources.Utils.processErrorPage;
+
 
 // BISOGNA STARE ATTENTI CHE 1) LO USER ESISTA ( CONTROLLA SE NON E' NULL) CONTROLLA PURE CHE LO USER CHE STA OPERANDO SULL'ASTA SIA LO STESSO CHE L'HA CREATO
 // PERCHE' MAGARI E' UN ALTRO USER CHE CHIAMA L'URL ESATTO PER FARE QUELL'AZIONE MA NON POTREBBE FARLO
@@ -51,15 +53,16 @@ public class Vendo extends HttpServlet {
     private TemplateEngine templateEngine;
     private ArticoloDao articoloDao;
     private AstaDao astaDao;
+    private ServletContext servletContext;
 
     @Override
     public void init() throws ServletException {
         try {
-            ServletContext context = getServletContext();
-            Connection connection = Utils.initDBConnection(context);
+            servletContext = getServletContext();
+            Connection connection = Utils.initDBConnection(servletContext);
             articoloDao = new ArticoloDao(connection);
             astaDao = new AstaDao(connection);
-            templateEngine = Utils.initTemplateEngine(context);
+            templateEngine = Utils.initTemplateEngine(servletContext);
         } catch (Exception e) {
             throw new ServletException("Error initializing servlet vendo", e);
         }
@@ -94,8 +97,7 @@ public class Vendo extends HttpServlet {
                                articolo.getDescrizione(),
                                articolo.getImmagine(),
                                articolo.getPrezzo(),
-                               articolo.isDisponibile(),
-                               articolo.getAstaId()
+                               articolo.isDisponibile()
                        ))
                        .toList();
 
@@ -112,7 +114,8 @@ public class Vendo extends HttpServlet {
 
                templateEngine.process("vendo", ctx, response.getWriter());
         }catch (SQLException e){
-               response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error");
+            e.printStackTrace();
+            processErrorPage(request, response,templateEngine,servletContext, "dbFailure");
         }
     }
 }

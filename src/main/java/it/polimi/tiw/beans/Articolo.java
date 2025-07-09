@@ -11,6 +11,18 @@ public class Articolo {
 
     public Articolo() {}
 
+    // costruttore default
+    public Articolo(Integer codice, String nome, String descrizione, String immagine, Integer prezzo, boolean disponibile, Integer astaId) {
+        this.codice = codice;
+        this.nome = nome;
+        this.descrizione = descrizione;
+        this.immagine = immagine;
+        this.prezzo = prezzo;
+        this.disponibile = disponibile;
+        this.astaId = astaId;
+    }
+
+    // costruttore per quando non hai codice ( prima di entrare nle db) e non hai asta id
     public Articolo(String nome, String descrizione, String immagine, Integer prezzo, boolean disponibile) {
         this.codice = null;
         this.nome = nome;
@@ -21,7 +33,8 @@ public class Articolo {
         this.astaId = null;
     }
 
-    public Articolo(Integer codice, String nome, String descrizione, String immagine, Integer prezzo, boolean disponibile, Integer astaId) {
+    // costruttore pr fase in cui non hai astaId
+    public Articolo(Integer codice, String nome, String descrizione, String immagine, Integer prezzo, boolean disponibile) {
         this.codice = codice;
         this.nome = nome;
         this.descrizione = descrizione;

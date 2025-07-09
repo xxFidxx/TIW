@@ -33,6 +33,7 @@
         <p th:case="'invalidPriceFormat'">Invalid price format.</p>
         <p th:case="'invalidImageType'">Only image files are allowed.</p>
         <p th:case="'imageTooLarge'">Image size cannot exceed 10MB.</p>
+        <p th:case="'notRecognizedAction'">not recognized action.</p>
         <p th:case="*">Unknown error occurred.</p>
     </div>
     <p th:switch="${servletPath}">
