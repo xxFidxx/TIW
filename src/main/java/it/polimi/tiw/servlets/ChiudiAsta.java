@@ -119,7 +119,7 @@ public class ChiudiAsta extends HttpServlet {
             response.setContentType("text/html;charset=UTF-8");
 
 
-            templateEngine.process("vendo", ctx, response.getWriter());
+            templateEngine.process("dettaglioAsta", ctx, response.getWriter());
 
 
         } catch (NumberFormatException e) {

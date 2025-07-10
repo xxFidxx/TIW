@@ -7,6 +7,7 @@
 
 </head>
 <body>
+<a th:href="@{/Home}" class="home-button">Home</a>
 <h1>ACQUISTI</h1>
 
 <div class="ricerca-aste">
@@ -26,32 +27,33 @@
             <th>Articoli</th>
             <th>Scadenza</th>
             <th>Tempo Mancante</th>
-            <th>offerte</th>
+            <th>Prezzo attuale</th>
+            <th>Offerte</th>
         </tr>
         </thead>
         <tbody>
 
-        <tr th:each="asta : ${articolixAsta}">
+        <tr th:each="articolixAsta : ${articolixAsta}">
 
-            <td th:text="${asta.key.id}"></td>
+            <td th:text="${articolixAsta.key.id}"></td>
 
 
             <td th:inline="text">
-                <div th:each="articolo : ${asta.value}">
+                <div th:each="articolo : ${articolixAsta.value}">
                     [[${articolo.codice}]] - [[${articolo.nome}]]
                 </div>
             </td>
 
 
-            <td th:text="${dateFormattateMap.get(asta.key.id)}"></td>
+            <td th:text="${dateFormattateMap.get(articolixAsta.key.id)}"></td>
 
 
-            <td th:text="${tempoMancanteMap.get(asta.key.id)}"></td>
+            <td th:text="${tempoMancanteMap.get(articolixAsta.key.id)}"></td>
 
-
+            <td th:text="${articolixAsta.key.prezzoAttuale}"></td>
 
             <td>
-                <a th:href="@{/offerta(id=${asta.key.id})}">Vai alla pagina offerte</a>
+                <a th:href="@{/OffertaServlet(id=${articolixAsta.key.id})}">Vai alla pagina offerte</a>
             </td>
         </tr>
         </tbody>
@@ -92,12 +94,6 @@
         </tr>
         </tbody>
     </table>
-
-
-
-
-
-
 </div>
 
 </body>
