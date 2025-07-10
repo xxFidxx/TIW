@@ -112,6 +112,8 @@ public class DettaglioAsta extends HttpServlet {
 
             Offerta offertaAggiudicatario = offertaDao.findMaxOffertaByAstaId(asta.getId());
             User userAggiudicatario = null;
+
+            // sono entrato in dettaglio asta dopo aver fatto chiudi
             if(offertaAggiudicatario!= null && asta.isChiusa()){
                 offertaDao.setAggiudicata(offertaAggiudicatario.getId());
                 userAggiudicatario = userDao.userByUsername(offertaAggiudicatario.getUtenteUsername());
