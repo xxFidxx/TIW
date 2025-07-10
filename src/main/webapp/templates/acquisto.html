@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>Pagina Acquisto</title>
-    <link rel="stylesheet" th:href="@{/css/acquisto.css}" />
+    <link rel="stylesheet" href="css/acquisto.css">
 
 </head>
 <body>
 <a th:href="@{/Home}" class="home-button">Home</a>
-    <h1>ACQUISTI</h1>
+<h1>ACQUISTI</h1>
 
-    <div class="ricerca-aste">
-        <h2>Ricerca aste</h2>
-        <form method="get" th:action="@{/Acquisto}">
-            <label for="parolaChiave">Parola chiave:</label>
-            <input type="text" id="parolaChiave" name="parolaChiave">
-            <button type="submit">Cerca</button>
-        </form>
-    </div>
-    <div class="aste-aperte">
+<div class="ricerca-aste">
+    <h2>Ricerca aste</h2>
+    <form method="get" th:action="@{/Acquisto}">
+        <label for="parolaChiave">Parola chiave:</label>
+        <input type="text" id="parolaChiave" name="parolaChiave">
+        <button type="submit">Cerca</button>
+    </form>
+</div>
+<div class="aste-aperte">
     <h2>ASTE APERTE TROVATE</h2>
     <table>
-    <thead>
+        <thead>
         <tr>
             <th>ID Asta</th>
             <th>Articoli</th>
@@ -30,8 +30,8 @@
             <th>Prezzo attuale</th>
             <th>Offerte</th>
         </tr>
-    </thead>
-    <tbody>
+        </thead>
+        <tbody>
 
         <tr th:each="articolixAsta : ${articolixAsta}">
 
@@ -56,52 +56,37 @@
                 <a th:href="@{/OffertaServlet(id=${articolixAsta.key.id})}">Vai alla pagina offerte</a>
             </td>
         </tr>
-    </tbody>
+        </tbody>
     </table>
 
-    </div>
+</div>
 
 
-    <div class="aste-aggiudicate">
-        <h2>ASTE AGGIUDICATE</h2>
-        <table>
-            <thead>
-            <tr>
-                <th>ID Asta</th>
-                <th>Articoli</th>
-                <th>Prezzo Finale</th>
+<div class="aste-aggiudicate">
+    <h2>ASTE AGGIUDICATE</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>ID Asta</th>
+            <th>Articoli</th>
+            <th>Prezzo Finale</th>
 
+        </tr>
+        </thead>
+        <tbody>
 
-
-            </tr>
-            </thead>
-            <tbody>
-
-            <tr th:each="asta : ${articolixOfferta}">
-
-                <td th:text="${asta.key.id}"></td>
-
-
-                <td th:inline="text">
-                    <div th:each="articolo : ${asta.value}">
-                        [[${articolo.codice}]] - [[${articolo.nome}]]
-                    </div>
-                </td>
-
-                <td th:text="${asta.key.prezzoAttuale} + ' €'"></td>
-
-
-            </tr>
-            </tbody>
-        </table>
-
-
-
-
-
-
-    </div>
-    <a th:href="@{/Home}" class="home-button"> Home</a>
+        <tr th:each="articolixAsteAggiudicate : ${articolixAsteAggiudicate}">
+            <td th:text="${articolixAsteAggiudicate.key.id}"></td>
+            <td th:inline="text">
+                <div th:each="articolo : ${articolixAsteAggiudicate.value}">
+                    [[${articolo.codice}]] - [[${articolo.nome}]]
+                </div>
+            </td>
+            <td th:text="${articolixAsteAggiudicate.key.prezzoAttuale} + ' €'"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 
 </body>
 </html>

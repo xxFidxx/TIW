@@ -94,7 +94,6 @@ public class AstaDao {
                 "FROM articoli a " +
                 "JOIN asta at ON a.asta_id = at.id " +
                 "WHERE (a.nome LIKE ? OR a.descrizione LIKE ?) " +
-                "AND at.chiusa = 0 " +
                 "AND at.data_fine > ?";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -170,6 +169,24 @@ public class AstaDao {
     }
 
 
+    public ArrayList<Asta> findAllAsteAggiudicate(String user) throws SQLException {
+        ArrayList<Asta> aste = new ArrayList<>();
 
+        String query = "SELECT DISTINCT at.id, at.venditore_username, at.data_inizio, at.data_fine, " +
+                "at.prezzo_iniziale, at.prezzo_attuale, at.rialzo_minimo, at.chiusa " +
+                "FROM offerta o " +
+                "JOIN asta at ON o.asta_id = at.id " +
+                "WHERE (o.utente_username = ? AND o.aggiudicata = 1)";
 
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, user);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    aste.add(createAstaBeanFromRes(rs));
+                }
+            }
+        }
+        return aste;
+    }
 }

@@ -92,6 +92,14 @@ public class Acquisto extends HttpServlet {
                 articolixOfferta.put(offerta, articoli);
             }
 
+            ArrayList<Asta> asteAggiudicate = astaDao.findAllAsteAggiudicate(user.getUsername());
+            HashMap<Asta,ArrayList<Articolo>> articolixAsteAggiudicate = new HashMap<>();
+            for(Asta asta : asteAggiudicate){
+                ArrayList<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
+                articolixAsteAggiudicate.put(asta, articoli);
+            }
+
+
             LocalDateTime now = (LocalDateTime) request.getSession().getAttribute("loginTime");
             Map<Integer, String> tempoMancanteMap = new HashMap<>();
             Map<Integer, String> dateFormattateMap = new HashMap<>();
@@ -136,6 +144,7 @@ public class Acquisto extends HttpServlet {
                     JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response),
                     request.getLocale());
 
+            ctx.setVariable("articolixAsteAggiudicate", articolixAsteAggiudicate);
             ctx.setVariable("articolixOfferta", articolixOfferta);
             ctx.setVariable("articolixAsta", articolixAsta);
             ctx.setVariable("parolaChiave", parolaChiave);
@@ -144,6 +153,7 @@ public class Acquisto extends HttpServlet {
             response.setContentType("text/html;charset=UTF-8");
             templateEngine.process("acquisto", ctx, response.getWriter());
         } catch (SQLException e) {
+            e.printStackTrace();
             processErrorPage(request, response,templateEngine,servletContext,  "dbFailure");
         }
     }

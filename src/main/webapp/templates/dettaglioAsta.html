@@ -19,7 +19,7 @@
   <h2>Articoli in Asta</h2>
   <ul class="lista-articoli" style="list-style: none; padding: 0;">
     <li th:each="articolo : ${articoli}" style="display: flex; align-items: center; margin-bottom: 1em;">
-      <img th:src="@{/{img}(img=${articolo.immagine})}" alt="Immagine articolo" style="width: 100px; height: auto; margin-right: 1em; border-radius: 8px;"/>
+      <img th:src="@{'/immagini/' + ${articolo.immagine}}" alt="Immagine articolo" style="width: 100px; height: auto; margin-right: 1em; border-radius: 8px;">
       <div>
         <strong th:text="${articolo.nome}"></strong><br/>
         <span th:text="${articolo.descrizione}"></span><br/>

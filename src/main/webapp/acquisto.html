@@ -71,26 +71,18 @@
             <th>Articoli</th>
             <th>Prezzo Finale</th>
 
-
-
         </tr>
         </thead>
         <tbody>
 
-        <tr th:each="asta : ${articolixOfferta}">
-
-            <td th:text="${asta.key.id}"></td>
-
-
+        <tr th:each="articolixAsteAggiudicate : ${articolixAsteAggiudicate}">
+            <td th:text="${articolixAsteAggiudicate.key.id}"></td>
             <td th:inline="text">
-                <div th:each="articolo : ${asta.value}">
+                <div th:each="articolo : ${articolixAsteAggiudicate.value}">
                     [[${articolo.codice}]] - [[${articolo.nome}]]
                 </div>
             </td>
-
-            <td th:text="${asta.key.prezzoAttuale} + ' €'"></td>
-
-
+            <td th:text="${articolixAsteAggiudicate.key.prezzoAttuale} + ' €'"></td>
         </tr>
         </tbody>
     </table>

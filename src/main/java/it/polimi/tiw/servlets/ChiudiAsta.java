@@ -102,27 +102,9 @@ public class ChiudiAsta extends HttpServlet {
                 return;
             }
 
-            List<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
-
-            Offerta offertaAggiudicatario = offertaDao.findMaxOffertaByAstaId(asta.getId());
-            User userAggiudicatario = null;
-            if(offertaAggiudicatario!= null){
-                offertaDao.setAggiudicata(offertaAggiudicatario.getId());
-                userAggiudicatario = userDao.userByUsername(offertaAggiudicatario.getUtenteUsername());
-            }
             astaDao.setChiusa(astaId);
 
-            WebContext ctx = new WebContext(JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response), request.getLocale());
-
-            ctx.setVariable("asta", asta);
-            ctx.setVariable("articoli", articoli);
-            ctx.setVariable("offertaAggiudicatario", offertaAggiudicatario);
-            ctx.setVariable("userAggiudicatario", userAggiudicatario);
-
-            response.setContentType("text/html;charset=UTF-8");
-
-
-            templateEngine.process("dettaglioAsta", ctx, response.getWriter());
+            response.sendRedirect(request.getContextPath() + "/DettaglioAsta?id=" + astaId);
 
 
         } catch (NumberFormatException e) {

@@ -27,7 +27,7 @@
   </context-param>
   <context-param>
     <param-name>imagesDirectory</param-name>
-    <param-value>C:\Users\fidel\OneDrive\Desktop\TIW\TIW\src\main\webapp\immagini</param-value>
+    <param-value>C:\Users\fidel\OneDrive\Desktop\TIW\immaginiTIW</param-value>
   </context-param>
 
 </web-app>

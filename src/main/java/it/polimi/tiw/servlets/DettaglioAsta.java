@@ -103,12 +103,18 @@ public class DettaglioAsta extends HttpServlet {
             }
 
 
-                Offerta offertaAggiudicatario = offertaDao.findMaxOffertaByAstaId(asta.getId());
-                User userAggiudicatario = userDao.userByUsername(offertaAggiudicatario.getUtenteUsername());
+
             if(!Objects.equals(asta.getVenditoreUsername(), ((User)request.getSession().getAttribute("user")).getUsername())) {
                 System.out.println(asta.getVenditoreUsername() + ((User) request.getSession().getAttribute("user")).getUsername());
                 processErrorPage(request, response, templateEngine, servletContext, "illegalAction");
                 return;
+            }
+
+            Offerta offertaAggiudicatario = offertaDao.findMaxOffertaByAstaId(asta.getId());
+            User userAggiudicatario = null;
+            if(offertaAggiudicatario!= null){
+                offertaDao.setAggiudicata(offertaAggiudicatario.getId());
+                userAggiudicatario = userDao.userByUsername(offertaAggiudicatario.getUtenteUsername());
             }
 
             List<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());

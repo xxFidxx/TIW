@@ -105,21 +105,18 @@ public class CreaArticoloAsta extends HttpServlet {
                 return;
             }
 
-            // Validazione immagine
+
             String contentType = requestPart.getContentType();
             if (!contentType.startsWith("image/")) {
                 processErrorPage(request, response, templateEngine, servletContext, "invalidImageType");
                 return;
             }
 
-            if (requestPart.getSize() > 10 * 1024 * 1024) {
-                processErrorPage(request, response, templateEngine, servletContext, "imageTooLarge");
-                return;
-            }
+
 
             String nomeImmagine = UUID.randomUUID() + ".png";
 
-// Ottieni il percorso della cartella immagini (configurato in web.xml o default)
+
             String uploadPath = getServletContext().getInitParameter("imagesDirectory");
 
 
@@ -136,19 +133,15 @@ public class CreaArticoloAsta extends HttpServlet {
 
             Path destination = Paths.get(uploadPath, nomeImmagine);
 
-            try (InputStream fileContent = requestPart.getInputStream()) {
+            InputStream fileContent = requestPart.getInputStream();
 
                 Files.copy(fileContent, destination, StandardCopyOption.REPLACE_EXISTING);
 
+                Articolo articolo = new Articolo(user.getUsername(), nome, descrizione, nomeImmagine, prezzo, true);
+                articoloDao.insertArticolo(articolo, SessionUtils.getUser(request));
 
-                String percorsoRelativo = "immagini/" + nomeImmagine;
+            response.sendRedirect(request.getContextPath() + "/Vendo");
 
-                Articolo articolo = new Articolo(user.getUsername(),nome, descrizione, percorsoRelativo, prezzo, true);
-                User u = SessionUtils.getUser(request);
-                articoloDao.insertArticolo(articolo, u);
-
-                response.sendRedirect(request.getContextPath() + "/Vendo");
-            }
         } catch (IOException | ServletException e) {
             e.printStackTrace();
             processErrorPage(request, response, templateEngine, servletContext, "internalServerError");
