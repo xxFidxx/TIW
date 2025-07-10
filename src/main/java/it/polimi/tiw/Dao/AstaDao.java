@@ -149,6 +149,17 @@ public class AstaDao {
         return aste;
     }
 
+    public void setPrezzoAttuale(int prezzoAttuale) throws SQLException {
+
+        String query = "UPDATE asta SET prezzo_attuale = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, prezzoAttuale);
+            ResultSet rs = ps.executeQuery();
+
+        }
+    }
+
 
 
 }

@@ -84,7 +84,7 @@ public class OffertaServlet extends HttpServlet {
                     request.getLocale());
 
             ctx.setVariable("asta", asta);
-            ctx.setVariable("offerta", offerte);
+            ctx.setVariable("offerte", offerte);
             ctx.setVariable("articoli", articoli);
             response.setContentType("text/html;charset=UTF-8");
             templateEngine.process("offerta", ctx, response.getWriter());
