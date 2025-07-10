@@ -2,6 +2,7 @@ package it.polimi.tiw.beans;
 
 public class Articolo {
     private Integer codice;
+    private String usernameProprietario;
     private String nome;
     private String descrizione;
     private String immagine;
@@ -12,7 +13,8 @@ public class Articolo {
     public Articolo() {}
 
     // costruttore default
-    public Articolo(Integer codice, String nome, String descrizione, String immagine, Integer prezzo, boolean disponibile, Integer astaId) {
+    public Articolo(String usernameProprietario, Integer codice, String nome, String descrizione, String immagine, Integer prezzo, boolean disponibile, Integer astaId) {
+        this.usernameProprietario = usernameProprietario;
         this.codice = codice;
         this.nome = nome;
         this.descrizione = descrizione;
@@ -23,7 +25,8 @@ public class Articolo {
     }
 
     // costruttore per quando non hai codice ( prima di entrare nle db) e non hai asta id
-    public Articolo(String nome, String descrizione, String immagine, Integer prezzo, boolean disponibile) {
+    public Articolo(String usernameProprietario,String nome, String descrizione, String immagine, Integer prezzo, boolean disponibile) {
+        this.usernameProprietario = usernameProprietario;
         this.codice = null;
         this.nome = nome;
         this.descrizione = descrizione;
@@ -34,7 +37,8 @@ public class Articolo {
     }
 
     // costruttore pr fase in cui non hai astaId
-    public Articolo(Integer codice, String nome, String descrizione, String immagine, Integer prezzo, boolean disponibile) {
+    public Articolo(String usernameProprietario ,Integer codice, String nome, String descrizione, String immagine, Integer prezzo, boolean disponibile) {
+        this.usernameProprietario = usernameProprietario;
         this.codice = codice;
         this.nome = nome;
         this.descrizione = descrizione;
@@ -46,6 +50,10 @@ public class Articolo {
 
     public Integer getCodice() {
         return codice;
+    }
+
+    public String getUsernameProprietario() {
+        return usernameProprietario;
     }
 
     public void setCodice(Integer codice) {

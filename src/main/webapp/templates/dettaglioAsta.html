@@ -8,21 +8,24 @@
 <body>
 <h1>Dettaglio Asta - ID: <span th:text="${asta.id}"></span></h1>
 <div class="dati-asta">
-  <p><strong>Scadenza:</strong> <span th:text="${#dates.format(asta.dataFine, 'dd/MM/yyyy HH:mm')}"></span></p>
+  <p><strong>Scadenza:</strong> <span th:text="${asta.dataFineFormattata}"></span></p>
   <p><strong>Prezzo Attuale:</strong> <span th:text="${asta.prezzoAttuale}"></span> €</p>
   <p><strong>Rialzo Minimo:</strong> <span th:text="${asta.rialzoMinimo}"></span> €</p>
 </div>
 
 <hr/>
 <h2>Articoli in Asta</h2>
-<ul>
-  <li th:each="articolo : ${articoli}">
-    <strong th:text="${articolo.nome}"></strong> -
-    <span th:text="${articolo.descrizione}"></span>
-    (<span th:text="${articolo.prezzo}"></span> €)
+<ul class="lista-articoli" style="list-style: none; padding: 0;">
+  <li th:each="articolo : ${articoli}" style="display: flex; align-items: center; margin-bottom: 1em;">
+    <img th:src="@{/${articolo.immagine}}" alt="Immagine articolo" style="width: 100px; height: auto; margin-right: 1em; border-radius: 8px;"/>
+    <div>
+      <strong th:text="${articolo.nome}"></strong><br/>
+      <span th:text="${articolo.descrizione}"></span><br/>
+      <span th:text="${articolo.prezzo}"></span> €
+    </div>
   </li>
 </ul>
-<hr/>
+
 <div th:if="${!asta.isChiusa()}">
 <h2>Offerte</h2>
 <table>
@@ -37,7 +40,7 @@
   <tr th:each="offerta : ${offerte}">
     <td th:text="${offerta.utenteUsername}"></td>
     <td th:text="${offerta.prezzo}"></td>
-    <td th:text="${#dates.format(offerta.dataOra, 'dd/MM/yyyy HH:mm:ss')}"></td>
+    <td th:text="${offerta.dataOraFormattata}"></td>
   </tr>
 
 

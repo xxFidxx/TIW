@@ -29,6 +29,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -99,6 +100,8 @@ public class DettaglioAsta extends HttpServlet {
 
                 List<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
                 List<Offerta> offerte = offertaDao.findOfferteByAstaId(asta.getId());
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
 
                 WebContext ctx = new WebContext(JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response), request.getLocale());
 

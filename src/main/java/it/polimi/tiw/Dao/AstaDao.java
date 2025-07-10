@@ -27,12 +27,13 @@ public class AstaDao {
         return null;
     }
 
-    public List<Asta> findAsteByVenditore(String venditoreUsername) throws SQLException {
-        String query = "SELECT DISTINCT * FROM asta WHERE venditore_username = ? ORDER BY data_fine ASC";
+    public ArrayList<Asta> findAsteByVenditore(String venditoreUsername, int chiusa) throws SQLException {
+        String query = "SELECT DISTINCT * FROM asta WHERE (venditore_username = ? AND chiusa = ?) ORDER BY data_fine ASC";
         try (PreparedStatement p = connection.prepareStatement(query)) {
             p.setString(1, venditoreUsername);
+            p.setInt(2, chiusa);
             try (ResultSet rs = p.executeQuery()) {
-                List<Asta> aste = new ArrayList<>();
+                ArrayList<Asta> aste = new ArrayList<>();
                 while (rs.next()) {
                     aste.add(createAstaBeanFromRes(rs));
                 }
@@ -159,7 +160,7 @@ public class AstaDao {
         }
     }
 
-    public void setChiuso(int astaId) throws SQLException {
+    public void setChiusa(int astaId) throws SQLException {
         String query = "UPDATE asta SET chiusa = 1 WHERE asta_id = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {

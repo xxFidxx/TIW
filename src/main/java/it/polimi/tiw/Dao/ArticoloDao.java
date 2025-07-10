@@ -28,15 +28,16 @@ public class ArticoloDao {
         return null;
     }
 
-    public List<Articolo> findAllDisponibili() throws SQLException {
-        String query = "SELECT * FROM articoli WHERE disponibile = 1";
+    public List<Articolo> findAllDisponibili(String user) throws SQLException {
+        String query = "SELECT * FROM articoli WHERE disponibile = 1 AND venditoreUsername = ?";
         List<Articolo> articoli = new ArrayList<>();
-        try (PreparedStatement p = con.prepareStatement(query);
-             ResultSet rs = p.executeQuery()) {
-            while (rs.next()) {
-                articoli.add(createArticoloBeanFromRes(rs));
+        try (PreparedStatement p = con.prepareStatement(query)) {
+            p.setString(1, user);
+            ResultSet rs = p.executeQuery();
+                while (rs.next()) {
+                    articoli.add(createArticoloBeanFromRes(rs));
+                }
             }
-        }
         return articoli;
     }
 
@@ -68,6 +69,7 @@ public class ArticoloDao {
 
     private Articolo createArticoloBeanFromRes(ResultSet rs) throws SQLException {
         Articolo articolo = new Articolo(
+                rs.getString("venditoreUsername"),
                 rs.getString("nome"),
                 rs.getString("descrizione"),
                 rs.getString("immagine"),
