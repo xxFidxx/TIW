@@ -42,13 +42,14 @@ public class ArticoloDao {
     }
 
     public void insertArticolo(Articolo a,User u) throws SQLException {
-        String query = "INSERT INTO articoli (nome, descrizione, immagine, prezzo, disponibile) VALUES (?, ?, ?, ?, ?) ";
+        String query = "INSERT INTO articoli (nome, descrizione, immagine, prezzo, disponibile,venditoreUsername) VALUES (?, ?, ?, ?, ?,?) ";
         try (PreparedStatement p = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             p.setString(1, a.getNome());
             p.setString(2, a.getDescrizione());
             p.setString(3, a.getImmagine());
             p.setInt(4, a.getPrezzo());
             p.setBoolean(5, a.isDisponibile());
+            p.setString(6, u.getUsername());
             p.executeUpdate();
             try (ResultSet rs = p.getGeneratedKeys()) {
                 if (rs.next()) {
