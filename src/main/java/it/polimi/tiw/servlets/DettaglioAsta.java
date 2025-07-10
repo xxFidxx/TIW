@@ -100,7 +100,6 @@ public class DettaglioAsta extends HttpServlet {
 
                 List<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
                 List<Offerta> offerte = offertaDao.findOfferteByAstaId(asta.getId());
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
 
                 WebContext ctx = new WebContext(JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response), request.getLocale());

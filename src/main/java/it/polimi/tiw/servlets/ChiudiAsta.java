@@ -79,11 +79,11 @@ public class ChiudiAsta extends HttpServlet {
     private void handleCreateChiudiAsta(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
 
-            String astaIdParam = request.getParameter("astaId");
+            String astaIdParam = request.getParameter("idAsta");
 
 
-            if (astaIdParam == null || astaIdParam.isEmpty() ) {
-                processErrorPage(request, response, templateEngine, servletContext, "emptyFields");
+            if (astaIdParam == null) {
+                processErrorPage(request, response, templateEngine, servletContext, "illegalAction");
                 return;
             }
 

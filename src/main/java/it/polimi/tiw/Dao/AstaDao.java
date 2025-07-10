@@ -151,7 +151,7 @@ public class AstaDao {
     }
 
     public void setPrezzoAttuale(int prezzoAttuale, int astaId) throws SQLException {
-        String query = "UPDATE asta SET prezzo_attuale = ? WHERE asta_id = ?";
+        String query = "UPDATE asta SET prezzo_attuale = ? WHERE id = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, prezzoAttuale);
@@ -161,7 +161,7 @@ public class AstaDao {
     }
 
     public void setChiusa(int astaId) throws SQLException {
-        String query = "UPDATE asta SET chiusa = 1 WHERE asta_id = ?";
+        String query = "UPDATE asta SET chiusa = 1 WHERE id = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, astaId);

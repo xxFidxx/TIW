@@ -93,6 +93,7 @@ public class DoOfferta extends HttpServlet {
             astaDao.setPrezzoAttuale(offertaUser,astaId);
             response.sendRedirect(request.getContextPath() + "/Acquisto");
         } catch (SQLException e) {
+            e.printStackTrace();
             processErrorPage(request, response,templateEngine,servletContext,  "dbFailure");
         }catch (NumberFormatException e){
             e.printStackTrace();
