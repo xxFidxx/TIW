@@ -79,7 +79,7 @@ public class Vendo extends HttpServlet {
         User user = (User) request.getSession().getAttribute("user");
         try {
                 List<Asta> asteAperte = astaDao.findAsteByVenditore(user.getUsername(), 0);
-                List<Asta> asteChiuse = astaDao.findAsteByVenditore(user.getUsername(), 0);
+                List<Asta> asteChiuse = astaDao.findAsteByVenditore(user.getUsername(), 1);
                 Map<Asta, List<Articolo>> asteConArticoli = new HashMap<>();
                 Map<Asta,List<Articolo>> asteChiuseconArticoli = new HashMap<>();
 
