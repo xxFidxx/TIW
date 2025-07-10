@@ -105,8 +105,11 @@ public class ChiudiAsta extends HttpServlet {
             List<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
 
             Offerta offertaAggiudicatario = offertaDao.findMaxOffertaByAstaId(asta.getId());
-            offertaDao.setAggiudicata(offertaAggiudicatario.getId());
-            User userAggiudicatario = userDao.userByUsername(offertaAggiudicatario.getUtenteUsername());
+            User userAggiudicatario = null;
+            if(offertaAggiudicatario!= null){
+                offertaDao.setAggiudicata(offertaAggiudicatario.getId());
+                userAggiudicatario = userDao.userByUsername(offertaAggiudicatario.getUtenteUsername());
+            }
             astaDao.setChiusa(astaId);
 
             WebContext ctx = new WebContext(JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response), request.getLocale());
