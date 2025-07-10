@@ -179,7 +179,7 @@ public class Vendo extends HttpServlet {
 
             ctx.setVariable("asteAperte", asteAperte);
             ctx.setVariable("asteChiuse", asteChiuse);
-            ctx.setVariable("arteChiuseconArticoli", asteChiuseconArticoli);
+            ctx.setVariable("asteChiuseconArticoli", asteChiuseconArticoli);
             ctx.setVariable("asteConArticoli", asteConArticoli);
             ctx.setVariable("tempoMancanteMap", tempoMancanteMap);
             ctx.setVariable("dateFormattateMap", dateFormattateMap);
