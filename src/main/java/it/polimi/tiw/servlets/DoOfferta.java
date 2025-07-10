@@ -6,6 +6,7 @@ import it.polimi.tiw.Dao.AstaDao;
 import it.polimi.tiw.Dao.OffertaDao;
 import it.polimi.tiw.beans.Asta;
 import it.polimi.tiw.beans.Offerta;
+import it.polimi.tiw.beans.User;
 import it.polimi.tiw.rescources.SessionUtils;
 import it.polimi.tiw.rescources.Utils;
 import jakarta.servlet.ServletContext;
@@ -61,7 +62,7 @@ public class DoOfferta extends HttpServlet {
 
     private void handleOfferta(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            String user = request.getParameter("user");
+            User user = (User) request.getSession().getAttribute("user");
             int astaId = Integer.parseInt(request.getParameter("astaId"));
 
             if(astaId < 0){
@@ -70,27 +71,31 @@ public class DoOfferta extends HttpServlet {
             int offertaUser = Integer.parseInt(request.getParameter("offerta"));
 
             if(offertaUser < 0){
+                System.out.println(offertaUser);
                 processErrorPage(request, response,templateEngine,servletContext,  "invalidOffer");
             }
 
             Asta asta = astaDao.findAstaById(astaId);
 
-            if(user.equals(asta.getVenditoreUsername())){
+            if((user.getUsername()).equals(asta.getVenditoreUsername()) ){
                 processErrorPage(request, response,templateEngine,servletContext,  "illegalAction");
                 return;
             }
 
-            Offerta offertaMax = offertaDao.findMaxOffertaByAstaId(astaId);
-            if(offertaUser < offertaMax.getPrezzo() + asta.getRialzoMinimo()){
+
+            if(offertaUser < asta.getPrezzoAttuale()  + asta.getRialzoMinimo()){
+                System.out.println(offertaUser + " offertaMax " + asta.getPrezzoAttuale() +  " + rialzoMin " + asta.getRialzoMinimo());
                 processErrorPage(request, response,templateEngine,servletContext,  "invalidOffer");
                 return;
             }
 
-            offertaDao.insertOfferta(astaId,user,offertaUser, LocalDateTime.now());
+            offertaDao.insertOfferta(astaId,user.getUsername(),offertaUser, LocalDateTime.now());
+            astaDao.setPrezzoAttuale(offertaUser);
             response.sendRedirect(request.getContextPath() + "/Acquisto");
         } catch (SQLException e) {
             processErrorPage(request, response,templateEngine,servletContext,  "dbFailure");
         }catch (NumberFormatException e){
+            e.printStackTrace();
             processErrorPage(request, response,templateEngine,servletContext,  "invalidOffer");
         }
     }
