@@ -23,7 +23,7 @@
   </li>
 </ul>
 <hr/>
-
+<div th:if="${!asta.isChiusa()}">
 <h2>Offerte</h2>
 <table>
   <thead>
@@ -50,6 +50,14 @@
     Chiudi Asta
   </button>
 </form>
+</div>
+<div th:if="${asta.isChiusa()}">
+  <h2>Asta Chiusa</h2>
+  <p><strong>Aggiudicatario:</strong> <span th:text="${offertaAggiudicatario.getUtenteUsername()}"></span></p>
+  <p><strong>Prezzo Finale:</strong><span th:text="${asta.getPrezzoAttuale()}"></span> €</p>
+  <p><strong>Indirizzo Spedizione:</strong><span th:text="${userAggiudicatario.getAddress()}"></span> <span th:text="${userAggiudicatario.getAddressNumber()}"></span> </p>
+
+</div>
 
 <p><a th:href="@{/Vendo}">Torna alla pagina vendo</a></p>
 
