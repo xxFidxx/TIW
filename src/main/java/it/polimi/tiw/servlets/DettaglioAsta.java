@@ -30,6 +30,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -93,17 +95,31 @@ public class DettaglioAsta extends HttpServlet {
                 return;
             }
 
-                int astaId = Integer.parseInt(astaIdParam);
-                Asta asta = astaDao.findAstaById(astaId);
-                if (asta == null) {
-                    processErrorPage(request, response, templateEngine, servletContext, "astaNotFound");
-                    return;
-                }
+            int astaId = Integer.parseInt(astaIdParam);
+            Asta asta = astaDao.findAstaById(astaId);
+            if (asta == null) {
+                processErrorPage(request, response, templateEngine, servletContext, "astaNotFound");
+                return;
+            }
 
-                List<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
-                List<Offerta> offerte = offertaDao.findOfferteByAstaId(asta.getId());
+
                 Offerta offertaAggiudicatario = offertaDao.findMaxOffertaByAstaId(asta.getId());
                 User userAggiudicatario = userDao.userByUsername(offertaAggiudicatario.getUtenteUsername());
+            if(!Objects.equals(asta.getVenditoreUsername(), ((User)request.getSession().getAttribute("user")).getUsername())) {
+                System.out.println(asta.getVenditoreUsername() + ((User) request.getSession().getAttribute("user")).getUsername());
+                processErrorPage(request, response, templateEngine, servletContext, "illegalAction");
+                return;
+            }
+
+            List<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
+            List<Offerta> offerte = offertaDao.findOfferteByAstaId(asta.getId());
+
+
+            asta.setDataFineFormattata();
+            for(Offerta offerta: offerte){
+                offerta.setDataOraFormattata();
+            }
+
 
                 WebContext ctx = new WebContext(JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response), request.getLocale());
 

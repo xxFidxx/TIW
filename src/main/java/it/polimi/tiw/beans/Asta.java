@@ -8,6 +8,7 @@ public class Asta {
     private String venditoreUsername;
     private LocalDateTime dataInizio;
     private LocalDateTime dataFine;
+    private String dataFineFormattata;
     private Integer prezzoIniziale;
     private Integer prezzoAttuale;
     private Integer rialzoMinimo;
@@ -66,6 +67,10 @@ public class Asta {
         return prezzoAttuale;
     }
 
+    public String getDataFineFormattata() {
+        return dataFineFormattata;
+    }
+
     // Setters
     public void setId(Integer id) {
         this.id = id;
@@ -89,6 +94,11 @@ public class Asta {
 
     public void setPrezzoAttuale(Integer prezzoAttuale) {
         this.prezzoAttuale = prezzoAttuale;
+    }
+
+    public void setDataFineFormattata(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        this.dataFineFormattata = dataFine.format(formatter);
     }
 
 }

@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Pagina Acquisto</title>
-    <link rel="stylesheet" href="css/acquisto.css">
+    <link rel="stylesheet" th:href="@{/css/acquisto.css}" />
 
 </head>
 <body>
+<a th:href="@{/Home}" class="home-button">Home</a>
     <h1>ACQUISTI</h1>
 
     <div class="ricerca-aste">
@@ -100,7 +101,7 @@
 
 
     </div>
-    <p><a th:href="@{/Home}">Torna alla pagina home</a></p>
+    <a th:href="@{/Home}" class="home-button"> Home</a>
 
 </body>
 </html>

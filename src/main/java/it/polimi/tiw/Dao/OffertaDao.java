@@ -5,8 +5,6 @@ import it.polimi.tiw.beans.Offerta;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
-import java.math.BigDecimal;
 
 public class OffertaDao {
     private final Connection connection;
@@ -43,14 +41,14 @@ public class OffertaDao {
         }
     }
 
-    public boolean insertOfferta(int astaId, String username, Integer prezzo, LocalDateTime dataOra) throws SQLException {
+    public void insertOfferta(int astaId, String username, Integer prezzo, LocalDateTime dataOra) throws SQLException {
         String query = "INSERT INTO offerta (asta_id, utente_username, prezzo, data_ora) VALUES (?, ?, ?, ?)";
         try (PreparedStatement p = connection.prepareStatement(query)) {
             p.setInt(1, astaId);
             p.setString(2, username);
             p.setInt(3, prezzo);
             p.setTimestamp(4, Timestamp.valueOf(dataOra));
-            return p.executeUpdate() == 1;
+            p.executeUpdate();
         }
     }
 
@@ -78,29 +76,14 @@ public class OffertaDao {
         return offerta;
     }
 
-    public ArrayList <Offerta> logOfferteByAstaId(int astaId) throws SQLException {
-        ArrayList<Offerta> offerte = new ArrayList<>();
-        String query = "SELECT * FROM offerta WHERE asta_id = ? ORDER BY data_ora DESC";
-        try (PreparedStatement p = connection.prepareStatement(query)) {
-            p.setInt(1, astaId);
-            ResultSet rs = p.executeQuery();
-            while (rs.next()) {
-                offerte.add(createOffertaBeanFromRes(rs));
-            }
-        }
-        return offerte;
-    }
-
     public void setAggiudicata(int offertaId) throws SQLException {
         String query = "UPDATE offerta SET aggiudicata = 1 WHERE id = ?";
         try (PreparedStatement p = connection.prepareStatement(query)) {
             p.setInt(1, offertaId);
+            p.executeUpdate();
         }
     }
 
-
-    //tra tutte le offerte, guardo quelle dello user, trovo tutte le offerte dello user, aggiudicate.
-    //dalle offerte mi ricavo gli articoli a cui sono collegate ( for each asta, fai articoliByAsta();
 
 
 

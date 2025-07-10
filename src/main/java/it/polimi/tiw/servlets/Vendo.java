@@ -6,6 +6,7 @@ import it.polimi.tiw.beans.Articolo;
 import it.polimi.tiw.Dao.ArticoloDao;
 import it.polimi.tiw.Dao.AstaDao;
 import it.polimi.tiw.beans.Asta;
+import it.polimi.tiw.beans.User;
 import it.polimi.tiw.rescources.SessionUtils;
 import it.polimi.tiw.rescources.Utils;
 import jakarta.servlet.ServletContext;
@@ -74,9 +75,11 @@ public class Vendo extends HttpServlet {
             response.sendRedirect("index.html");
             return;
         }
+
+        User user = (User) request.getSession().getAttribute("user");
         try {
-                List<Asta> asteAperte = astaDao.findAllAsteAperte();
-                List<Asta> asteChiuse = astaDao.findAllAsteChiuse();
+                List<Asta> asteAperte = astaDao.findAsteByVenditore(user.getUsername(), 0);
+                List<Asta> asteChiuse = astaDao.findAsteByVenditore(user.getUsername(), 0);
                 Map<Asta, List<Articolo>> asteConArticoli = new HashMap<>();
                 Map<Asta,List<Articolo>> asteChiuseconArticoli = new HashMap<>();
 
@@ -90,7 +93,7 @@ public class Vendo extends HttpServlet {
                 asteChiuseconArticoli.put(asta, articoli);
             }
 
-               List<Articolo> articoliDisponibili = articoloDao.findAllDisponibili();
+               List<Articolo> articoliDisponibili = articoloDao.findAllDisponibili(user.getUsername());
 
 
                int totalePrezzoIntero = articoliDisponibili.stream()
@@ -99,6 +102,7 @@ public class Vendo extends HttpServlet {
 
                List<Articolo> articoliConPrezziInteri = articoliDisponibili.stream()
                        .map(articolo -> new Articolo(
+                               articolo.getUsernameProprietario(),
                                articolo.getCodice(),
                                articolo.getNome(),
                                articolo.getDescrizione(),

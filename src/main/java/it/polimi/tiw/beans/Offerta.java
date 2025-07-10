@@ -1,5 +1,6 @@
 package it.polimi.tiw.beans;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Offerta {
     private Integer id;
@@ -7,6 +8,7 @@ public class Offerta {
     private String utenteUsername;
     private Integer prezzo;
     private LocalDateTime dataOra;
+    private String dataOraFormattata;
     private boolean aggiudicata;
 
     public Offerta(Integer id, Integer astaId, String utenteUsername, Integer prezzo, LocalDateTime dataOra, boolean aggiudicata) {
@@ -58,6 +60,15 @@ public class Offerta {
 
     public boolean isAggiudicata() {
         return aggiudicata;
+    }
+
+    public void setDataOraFormattata() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        this.dataOraFormattata = dataOra.format(formatter);
+    }
+
+    public String getDataOraFormattata() {
+        return dataOraFormattata;
     }
 
 }

@@ -1,62 +1,69 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="">
 <head>
-    <meta charset="UTF-8">
-    <title>dettaglioAsta</title>
-  <link rel="stylesheet" href="css/dettaglioAsta.css">
+  <meta charset="UTF-8">
+  <title>dettaglioAsta</title>
+  <link rel="stylesheet" th:href="@{/css/dettaglioAsta.css}" />
 </head>
 <body>
 <h1>Dettaglio Asta - ID: <span th:text="${asta.id}"></span></h1>
-<div class="dati-asta">
-  <p><strong>Scadenza:</strong> <span th:text="${#dates.format(asta.dataFine, 'dd/MM/yyyy HH:mm')}"></span></p>
-  <p><strong>Prezzo Attuale:</strong> <span th:text="${asta.prezzoAttuale}"></span> €</p>
-  <p><strong>Rialzo Minimo:</strong> <span th:text="${asta.rialzoMinimo}"></span> €</p>
-</div>
 
-<hr/>
-<h2>Articoli in Asta</h2>
-<ul>
-  <li th:each="articolo : ${articoli}">
-    <strong th:text="${articolo.nome}"></strong> -
-    <span th:text="${articolo.descrizione}"></span>
-    (<span th:text="${articolo.prezzo}"></span> €)
-  </li>
-</ul>
-<hr/>
 <div th:if="${!asta.isChiusa()}">
-<h2>Offerte</h2>
-<table>
-  <thead>
-  <tr>
-    <th>Nome Utente</th>
-    <th>Prezzo Offerto </th>
-    <th>Data e Ora</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="offerta : ${offerte}">
-    <td th:text="${offerta.utenteUsername}"></td>
-    <td th:text="${offerta.prezzo}"></td>
-    <td th:text="${#dates.format(offerta.dataOra, 'dd/MM/yyyy HH:mm:ss')}"></td>
-  </tr>
+  <div class="dati-asta">
+    <p><strong>Scadenza:</strong> <span th:text="${asta.dataFineFormattata}"></span></p>
+    <p><strong>Prezzo Attuale:</strong> <span th:text="${asta.prezzoAttuale}"></span> €</p>
+    <p><strong>Rialzo Minimo:</strong> <span th:text="${asta.rialzoMinimo}"></span> €</p>
+  </div>
 
+  <hr/>
+  <h2>Articoli in Asta</h2>
+  <ul class="lista-articoli" style="list-style: none; padding: 0;">
+    <li th:each="articolo : ${articoli}" style="display: flex; align-items: center; margin-bottom: 1em;">
+      <img th:src="@{/{img}(img=${articolo.immagine})}" alt="Immagine articolo" style="width: 100px; height: auto; margin-right: 1em; border-radius: 8px;"/>
+      <div>
+        <strong th:text="${articolo.nome}"></strong><br/>
+        <span th:text="${articolo.descrizione}"></span><br/>
+        <span th:text="${articolo.prezzo}"></span> €
+      </div>
+    </li>
+  </ul>
 
-  </tbody>
-</table>
+  <h2>Offerte</h2>
+  <table>
+    <thead>
+    <tr>
+      <th>Nome Utente</th>
+      <th>Prezzo Offerto </th>
+      <th>Data e Ora</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="offerta : ${offerte}">
+      <td th:text="${offerta.utenteUsername}"></td>
+      <td th:text="${offerta.prezzo}"></td>
+      <td th:text="${offerta.dataOraFormattata}"></td>
+    </tr>
+    </tbody>
+  </table>
 
-<form th:action="@{/ChiudiAsta}" method="post">
-  <input type="hidden" name="idAsta" th:value="${asta.id}" />
-  <button type="submit" class="chiudi-asta">
-    Chiudi Asta
-  </button>
-</form>
+  <form th:action="@{/ChiudiAsta}" method="post">
+    <input type="hidden" name="idAsta" th:value="${asta.id}" />
+    <button type="submit" class="chiudi-asta">
+      Chiudi Asta
+    </button>
+  </form>
 </div>
+
 <div th:if="${asta.isChiusa()}">
   <h2>Asta Chiusa</h2>
-  <p><strong>Aggiudicatario:</strong> <span th:text="${offertaAggiudicatario.getUtenteUsername()}"></span></p>
-  <p><strong>Prezzo Finale:</strong><span th:text="${asta.getPrezzoAttuale()}"></span> €</p>
-  <p><strong>Indirizzo Spedizione:</strong><span th:text="${userAggiudicatario.getAddress()}"></span> <span th:text="${userAggiudicatario.getAddressNumber()}"></span> </p>
-
+    <div th:if="${offertaAggiudicatario != null}">
+    <p><strong>Aggiudicatario:</strong> <span th:text="${offertaAggiudicatario.getUtenteUsername()}"></span></p>
+    <p><strong>Prezzo Finale:</strong><span th:text="${asta.getPrezzoAttuale()}"></span> €</p>
+    <p><strong>Indirizzo Spedizione:</strong><span th:text="${userAggiudicatario.getAddress()}"></span> <span th:text="${userAggiudicatario.getAddressNumber()}"></span> </p>
+  </div>
+  <div th:if="${offertaAggiudicatario == null}">
+    <p><strong>NESSUN'OFFERTA PERVENUTA:</strong></p>
+  </div>
 </div>
 
 <p><a th:href="@{/Vendo}">Torna alla pagina vendo</a></p>

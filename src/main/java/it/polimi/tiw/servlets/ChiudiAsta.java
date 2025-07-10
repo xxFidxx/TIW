@@ -79,11 +79,12 @@ public class ChiudiAsta extends HttpServlet {
     private void handleCreateChiudiAsta(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
 
-            String astaIdParam = request.getParameter("astaId");
+            String astaIdParam = request.getParameter("idAsta");
 
 
-            if (astaIdParam == null || astaIdParam.isEmpty() ) {
-                processErrorPage(request, response, templateEngine, servletContext, "emptyFields");
+            if (astaIdParam == null) {
+                System.out.println("astaIdParam is null");
+                processErrorPage(request, response, templateEngine, servletContext, "illegalAction");
                 return;
             }
 
@@ -95,7 +96,7 @@ public class ChiudiAsta extends HttpServlet {
                 return;
             }
 
-            if(!Objects.equals(asta.getVenditoreUsername(), request.getParameter("username")) || asta.isChiusa() ||
+            if(!Objects.equals(asta.getVenditoreUsername(), ((User)request.getSession().getAttribute("user")).getUsername()) || asta.isChiusa() ||
                     (asta.getDataFine().isAfter((LocalDateTime)  request.getSession().getAttribute("loginTime")))) {
                 processErrorPage(request, response, templateEngine, servletContext, "illegalAction");
                 return;
@@ -104,8 +105,12 @@ public class ChiudiAsta extends HttpServlet {
             List<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
 
             Offerta offertaAggiudicatario = offertaDao.findMaxOffertaByAstaId(asta.getId());
-            offertaDao.setAggiudicata(offertaAggiudicatario.getId());
-            User userAggiudicatario = userDao.userByUsername(offertaAggiudicatario.getUtenteUsername());
+            User userAggiudicatario = null;
+            if(offertaAggiudicatario!= null){
+                offertaDao.setAggiudicata(offertaAggiudicatario.getId());
+                userAggiudicatario = userDao.userByUsername(offertaAggiudicatario.getUtenteUsername());
+            }
+            astaDao.setChiusa(astaId);
 
             WebContext ctx = new WebContext(JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response), request.getLocale());
 
@@ -117,7 +122,7 @@ public class ChiudiAsta extends HttpServlet {
             response.setContentType("text/html;charset=UTF-8");
 
 
-            templateEngine.process("vendo", ctx, response.getWriter());
+            templateEngine.process("dettaglioAsta", ctx, response.getWriter());
 
 
         } catch (NumberFormatException e) {

@@ -72,7 +72,7 @@ public class CreaArticoloAsta extends HttpServlet {
     // GESTISCI ANCHE ALTRE PAGINE COSI
     private void handleCreateArticolo(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            // Recupero parametri
+            User user = (User) request.getSession().getAttribute("user");
             String nome = request.getParameter("nome");
             String descrizione = request.getParameter("descrizione");
             String prezzoStr = request.getParameter("prezzo");
@@ -143,7 +143,7 @@ public class CreaArticoloAsta extends HttpServlet {
 
                 String percorsoRelativo = "immagini/" + nomeImmagine;
 
-                Articolo articolo = new Articolo(nome, descrizione, percorsoRelativo, prezzo, true);
+                Articolo articolo = new Articolo(user.getUsername(),nome, descrizione, percorsoRelativo, prezzo, true);
                 User u = SessionUtils.getUser(request);
                 articoloDao.insertArticolo(articolo, u);
 
