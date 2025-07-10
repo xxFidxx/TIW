@@ -19,6 +19,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
@@ -54,8 +55,10 @@ public class Login extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+
         if(request.getSession() != null && request.getSession().getAttribute("user") != null) {
-            response.sendRedirect("home.html");
+            response.sendRedirect("/Home");
+            return;
         }
 
         String username = request.getParameter("username");

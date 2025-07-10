@@ -33,7 +33,7 @@ public class Logout extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.getSession().invalidate();
 
-        response.sendRedirect("/Index");
+        response.sendRedirect("index.html");
     }
 
 }

@@ -46,13 +46,16 @@ public class Index extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         if (request.getSession() != null && request.getSession().getAttribute("user") != null) {
-            response.sendRedirect("home.html");
+            response.sendRedirect("/Home");
         }else{
             response.setContentType("text/html;charset=UTF-8");
             WebContext ctx = new WebContext(
                     JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response),
                     request.getLocale());
+
             templateEngine.process("index", ctx, response.getWriter());
         }
     }
+
+
 }

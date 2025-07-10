@@ -36,12 +36,12 @@
         <p th:case="'imageTooLarge'">Image size cannot exceed 10MB.</p>
         <p th:case="'astaNotFound'">Nessun'asta corrispondente all' Id fornito</p>
         <p th:case="'notRecognizedAction'">not recognized action.</p>
-        <p th:case="'illegalAction'">not recognized action.</p>
+        <p th:case="'illegalAction'">Illegal action.</p>
         <p th:case="*">Unknown error occurred.</p>
     </div>
     <p th:switch="${servletPath}">
-        <a th:case="'/Login'" th:href="@{/Index}">Back to login</a>
-        <a th:case="'/Register'" th:href="@{/Index}">Back to login</a>
+        <a th:case="'/Login'" href ="index.html">Back to login</a>
+        <a th:case="'/Register'" href ="index.html">Back to login</a>
         <a th:case="'/Acquisto'" th:href="@{/Acquisto}">Back to acquisto</a>
         <a th:case="'/CreaArticoloAsta'" th:href="@{/Vendo}">Back to vendo</a>
         <a th:case="'/OffertaServlet'" th:href="@{/Vendo}">Back to vendo</a>
@@ -51,7 +51,7 @@
         <a th:case="'/DoOfferta'" th:href="@{/Acquisto}">Back to acquisto</a>
         <a th:case="'/ChiudiAsta'" th:href="@{/Vendo}">Back to Vendo</a>
         <a th:case="'/CreaAsta'" th:href="@{/Vendo}">Back to Vendo</a>
-        <a th:case="*" th:href="@{/Index}">Back to Home</a>
+        <a th:case="*" href ="index.html">Back to login</a>
     </p>
 
 </div>
