@@ -9,6 +9,71 @@
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
 
+  <filter>
+    <filter-name>AuthenticationFilter</filter-name>
+    <filter-class>it.polimi.tiw.filters.AuthenticationFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>AuthenticationFilter</filter-name>
+    <url-pattern>/Acquisto</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>AuthenticationFilter</filter-name>
+    <url-pattern>/ChiudiAsta</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>AuthenticationFilter</filter-name>
+    <url-pattern>/CreaArticoloAsta</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>AuthenticationFilter</filter-name>
+    <url-pattern>/CreaAsta</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>AuthenticationFilter</filter-name>
+    <url-pattern>/DettaglioAsta</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>AuthenticationFilter</filter-name>
+    <url-pattern>/DoOfferta</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>AuthenticationFilter</filter-name>
+    <url-pattern>/Home</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>AuthenticationFilter</filter-name>
+    <url-pattern>/Logout</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>AuthenticationFilter</filter-name>
+    <url-pattern>/OffertaServlet</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>AuthenticationFilter</filter-name>
+    <url-pattern>/ParolaChiave</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>AuthenticationFilter</filter-name>
+    <url-pattern>/Vendo</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>AuthenticationFilter</filter-name>
+    <url-pattern>/UploadImageServlet</url-pattern>
+  </filter-mapping>
+
   <context-param>
     <param-name>dbDriver</param-name>
     <param-value>org.mariadb.jdbc.Driver</param-value>

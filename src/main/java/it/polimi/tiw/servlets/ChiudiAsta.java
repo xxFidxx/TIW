@@ -65,12 +65,6 @@ public class ChiudiAsta extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        if(!SessionUtils.isUserLogged(request)){
-            response.sendRedirect("index.html");
-            return;
-        }
-
-
         handleCreateChiudiAsta(request, response);
     }
 

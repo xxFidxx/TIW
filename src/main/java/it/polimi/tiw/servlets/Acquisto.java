@@ -63,11 +63,6 @@ public class Acquisto extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws  IOException {
 
-        if(!SessionUtils.isUserLogged(request)){
-            response.sendRedirect("index.html");
-            return;
-        }
-
         User user = (User) request.getSession().getAttribute("user");
 
         String parolaChiave = request.getParameter("parolaChiave");

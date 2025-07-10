@@ -60,11 +60,6 @@ public class OffertaServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws  IOException {
 
-        if(!SessionUtils.isUserLogged(request)){
-            response.sendRedirect("index.html");
-            return;
-        }
-
         handleOfferta(request, response);
     }
 

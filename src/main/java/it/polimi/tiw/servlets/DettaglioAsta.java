@@ -73,11 +73,6 @@ public class DettaglioAsta extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        if(!SessionUtils.isUserLogged(request)){
-            response.sendRedirect("index.html");
-            return;
-        }
-
 
         handleCreateDettagliAsta(request, response);
     }

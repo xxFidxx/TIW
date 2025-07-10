@@ -54,11 +54,6 @@ public class ParolaChiave extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws  IOException {
 
-        if(!SessionUtils.isUserLogged(request)){
-            response.sendRedirect("index.html");
-            return;
-        }
-
        String parolaChiave = request.getParameter("parolaChiave");
 
         if(parolaChiave == null){

@@ -52,11 +52,6 @@ public class DoOfferta extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws  IOException {
 
-        if(!SessionUtils.isUserLogged(request)){
-            response.sendRedirect("index.html");
-            return;
-        }
-
         handleOfferta(request, response);
     }
 

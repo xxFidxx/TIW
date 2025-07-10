@@ -57,10 +57,6 @@ public class CreaArticoloAsta extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        if(!SessionUtils.isUserLogged(request)){
-            response.sendRedirect("index.html");
-            return;
-        }
                 handleCreateArticolo(request, response);
     }
 

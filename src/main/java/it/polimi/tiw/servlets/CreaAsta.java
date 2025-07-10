@@ -60,11 +60,6 @@ public class CreaAsta extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if (!SessionUtils.isUserLogged(request)) {
-            response.sendRedirect("index.html");
-            return;
-        }
-
 
         String[] articoliIds = request.getParameterValues("articoli");
         String rialzoStr = request.getParameter("rialzo");
