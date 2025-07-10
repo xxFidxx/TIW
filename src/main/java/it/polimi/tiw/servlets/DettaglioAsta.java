@@ -98,11 +98,11 @@ public class DettaglioAsta extends HttpServlet {
                 return;
             }
 
-            if(!Objects.equals(asta.getVenditoreUsername(), request.getParameter("username")) || asta.isChiusa() ||
-                    (asta.getDataFine().isAfter((LocalDateTime)  request.getSession().getAttribute("loginTime")))) {
+            if(!Objects.equals(asta.getVenditoreUsername(), request.getParameter("username"))) {
                 processErrorPage(request, response, templateEngine, servletContext, "illegalAction");
                 return;
             }
+
             List<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
             List<Offerta> offerte = offertaDao.findOfferteByAstaId(asta.getId());
 
