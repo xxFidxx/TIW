@@ -3,6 +3,7 @@ package it.polimi.tiw.servlets;
 import it.polimi.tiw.Dao.ArticoloDao;
 import it.polimi.tiw.Dao.AstaDao;
 import it.polimi.tiw.Dao.OffertaDao;
+import it.polimi.tiw.Dao.UserDao;
 import it.polimi.tiw.beans.Articolo;
 import it.polimi.tiw.beans.Asta;
 import it.polimi.tiw.beans.Offerta;
@@ -44,6 +45,7 @@ public class DettaglioAsta extends HttpServlet {
     private ArticoloDao articoloDao;
     private AstaDao astaDao;
     private OffertaDao offertaDao;
+    private UserDao userDao;
     private ServletContext servletContext;
 
     public void init() throws ServletException {
@@ -53,6 +55,7 @@ public class DettaglioAsta extends HttpServlet {
             articoloDao = new ArticoloDao(connection);
             astaDao = new AstaDao(connection);
             offertaDao = new OffertaDao(connection);
+            userDao = new UserDao(connection);
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
             throw new ServletException("Error during database initialization", e);
@@ -99,12 +102,16 @@ public class DettaglioAsta extends HttpServlet {
 
                 List<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
                 List<Offerta> offerte = offertaDao.findOfferteByAstaId(asta.getId());
+                Offerta offertaAggiudicatario = offertaDao.findMaxOffertaByAstaId(asta.getId());
+                User userAggiudicatario = userDao.userByUsername(offertaAggiudicatario.getUtenteUsername());
 
                 WebContext ctx = new WebContext(JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response), request.getLocale());
 
                 ctx.setVariable("asta", asta);
                 ctx.setVariable("articoli", articoli);
                 ctx.setVariable("offerte", offerte);
+                ctx.setVariable("offertaAggiudicatario", offertaAggiudicatario);
+                ctx.setVariable("userAggiudicatario", userAggiudicatario);
 
                 response.setContentType("text/html;charset=UTF-8");
 
