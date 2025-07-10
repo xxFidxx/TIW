@@ -98,7 +98,8 @@ public class DettaglioAsta extends HttpServlet {
                 return;
             }
 
-            if(!Objects.equals(asta.getVenditoreUsername(), request.getParameter("username"))) {
+            if(!Objects.equals(asta.getVenditoreUsername(), ((User)request.getSession().getAttribute("user")).getUsername())) {
+                System.out.println(asta.getVenditoreUsername() + ((User) request.getSession().getAttribute("user")).getUsername());
                 processErrorPage(request, response, templateEngine, servletContext, "illegalAction");
                 return;
             }

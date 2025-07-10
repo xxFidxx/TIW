@@ -83,6 +83,7 @@ public class ChiudiAsta extends HttpServlet {
 
 
             if (astaIdParam == null) {
+                System.out.println("astaIdParam is null");
                 processErrorPage(request, response, templateEngine, servletContext, "illegalAction");
                 return;
             }
@@ -95,7 +96,7 @@ public class ChiudiAsta extends HttpServlet {
                 return;
             }
 
-            if(!Objects.equals(asta.getVenditoreUsername(), request.getParameter("username")) || asta.isChiusa() ||
+            if(!Objects.equals(asta.getVenditoreUsername(), ((User)request.getSession().getAttribute("user")).getUsername()) || asta.isChiusa() ||
                     (asta.getDataFine().isAfter((LocalDateTime)  request.getSession().getAttribute("loginTime")))) {
                 processErrorPage(request, response, templateEngine, servletContext, "illegalAction");
                 return;
