@@ -96,7 +96,7 @@ public class Asta {
         this.prezzoAttuale = prezzoAttuale;
     }
 
-    public void setDataFineFormattata(LocalDateTime dataFine){
+    public void setDataFineFormattata(){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         this.dataFineFormattata = dataFine.format(formatter);
     }

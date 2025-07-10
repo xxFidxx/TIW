@@ -62,7 +62,7 @@ public class Offerta {
         return aggiudicata;
     }
 
-    public void setDataOraFormattata(LocalDateTime dataOra) {
+    public void setDataOraFormattata() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         this.dataOraFormattata = dataOra.format(formatter);
     }

@@ -29,6 +29,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
@@ -85,21 +86,31 @@ public class DettaglioAsta extends HttpServlet {
 
             String astaIdParam = request.getParameter("id");
 
-
             if (astaIdParam == null || astaIdParam.isEmpty() ) {
                 processErrorPage(request, response, templateEngine, servletContext, "emptyFields");
                 return;
             }
 
-                int astaId = Integer.parseInt(astaIdParam);
-                Asta asta = astaDao.findAstaById(astaId);
-                if (asta == null) {
-                    processErrorPage(request, response, templateEngine, servletContext, "astaNotFound");
-                    return;
-                }
+            int astaId = Integer.parseInt(astaIdParam);
+            Asta asta = astaDao.findAstaById(astaId);
+            if (asta == null) {
+                processErrorPage(request, response, templateEngine, servletContext, "astaNotFound");
+                return;
+            }
 
-                List<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
-                List<Offerta> offerte = offertaDao.findOfferteByAstaId(asta.getId());
+            if(!Objects.equals(asta.getVenditoreUsername(), request.getParameter("username")) || asta.isChiusa() ||
+                    (asta.getDataFine().isAfter((LocalDateTime)  request.getSession().getAttribute("loginTime")))) {
+                processErrorPage(request, response, templateEngine, servletContext, "illegalAction");
+                return;
+            }
+            List<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
+            List<Offerta> offerte = offertaDao.findOfferteByAstaId(asta.getId());
+
+
+            asta.setDataFineFormattata();
+            for(Offerta offerta: offerte){
+                offerta.setDataOraFormattata();
+            }
 
 
                 WebContext ctx = new WebContext(JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(request, response), request.getLocale());
