@@ -157,7 +157,9 @@ public class Vendo extends HttpServlet {
 
 
             System.out.println("\nDebug aste con articoli:");
-            asteConArticoli.forEach((asta, articoli) -> {
+
+
+            asteChiuseconArticoli.forEach((asta, articoli) -> {
                 System.out.println("\nAsta ID: " + asta.getId());
                 System.out.println("Numero articoli: " + articoli.size());
                 articoli.forEach(articolo ->
@@ -167,8 +169,6 @@ public class Vendo extends HttpServlet {
                 System.out.println("Tempo mancante: " + tempoMancanteMap.get(asta.getId()));
                 System.out.println("Data fine: " + dateFormattateMap.get(asta.getId()));
             });
-
-
 
 
 

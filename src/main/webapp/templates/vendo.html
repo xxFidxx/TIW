@@ -24,28 +24,28 @@
 		</thead>
 		<tbody>
 
-		<tr th:each="asta : ${asteConArticoli}">
+		<tr th:each="asteConArticoli : ${asteConArticoli}">
 
-			<td th:text="${asta.key.id}"></td>
+			<td th:text="${asteConArticoli.key.id}"></td>
 
 
 			<td th:inline="text">
-				<div th:each="articolo : ${asta.value}">
+				<div th:each="articolo : ${asteConArticoli.value}">
 					[[${articolo.codice}]] - [[${articolo.nome}]]
 				</div>
 			</td>
 
 
-			<td th:text="${dateFormattateMap.get(asta.key.id)}"></td>
+			<td th:text="${dateFormattateMap.get(asteConArticoli.key.id)}"></td>
 
 
-			<td th:text="${tempoMancanteMap.get(asta.key.id)}"></td>
+			<td th:text="${tempoMancanteMap.get(asteConArticoli.key.id)}"></td>
 
 
-			<td th:text="${asta.key.prezzoAttuale} + ' €'"></td>
+			<td th:text="${asteConArticoli.key.prezzoAttuale} + ' €'"></td>
 
 			<td>
-				<a th:href="@{/DettaglioAsta(id=${asta.key.id})}">Vai al dettaglio</a>
+				<a th:href="@{/DettaglioAsta(id=${asteConArticoli.key.id})}">Vai al dettaglio</a>
 			</td>
 		</tr>
 		</tbody>
@@ -65,22 +65,22 @@
 		</thead>
 		<tbody>
 
-		<tr th:each="asta : ${asteChiuseConArticoli}">
+		<tr th:each="asteChiuseconArticoli : ${asteChiuseconArticoli}">
 
-			<td th:text="${asta.key.id}"></td>
+			<td th:text="${asteChiuseconArticoli.key.id}"></td>
 
 
 			<td th:inline="text">
-				<div th:each="articolo : ${asta.value}">
-					[[${articolo.codice}]] - [[${articolo.nome}]]
+				<div th:each="articolo : ${asteChiuseconArticoli.value}">
+					[[${articolo.nome}]]
 				</div>
 			</td>
 
 
-			<td th:text="${asta.key.prezzoAttuale} + ' €'"></td>
+			<td th:text="${asteChiuseconArticoli.key.prezzoAttuale} + ' €'"></td>
 
 			<td>
-				<a th:href="@{/dettaglioAsta(id=${asta.idAsta})}">Vai al dettaglio</a>
+				<a th:href="@{/DettaglioAsta(id=${asteChiuseconArticoli.key.id})}">Vai al dettaglio</a>
 			</td>
 		</tr>
 		</tbody>

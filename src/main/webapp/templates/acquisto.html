@@ -40,7 +40,7 @@
 
             <td th:inline="text">
                 <div th:each="articolo : ${articolixAsta.value}">
-                    [[${articolo.codice}]] - [[${articolo.nome}]]
+                    [[${articolo.nome}]] - [[${articolo.prezzo}]] €
                 </div>
             </td>
 
@@ -79,7 +79,7 @@
             <td th:text="${articolixAsteAggiudicate.key.id}"></td>
             <td th:inline="text">
                 <div th:each="articolo : ${articolixAsteAggiudicate.value}">
-                    [[${articolo.codice}]] - [[${articolo.nome}]]
+                    [[${articolo.nome}]] - [[${articolo.prezzo}]] €
                 </div>
             </td>
             <td th:text="${articolixAsteAggiudicate.key.prezzoAttuale} + ' €'"></td>
