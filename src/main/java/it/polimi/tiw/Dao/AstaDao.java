@@ -149,14 +149,25 @@ public class AstaDao {
         return aste;
     }
 
-    public void setPrezzoAttuale(int prezzoAttuale) throws SQLException {
+    public void setPrezzoAttuale(int prezzoAttuale, int astaId) throws SQLException {
 
-        String query = "UPDATE asta SET prezzo_attuale = ?";
+        String query = "UPDATE asta SET prezzo_attuale = ? WHERE asta_id = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, prezzoAttuale);
+            ps.setInt(2, astaId);
             ResultSet rs = ps.executeQuery();
 
+        }
+    }
+
+    public void setChiuso(int astaId) throws SQLException {
+
+        String query = "UPDATE asta SET chiusa = 1 WHERE asta_id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, astaId);
+            ps.executeQuery();
         }
     }
 
