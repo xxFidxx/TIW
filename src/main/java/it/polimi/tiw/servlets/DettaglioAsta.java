@@ -110,14 +110,20 @@ public class DettaglioAsta extends HttpServlet {
                 return;
             }
 
-            Offerta offertaAggiudicatario = offertaDao.findMaxOffertaByAstaId(asta.getId());
+
+            Offerta offertaAggiudicatario = null;
             User userAggiudicatario = null;
 
             // sono entrato in dettaglio asta dopo aver fatto chiudi
-            if(offertaAggiudicatario!= null && asta.isChiusa()){
-                offertaDao.setAggiudicata(offertaAggiudicatario.getId());
-                userAggiudicatario = userDao.userByUsername(offertaAggiudicatario.getUtenteUsername());
+            if(asta.isChiusa()){
+                offertaAggiudicatario = offertaDao.findMaxOffertaByAstaId(asta.getId());
+                // asta chiusa senza offerte
+                if(offertaAggiudicatario!= null){
+                    offertaDao.setAggiudicata(offertaAggiudicatario.getId());
+                    userAggiudicatario = userDao.userByUsername(offertaAggiudicatario.getUtenteUsername());
+                }
             }
+
 
             List<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
             List<Offerta> offerte = offertaDao.findOfferteByAstaId(asta.getId());
