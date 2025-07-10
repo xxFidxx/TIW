@@ -90,7 +90,7 @@ public class DoOfferta extends HttpServlet {
             }
 
             offertaDao.insertOfferta(astaId,user.getUsername(),offertaUser, LocalDateTime.now());
-            astaDao.setPrezzoAttuale(offertaUser);
+            astaDao.setPrezzoAttuale(offertaUser,astaId);
             response.sendRedirect(request.getContextPath() + "/Acquisto");
         } catch (SQLException e) {
             processErrorPage(request, response,templateEngine,servletContext,  "dbFailure");
