@@ -32,21 +32,7 @@ import java.util.Map;
 import static it.polimi.tiw.rescources.Utils.processErrorPage;
 
 
-// BISOGNA STARE ATTENTI CHE 1) LO USER ESISTA ( CONTROLLA SE NON E' NULL) CONTROLLA PURE CHE LO USER CHE STA OPERANDO SULL'ASTA SIA LO STESSO CHE L'HA CREATO
-// PERCHE' MAGARI E' UN ALTRO USER CHE CHIAMA L'URL ESATTO PER FARE QUELL'AZIONE MA NON POTREBBE FARLO
-// FAI SESSION INVALIDATE AL LOGOUT
 
-// TASTO DI RILANCIO OFFERTA
-//Nel server:
-//
-//Verifica che:
-//
-//l’asta sia ancora aperta,
-//
-//l’offerta sia almeno offertaMax + rialzoMinimo,
-//
-//l’utente non sia il venditore.
-// l'asta sia ancora aperta
 @WebServlet("/Vendo")
 public class Vendo extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -54,12 +40,13 @@ public class Vendo extends HttpServlet {
     private ArticoloDao articoloDao;
     private AstaDao astaDao;
     private ServletContext servletContext;
+    private Connection connection;
 
     @Override
     public void init() throws ServletException {
         try {
             servletContext = getServletContext();
-            Connection connection = Utils.initDBConnection(servletContext);
+            connection = Utils.initDBConnection(servletContext);
             articoloDao = new ArticoloDao(connection);
             astaDao = new AstaDao(connection);
             templateEngine = Utils.initTemplateEngine(servletContext);
@@ -74,39 +61,39 @@ public class Vendo extends HttpServlet {
 
         User user = (User) request.getSession().getAttribute("user");
         try {
-                List<Asta> asteAperte = astaDao.findAsteByVenditore(user.getUsername(), 0);
-                List<Asta> asteChiuse = astaDao.findAsteByVenditore(user.getUsername(), 1);
-                Map<Asta, List<Articolo>> asteConArticoli = new HashMap<>();
-                Map<Asta,List<Articolo>> asteChiuseconArticoli = new HashMap<>();
+            List<Asta> asteAperte = astaDao.findAsteByVenditore(user.getUsername(), 0);
+            List<Asta> asteChiuse = astaDao.findAsteByVenditore(user.getUsername(), 1);
+            Map<Asta, List<Articolo>> asteConArticoli = new HashMap<>();
+            Map<Asta, List<Articolo>> asteChiuseconArticoli = new HashMap<>();
 
-                for (Asta asta : asteAperte) {
-                    List<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
-                    asteConArticoli.put(asta, articoli);
-                }
+            for (Asta asta : asteAperte) {
+                List<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
+                asteConArticoli.put(asta, articoli);
+            }
 
             for (Asta asta : asteChiuse) {
                 List<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
                 asteChiuseconArticoli.put(asta, articoli);
             }
 
-               List<Articolo> articoliDisponibili = articoloDao.findAllDisponibili(user.getUsername());
+            List<Articolo> articoliDisponibili = articoloDao.findAllDisponibili(user.getUsername());
 
 
-               int totalePrezzoIntero = articoliDisponibili.stream()
-                       .map(Articolo::getPrezzo)
-                       .reduce(0, Integer::sum);
+            int totalePrezzoIntero = articoliDisponibili.stream()
+                    .map(Articolo::getPrezzo)
+                    .reduce(0, Integer::sum);
 
-               List<Articolo> articoliConPrezziInteri = articoliDisponibili.stream()
-                       .map(articolo -> new Articolo(
-                               articolo.getUsernameProprietario(),
-                               articolo.getCodice(),
-                               articolo.getNome(),
-                               articolo.getDescrizione(),
-                               articolo.getImmagine(),
-                               articolo.getPrezzo(),
-                               articolo.isDisponibile()
-                       ))
-                       .toList();
+            List<Articolo> articoliConPrezziInteri = articoliDisponibili.stream()
+                    .map(articolo -> new Articolo(
+                            articolo.getUsernameProprietario(),
+                            articolo.getCodice(),
+                            articolo.getNome(),
+                            articolo.getDescrizione(),
+                            articolo.getImmagine(),
+                            articolo.getPrezzo(),
+                            articolo.isDisponibile()
+                    ))
+                    .toList();
 
 
             LocalDateTime now = (LocalDateTime) request.getSession().getAttribute("loginTime");
@@ -150,8 +137,6 @@ public class Vendo extends HttpServlet {
             }
 
 
-
-
             System.out.println("\nDebug aste con articoli:");
 
 
@@ -165,8 +150,6 @@ public class Vendo extends HttpServlet {
                 System.out.println("Tempo mancante: " + tempoMancanteMap.get(asta.getId()));
                 System.out.println("Data fine: " + dateFormattateMap.get(asta.getId()));
             });
-
-
 
 
             WebContext ctx = new WebContext(
@@ -185,9 +168,22 @@ public class Vendo extends HttpServlet {
 
 
             templateEngine.process("vendo", ctx, response.getWriter());
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
-            processErrorPage(request, response,templateEngine,servletContext, "dbFailure");
+            processErrorPage(request, response, templateEngine, servletContext, "dbFailure");
         }
     }
+
+        public void destroy () {
+            if (connection != null) {
+                try {
+                    if (!connection.isClosed()) {
+                        connection.close();
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
 }
