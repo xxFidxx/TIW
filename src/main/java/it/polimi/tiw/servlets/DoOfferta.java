@@ -72,6 +72,11 @@ public class DoOfferta extends HttpServlet {
 
             Asta asta = astaDao.findAstaById(astaId);
 
+            if(asta.isChiusa()){
+                processErrorPage(request, response,templateEngine,servletContext,  "illegalAction");
+                return;
+            }
+
             if((user.getUsername()).equals(asta.getVenditoreUsername()) ){
                 processErrorPage(request, response,templateEngine,servletContext,  "illegalAction");
                 return;
