@@ -23,7 +23,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import static it.polimi.tiw.rescources.Utils.processErrorPage;
 
@@ -63,7 +63,7 @@ public class ParolaChiave extends HttpServlet {
 
         try {
             ArrayList<Asta> aste = astaDao.findAstaByParolaChiave(parolaChiave, LocalDateTime.now());
-            HashMap<Asta, ArrayList<Articolo> > articolixAsta = new HashMap<>();
+            LinkedHashMap<Asta, ArrayList<Articolo> > articolixAsta = new LinkedHashMap<>();
 
             for(Asta asta : aste){
                 ArrayList<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());

@@ -25,7 +25,7 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -63,8 +63,8 @@ public class Vendo extends HttpServlet {
         try {
             List<Asta> asteAperte = astaDao.findAsteByVenditore(user.getUsername(), 0);
             List<Asta> asteChiuse = astaDao.findAsteByVenditore(user.getUsername(), 1);
-            Map<Asta, List<Articolo>> asteConArticoli = new HashMap<>();
-            Map<Asta, List<Articolo>> asteChiuseconArticoli = new HashMap<>();
+            Map<Asta, List<Articolo>> asteConArticoli = new LinkedHashMap<>();
+            Map<Asta, List<Articolo>> asteChiuseconArticoli = new LinkedHashMap<>();
 
             for (Asta asta : asteAperte) {
                 List<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
@@ -97,8 +97,8 @@ public class Vendo extends HttpServlet {
 
 
             LocalDateTime now = (LocalDateTime) request.getSession().getAttribute("loginTime");
-            Map<Integer, String> tempoMancanteMap = new HashMap<>();
-            Map<Integer, String> dateFormattateMap = new HashMap<>();
+            Map<Integer, String> tempoMancanteMap = new LinkedHashMap<>();
+            Map<Integer, String> dateFormattateMap = new LinkedHashMap<>();
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
