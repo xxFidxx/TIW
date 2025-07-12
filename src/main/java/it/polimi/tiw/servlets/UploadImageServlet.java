@@ -9,23 +9,45 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 @WebServlet("/immagini/*")
 public class UploadImageServlet extends HttpServlet {
+    private static final Map<String, String> CONTENT_TYPES = new HashMap<>();
+
+    static {
+        CONTENT_TYPES.put("png", "image/png");
+        CONTENT_TYPES.put("jpg", "image/jpeg");
+        CONTENT_TYPES.put("jpeg", "image/jpeg");
+        CONTENT_TYPES.put("gif", "image/gif");
+        CONTENT_TYPES.put("webp", "image/webp");
+    }
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
         String uploadPath = getServletContext().getInitParameter("imagesDirectory");
-        // /images/filename.png diventa filename.png
         String imageName = request.getPathInfo().substring(1);
-
         Path imagePath = Paths.get(uploadPath, imageName);
 
         if (Files.exists(imagePath)) {
-            response.setContentType("image/png");
+
+            String extension = getFileExtension(imageName).toLowerCase();
+            String contentType = CONTENT_TYPES.get(extension);
+
+            response.setContentType(contentType);
             Files.copy(imagePath, response.getOutputStream());
         } else {
-            response.sendError(404);
+            response.sendError(404, "Image not found");
         }
+    }
+
+    private String getFileExtension(String filename) {
+        int dotIndex = filename.lastIndexOf('.');
+        if (dotIndex > 0 && dotIndex < filename.length() - 1) {
+            return filename.substring(dotIndex + 1);
+        }
+        return "";
     }
 }
