@@ -28,7 +28,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static it.polimi.tiw.rescources.Utils.processErrorPage;
@@ -67,7 +67,7 @@ public class Acquisto extends HttpServlet {
 
         String parolaChiave = request.getParameter("parolaChiave");
         ArrayList<Asta> aste;
-        Map<Asta,ArrayList<Articolo>> articolixAsta = new HashMap<>();
+        Map<Asta,ArrayList<Articolo>> articolixAsta = new LinkedHashMap<>();
         try {
             if(parolaChiave != null && !parolaChiave.isBlank()){
                 aste = astaDao.findAstaByParolaChiave(parolaChiave, LocalDateTime.now());
@@ -81,14 +81,14 @@ public class Acquisto extends HttpServlet {
             }
 
             ArrayList<Offerta> offerte = offertaDao.findOfferteAggiudicateByUser(user.getUsername());
-            HashMap<Offerta,ArrayList<Articolo>> articolixOfferta = new HashMap<>();
+            LinkedHashMap<Offerta,ArrayList<Articolo>> articolixOfferta = new LinkedHashMap<>();
             for(Offerta offerta : offerte){
                 ArrayList<Articolo> articoli = articoloDao.articoliByAsta(offerta.getAstaId());
                 articolixOfferta.put(offerta, articoli);
             }
 
             ArrayList<Asta> asteAggiudicate = astaDao.findAllAsteAggiudicate(user.getUsername());
-            HashMap<Asta,ArrayList<Articolo>> articolixAsteAggiudicate = new HashMap<>();
+            LinkedHashMap<Asta,ArrayList<Articolo>> articolixAsteAggiudicate = new LinkedHashMap<>();
             for(Asta asta : asteAggiudicate){
                 ArrayList<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
                 articolixAsteAggiudicate.put(asta, articoli);
@@ -96,8 +96,8 @@ public class Acquisto extends HttpServlet {
 
 
             LocalDateTime now = (LocalDateTime) request.getSession().getAttribute("loginTime");
-            Map<Integer, String> tempoMancanteMap = new HashMap<>();
-            Map<Integer, String> dateFormattateMap = new HashMap<>();
+            Map<Integer, String> tempoMancanteMap = new LinkedHashMap<>();
+            Map<Integer, String> dateFormattateMap = new LinkedHashMap<>();
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
