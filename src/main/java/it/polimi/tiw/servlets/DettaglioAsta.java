@@ -21,20 +21,11 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 import static it.polimi.tiw.rescources.Utils.processErrorPage;
 
@@ -106,8 +97,8 @@ public class DettaglioAsta extends HttpServlet {
 
 
 
-            if(!Objects.equals(asta.getVenditoreUsername(), ((User)request.getSession().getAttribute("user")).getUsername())) {
-                System.out.println(asta.getVenditoreUsername() + ((User) request.getSession().getAttribute("user")).getUsername());
+            if(!Objects.equals(asta.getVenditoreId(), ((User)request.getSession().getAttribute("user")).getId())) {
+                System.out.println(asta.getVenditoreId() + ((User) request.getSession().getAttribute("user")).getUsername());
                 processErrorPage(request, response, templateEngine, servletContext, "illegalAction");
                 return;
             }
@@ -122,7 +113,7 @@ public class DettaglioAsta extends HttpServlet {
                 // asta chiusa senza offerte
                 if(offertaAggiudicatario!= null){
                     offertaDao.setAggiudicata(offertaAggiudicatario.getId());
-                    userAggiudicatario = userDao.userByUsername(offertaAggiudicatario.getUtenteUsername());
+                    userAggiudicatario = userDao.userById(offertaAggiudicatario.getUtenteId());
                 }
             }
 

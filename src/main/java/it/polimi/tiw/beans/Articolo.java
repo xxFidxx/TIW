@@ -2,7 +2,7 @@ package it.polimi.tiw.beans;
 
 public class Articolo {
     private Integer codice;
-    private String usernameProprietario;
+    private Integer userId;
     private String nome;
     private String descrizione;
     private String immagine;
@@ -13,8 +13,8 @@ public class Articolo {
     public Articolo() {}
 
     // costruttore default
-    public Articolo(String usernameProprietario, Integer codice, String nome, String descrizione, String immagine, Integer prezzo, boolean disponibile, Integer astaId) {
-        this.usernameProprietario = usernameProprietario;
+    public Articolo(Integer userId, Integer codice, String nome, String descrizione, String immagine, Integer prezzo, boolean disponibile, Integer astaId) {
+        this.userId = userId;
         this.codice = codice;
         this.nome = nome;
         this.descrizione = descrizione;
@@ -25,8 +25,8 @@ public class Articolo {
     }
 
     // costruttore per quando non hai codice ( prima di entrare nle db) e non hai asta id
-    public Articolo(String usernameProprietario,String nome, String descrizione, String immagine, Integer prezzo, boolean disponibile) {
-        this.usernameProprietario = usernameProprietario;
+    public Articolo(Integer userId, String nome, String descrizione, String immagine, Integer prezzo, boolean disponibile) {
+        this.userId = userId;
         this.codice = null;
         this.nome = nome;
         this.descrizione = descrizione;
@@ -37,8 +37,8 @@ public class Articolo {
     }
 
     // costruttore pr fase in cui non hai astaId
-    public Articolo(String usernameProprietario ,Integer codice, String nome, String descrizione, String immagine, Integer prezzo, boolean disponibile) {
-        this.usernameProprietario = usernameProprietario;
+    public Articolo(Integer userId, Integer codice, String nome, String descrizione, String immagine, Integer prezzo, boolean disponibile) {
+        this.userId = userId;
         this.codice = codice;
         this.nome = nome;
         this.descrizione = descrizione;
@@ -52,8 +52,8 @@ public class Articolo {
         return codice;
     }
 
-    public String getUsernameProprietario() {
-        return usernameProprietario;
+    public Integer getUserId() {
+        return userId;
     }
 
     public void setCodice(Integer codice) {

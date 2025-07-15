@@ -31,7 +31,7 @@
 
 			<td th:inline="text">
 				<div th:each="articolo : ${asteConArticoli.value}">
-					- [[${articolo.nome}]]
+					[[${articolo.codice}]] - [[${articolo.nome}]]
 				</div>
 			</td>
 
@@ -72,7 +72,7 @@
 
 			<td th:inline="text">
 				<div th:each="articolo : ${asteChiuseconArticoli.value}">
-					[[${articolo.nome}]]
+					[[${articolo.codice}]] - [[${articolo.nome}]]
 				</div>
 			</td>
 

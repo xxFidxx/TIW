@@ -5,7 +5,6 @@ package it.polimi.tiw.servlets;
 import it.polimi.tiw.Dao.AstaDao;
 import it.polimi.tiw.Dao.OffertaDao;
 import it.polimi.tiw.beans.Asta;
-import it.polimi.tiw.beans.Offerta;
 import it.polimi.tiw.beans.User;
 import it.polimi.tiw.rescources.SessionUtils;
 import it.polimi.tiw.rescources.Utils;
@@ -83,7 +82,7 @@ public class DoOfferta extends HttpServlet {
                 return;
             }
 
-            if((user.getUsername()).equals(asta.getVenditoreUsername()) ){
+            if((user.getId()).equals(asta.getVenditoreId()) ){
                 processErrorPage(request, response,templateEngine,servletContext,  "illegalAction");
                 return;
             }
@@ -95,7 +94,7 @@ public class DoOfferta extends HttpServlet {
                 return;
             }
 
-            offertaDao.insertOfferta(astaId,user.getUsername(),offertaUser, LocalDateTime.now());
+            offertaDao.insertOfferta(astaId,user.getId(),user.getUsername(),offertaUser, LocalDateTime.now());
             astaDao.setPrezzoAttuale(offertaUser,astaId);
             response.sendRedirect(request.getContextPath() + "/Acquisto");
         } catch (SQLException e) {

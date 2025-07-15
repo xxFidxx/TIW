@@ -69,15 +69,15 @@ public class Acquisto extends HttpServlet {
             return;
         }
 
-
+        LocalDateTime now = (LocalDateTime) request.getSession().getAttribute("loginTime");
         String parolaChiave = request.getParameter("parolaChiave");
         ArrayList<Asta> aste;
         Map<Asta,ArrayList<Articolo>> articolixAsta = new LinkedHashMap<>();
         try {
             if(parolaChiave != null && !parolaChiave.isBlank()){
-                aste = astaDao.findAstaByParolaChiave(parolaChiave, LocalDateTime.now());
+                aste = astaDao.findAstaByParolaChiave(parolaChiave, now);
             }else{
-                aste = astaDao.findAllAsteAperte();
+                aste = astaDao.findAllAsteAperte(now);
             }
 
             for(Asta asta : aste){
@@ -85,14 +85,14 @@ public class Acquisto extends HttpServlet {
                 articolixAsta.put(asta, articoli);
             }
 
-            ArrayList<Offerta> offerte = offertaDao.findOfferteAggiudicateByUser(user.getUsername());
+            ArrayList<Offerta> offerte = offertaDao.findOfferteAggiudicateByUser(user.getId());
             LinkedHashMap<Offerta,ArrayList<Articolo>> articolixOfferta = new LinkedHashMap<>();
             for(Offerta offerta : offerte){
                 ArrayList<Articolo> articoli = articoloDao.articoliByAsta(offerta.getAstaId());
                 articolixOfferta.put(offerta, articoli);
             }
 
-            ArrayList<Asta> asteAggiudicate = astaDao.findAllAsteAggiudicate(user.getUsername());
+            ArrayList<Asta> asteAggiudicate = astaDao.findAllAsteAggiudicate(user.getId());
             LinkedHashMap<Asta,ArrayList<Articolo>> articolixAsteAggiudicate = new LinkedHashMap<>();
             for(Asta asta : asteAggiudicate){
                 ArrayList<Articolo> articoli = articoloDao.articoliByAsta(asta.getId());
@@ -100,7 +100,6 @@ public class Acquisto extends HttpServlet {
             }
 
 
-            LocalDateTime now = (LocalDateTime) request.getSession().getAttribute("loginTime");
             Map<Integer, String> tempoMancanteMap = new LinkedHashMap<>();
             Map<Integer, String> dateFormattateMap = new LinkedHashMap<>();
 

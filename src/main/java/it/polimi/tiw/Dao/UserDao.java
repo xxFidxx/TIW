@@ -43,8 +43,23 @@ public class UserDao {
         }
     }
 
+    public User userById(Integer Id) throws SQLException {
+        String query = "SELECT * FROM users WHERE Id = ?";
+        try (PreparedStatement p = con.prepareStatement(query)) {
+            p.setInt(1, Id);
+            try (ResultSet rs = p.executeQuery()) {
+                if (rs.next()) {
+                    return createUserBeanFromRes(rs);
+                } else {
+                    return null;
+                }
+            }
+        }
+    }
+
     private User createUserBeanFromRes(ResultSet rs) throws SQLException {
         return new User(
+                rs.getInt("Id"),
                 rs.getString("username"),
                 rs.getString("password"),
                 rs.getString("name"),

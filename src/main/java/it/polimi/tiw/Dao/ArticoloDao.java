@@ -28,11 +28,11 @@ public class ArticoloDao {
         return null;
     }
 
-    public List<Articolo> findAllDisponibili(String user) throws SQLException {
-        String query = "SELECT * FROM articoli WHERE disponibile = 1 AND venditoreUsername = ?";
+    public List<Articolo> findAllDisponibili(Integer venditoreId) throws SQLException {
+        String query = "SELECT * FROM articoli WHERE disponibile = 1 AND venditoreId = ?";
         List<Articolo> articoli = new ArrayList<>();
         try (PreparedStatement p = con.prepareStatement(query)) {
-            p.setString(1, user);
+            p.setInt(1, venditoreId);
             ResultSet rs = p.executeQuery();
                 while (rs.next()) {
                     articoli.add(createArticoloBeanFromRes(rs));
@@ -42,14 +42,14 @@ public class ArticoloDao {
     }
 
     public void insertArticolo(Articolo a,User u) throws SQLException {
-        String query = "INSERT INTO articoli (nome, descrizione, immagine, prezzo, disponibile,venditoreUsername) VALUES (?, ?, ?, ?, ?,?) ";
+        String query = "INSERT INTO articoli (nome, descrizione, immagine, prezzo, disponibile,venditoreId) VALUES (?, ?, ?, ?, ?,?) ";
         try (PreparedStatement p = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             p.setString(1, a.getNome());
             p.setString(2, a.getDescrizione());
             p.setString(3, a.getImmagine());
             p.setInt(4, a.getPrezzo());
             p.setBoolean(5, a.isDisponibile());
-            p.setString(6, u.getUsername());
+            p.setInt(6, u.getId());
             p.executeUpdate();
             try (ResultSet rs = p.getGeneratedKeys()) {
                 if (rs.next()) {
@@ -70,7 +70,7 @@ public class ArticoloDao {
 
     private Articolo createArticoloBeanFromRes(ResultSet rs) throws SQLException {
         Articolo articolo = new Articolo(
-                rs.getString("venditoreUsername"),
+                rs.getInt("venditoreId"),
                 rs.getString("nome"),
                 rs.getString("descrizione"),
                 rs.getString("immagine"),

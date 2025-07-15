@@ -1,6 +1,7 @@
 package it.polimi.tiw.beans;
 
 public class User {
+    private Integer id;
     private String username;
     private String password;
     private String name;
@@ -10,7 +11,18 @@ public class User {
 
     public User() {}
 
+    // costruttore prima di metterlo nel db, quindi non ha id
     public User(String username, String password, String name, String surname, String address, int addressNumber) {
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.surname = surname;
+        this.address = address;
+        this.addressNumber = addressNumber;
+    }
+
+    public User(Integer id, String username, String password, String name, String surname, String address, int addressNumber) {
+        this.id = id;
         this.username = username;
         this.password = password;
         this.name = name;
@@ -67,5 +79,9 @@ public class User {
 
     public void setAddressNumber(int addressNumber) {
         this.addressNumber = addressNumber;
+    }
+
+    public Integer getId() {
+        return id;
     }
 }

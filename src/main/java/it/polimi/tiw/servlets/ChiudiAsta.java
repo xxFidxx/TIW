@@ -4,9 +4,7 @@ import it.polimi.tiw.Dao.ArticoloDao;
 import it.polimi.tiw.Dao.AstaDao;
 import it.polimi.tiw.Dao.OffertaDao;
 import it.polimi.tiw.Dao.UserDao;
-import it.polimi.tiw.beans.Articolo;
 import it.polimi.tiw.beans.Asta;
-import it.polimi.tiw.beans.Offerta;
 import it.polimi.tiw.beans.User;
 import it.polimi.tiw.rescources.SessionUtils;
 import it.polimi.tiw.rescources.Utils;
@@ -18,14 +16,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
-import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 
 import static it.polimi.tiw.rescources.Utils.processErrorPage;
@@ -96,7 +91,7 @@ public class ChiudiAsta extends HttpServlet {
                 return;
             }
 
-            if(!Objects.equals(asta.getVenditoreUsername(), ((User)request.getSession().getAttribute("user")).getUsername()) || asta.isChiusa() ||
+            if(!Objects.equals(asta.getVenditoreId(), user.getId()) || asta.isChiusa() ||
                     (asta.getDataFine().isAfter((LocalDateTime)  request.getSession().getAttribute("loginTime")))) {
                 processErrorPage(request, response, templateEngine, servletContext, "illegalAction");
                 return;

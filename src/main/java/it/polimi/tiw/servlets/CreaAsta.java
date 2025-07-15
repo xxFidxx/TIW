@@ -106,9 +106,9 @@ public class CreaAsta extends HttpServlet {
                 LocalDateTime scadenza = LocalDateTime.parse(scadenzaStr);
                 LocalDateTime dataInizio = LocalDateTime.now();
 
-                String venditoreUsername = user.getUsername();
+                Integer venditoreId = user.getId();
 
-                Asta asta = new Asta(venditoreUsername, dataInizio, scadenza,prezzoIniziale,prezzoIniziale, rialzoMinimo);
+                Asta asta = new Asta(venditoreId, dataInizio, scadenza,prezzoIniziale,prezzoIniziale, rialzoMinimo);
                 int idAsta = astaDao.createAsta(asta);
 
 

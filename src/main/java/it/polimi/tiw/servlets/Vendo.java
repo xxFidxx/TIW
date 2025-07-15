@@ -67,8 +67,8 @@ public class Vendo extends HttpServlet {
 
 
         try {
-            List<Asta> asteAperte = astaDao.findAsteByVenditore(user.getUsername(), 0);
-            List<Asta> asteChiuse = astaDao.findAsteByVenditore(user.getUsername(), 1);
+            List<Asta> asteAperte = astaDao.findAsteByVenditore(user.getId(), 0);
+            List<Asta> asteChiuse = astaDao.findAsteByVenditore(user.getId(), 1);
             Map<Asta, List<Articolo>> asteConArticoli = new LinkedHashMap<>();
             Map<Asta, List<Articolo>> asteChiuseconArticoli = new LinkedHashMap<>();
 
@@ -82,7 +82,7 @@ public class Vendo extends HttpServlet {
                 asteChiuseconArticoli.put(asta, articoli);
             }
 
-            List<Articolo> articoliDisponibili = articoloDao.findAllDisponibili(user.getUsername());
+            List<Articolo> articoliDisponibili = articoloDao.findAllDisponibili(user.getId());
 
 
             int totalePrezzoIntero = articoliDisponibili.stream()
@@ -91,7 +91,7 @@ public class Vendo extends HttpServlet {
 
             List<Articolo> articoliConPrezziInteri = articoliDisponibili.stream()
                     .map(articolo -> new Articolo(
-                            articolo.getUsernameProprietario(),
+                            articolo.getUserId(),
                             articolo.getCodice(),
                             articolo.getNome(),
                             articolo.getDescrizione(),

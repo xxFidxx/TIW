@@ -27,10 +27,10 @@ public class OffertaDao {
         }
     }
 
-    public ArrayList<Offerta> findOfferteAggiudicateByUser(String user) throws SQLException {
-        String query = "SELECT * FROM offerta WHERE (utente_username = ? AND aggiudicata=1) ORDER BY data_ora DESC";
+    public ArrayList<Offerta> findOfferteAggiudicateByUser(Integer userId) throws SQLException {
+        String query = "SELECT * FROM offerta WHERE (utente_id = ? AND aggiudicata = 1) ORDER BY data_ora DESC";
         try (PreparedStatement p = connection.prepareStatement(query)) {
-            p.setString(1, user);
+            p.setInt(1, userId);
             try (ResultSet rs = p.executeQuery()) {
                 ArrayList<Offerta> offerte = new ArrayList<>();
                 while (rs.next()) {
@@ -41,13 +41,14 @@ public class OffertaDao {
         }
     }
 
-    public void insertOfferta(int astaId, String username, Integer prezzo, LocalDateTime dataOra) throws SQLException {
-        String query = "INSERT INTO offerta (asta_id, utente_username, prezzo, data_ora) VALUES (?, ?, ?, ?)";
+    public void insertOfferta(int astaId,int utenteId, String username, Integer prezzo, LocalDateTime dataOra) throws SQLException {
+        String query = "INSERT INTO offerta (asta_id,utente_id, utente_username, prezzo, data_ora) VALUES (?,?,?, ?, ?)";
         try (PreparedStatement p = connection.prepareStatement(query)) {
             p.setInt(1, astaId);
-            p.setString(2, username);
-            p.setInt(3, prezzo);
-            p.setTimestamp(4, Timestamp.valueOf(dataOra));
+            p.setInt(2, utenteId);
+            p.setString(3, username);
+            p.setInt(4, prezzo);
+            p.setTimestamp(5, Timestamp.valueOf(dataOra));
             p.executeUpdate();
         }
     }
@@ -68,6 +69,7 @@ public class OffertaDao {
     public Offerta createOffertaBeanFromRes(ResultSet rs) throws SQLException {
         Offerta offerta = new Offerta();
         offerta.setId(rs.getInt("id"));
+        offerta.setUtenteId(rs.getInt("utente_id"));
         offerta.setAstaId(rs.getInt("asta_id"));
         offerta.setUtenteUsername(rs.getString("utente_username"));
         offerta.setPrezzo(rs.getInt("prezzo"));

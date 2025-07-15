@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 public class Offerta {
     private Integer id;
     private Integer astaId;
+    private Integer utenteId;
     private String utenteUsername;
     private Integer prezzo;
     private LocalDateTime dataOra;
@@ -71,4 +72,11 @@ public class Offerta {
         return dataOraFormattata;
     }
 
+    public void setUtenteId(Integer utenteId) {
+        this.utenteId = utenteId;
+    }
+
+    public Integer getUtenteId() {
+        return utenteId;
+    }
 }

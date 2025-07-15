@@ -136,8 +136,8 @@ public class CreaArticoloAsta extends HttpServlet {
 
                 Files.copy(fileContent, destination, StandardCopyOption.REPLACE_EXISTING);
 
-                Articolo articolo = new Articolo(user.getUsername(), nome, descrizione, nomeImmagine, prezzo, true);
-                articoloDao.insertArticolo(articolo, SessionUtils.getUser(request));
+                Articolo articolo = new Articolo(user.getId(), nome, descrizione, nomeImmagine, prezzo, true);
+                articoloDao.insertArticolo(articolo, user);
 
             response.sendRedirect(request.getContextPath() + "/Vendo");
 

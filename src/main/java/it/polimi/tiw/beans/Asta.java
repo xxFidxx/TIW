@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 
 public class Asta {
     private Integer id;
-    private String venditoreUsername;
+    private Integer venditoreId;
     private LocalDateTime dataInizio;
     private LocalDateTime dataFine;
     private String dataFineFormattata;
@@ -16,10 +16,10 @@ public class Asta {
     public Asta() {
     }
 
-    public Asta(Integer id, String venditoreUsername, LocalDateTime dataInizio, LocalDateTime dataFine,
+    public Asta(Integer id, Integer venditoreId, LocalDateTime dataInizio, LocalDateTime dataFine,
                 Integer prezzoIniziale, Integer prezzoAttuale, Integer rialzoMinimo, boolean chiusa) {
         this.id = id;
-        this.venditoreUsername = venditoreUsername;
+        this.venditoreId = venditoreId;
         this.dataInizio = dataInizio;
         this.dataFine = dataFine;
         this.prezzoIniziale = prezzoIniziale;
@@ -29,9 +29,9 @@ public class Asta {
     }
 
     // Costruttore per aste non ancora nel DB
-    public Asta(String venditoreUsername, LocalDateTime dataInizio, LocalDateTime dataFine,
+    public Asta(Integer venditoreId, LocalDateTime dataInizio, LocalDateTime dataFine,
                 Integer prezzoIniziale, Integer prezzoAttuale, Integer rialzoMinimo) {
-        this(null, venditoreUsername, dataInizio, dataFine, prezzoIniziale, prezzoAttuale, rialzoMinimo, false);
+        this(null, venditoreId, dataInizio, dataFine, prezzoIniziale, prezzoAttuale, rialzoMinimo, false);
     }
 
     // Getters
@@ -39,8 +39,8 @@ public class Asta {
         return id;
     }
 
-    public String getVenditoreUsername() {
-        return venditoreUsername;
+    public Integer getVenditoreId() {
+        return venditoreId;
     }
 
     public LocalDateTime getDataInizio() {
@@ -76,8 +76,8 @@ public class Asta {
         this.id = id;
     }
 
-    public void setVenditoreUsername(String venditoreUsername) {
-        this.venditoreUsername = venditoreUsername;
+    public void setVenditoreId(Integer venditoreId) {
+        this.venditoreId = venditoreId;
     }
 
     public void setPrezzoIniziale(Integer prezzoIniziale) {
