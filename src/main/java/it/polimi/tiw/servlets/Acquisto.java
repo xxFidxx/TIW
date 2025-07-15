@@ -63,7 +63,12 @@ public class Acquisto extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws  IOException {
 
-        User user = (User) request.getSession().getAttribute("user");
+        User user = SessionUtils.getUser(request);
+        if (user== null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+
 
         String parolaChiave = request.getParameter("parolaChiave");
         ArrayList<Asta> aste;

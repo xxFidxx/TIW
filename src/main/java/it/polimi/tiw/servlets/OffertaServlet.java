@@ -65,6 +65,14 @@ public class OffertaServlet extends HttpServlet {
 
     private void handleOfferta(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
+
+            User user = SessionUtils.getUser(request);
+            if (user== null) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
+
+
             int astaId = Integer.parseInt(request.getParameter("id"));
 
             if(astaId < 0){

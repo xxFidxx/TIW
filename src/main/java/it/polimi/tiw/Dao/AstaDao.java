@@ -94,7 +94,8 @@ public class AstaDao {
                 "FROM articoli a " +
                 "JOIN asta at ON a.asta_id = at.id " +
                 "WHERE (a.nome LIKE ? OR a.descrizione LIKE ?) " +
-                "AND at.data_fine > ?";
+                "AND at.data_fine > ? " +
+                "ORDER BY at.data_fine ASC";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             String keyword = "%" + parolaChiave + "%";

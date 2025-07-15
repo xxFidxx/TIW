@@ -1,5 +1,7 @@
 package it.polimi.tiw.servlets;
 
+import it.polimi.tiw.beans.User;
+import it.polimi.tiw.rescources.SessionUtils;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,6 +28,14 @@ public class UploadImageServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
+
+        User user = SessionUtils.getUser(request);
+        if (user== null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+
+
 
         String uploadPath = getServletContext().getInitParameter("imagesDirectory");
         String imageName = request.getPathInfo().substring(1);

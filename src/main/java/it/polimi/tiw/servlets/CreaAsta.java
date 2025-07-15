@@ -6,6 +6,7 @@ import it.polimi.tiw.Dao.ArticoloDao;
 import it.polimi.tiw.Dao.AstaDao;
 import it.polimi.tiw.beans.Asta;
 
+import it.polimi.tiw.beans.User;
 import it.polimi.tiw.rescources.SessionUtils;
 import it.polimi.tiw.rescources.Utils;
 import jakarta.servlet.ServletContext;
@@ -23,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static it.polimi.tiw.rescources.Utils.processErrorPage;
 
@@ -61,6 +63,13 @@ public class CreaAsta extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+        User user = SessionUtils.getUser(request);
+        if (user== null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+
+
         String[] articoliIds = request.getParameterValues("articoli");
         String rialzoStr = request.getParameter("rialzo");
         String scadenzaStr = request.getParameter("scadenza");
@@ -85,7 +94,6 @@ public class CreaAsta extends HttpServlet {
                 } else {
                     System.out.println("Articolo non trovato: codice = " + codiceArticolo);
                 }
-
            }
 
             Integer prezzoIniziale = articoliSelezionati.stream()
@@ -94,22 +102,25 @@ public class CreaAsta extends HttpServlet {
 
             Integer rialzoMinimo = Integer.parseInt(rialzoStr);
 
-            LocalDateTime scadenza = LocalDateTime.parse(scadenzaStr);
-            LocalDateTime dataInizio = LocalDateTime.now();
+            try {
+                LocalDateTime scadenza = LocalDateTime.parse(scadenzaStr);
+                LocalDateTime dataInizio = LocalDateTime.now();
 
-            String venditoreUsername = SessionUtils.getUser(request).getUsername();
+                String venditoreUsername = user.getUsername();
+
+                Asta asta = new Asta(venditoreUsername, dataInizio, scadenza,prezzoIniziale,prezzoIniziale, rialzoMinimo);
+                int idAsta = astaDao.createAsta(asta);
 
 
-            Asta asta = new Asta(venditoreUsername, dataInizio, scadenza,prezzoIniziale,prezzoIniziale, rialzoMinimo);
-            int idAsta = astaDao.createAsta(asta);
-
-
-            for (int codiceArticolo : articoloCodici) {
-                articoloDao.setIdAsta(codiceArticolo, idAsta);
-                articoloDao.setDisponibile(codiceArticolo, false);
+                for (int codiceArticolo : articoloCodici) {
+                    articoloDao.setIdAsta(codiceArticolo, idAsta);
+                    articoloDao.setDisponibile(codiceArticolo, false);
+                }
+                response.sendRedirect(request.getContextPath() + "/Vendo");
+            }catch (Exception e){
+                processErrorPage(request, response,templateEngine,servletContext, "invalidFormat");
             }
 
-            response.sendRedirect(request.getContextPath() + "/Vendo");
 
         } catch (SQLException | NumberFormatException e) {
             e.printStackTrace(response.getWriter());

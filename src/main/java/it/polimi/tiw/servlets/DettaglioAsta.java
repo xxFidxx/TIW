@@ -82,6 +82,13 @@ public class DettaglioAsta extends HttpServlet {
     private void handleCreateDettagliAsta(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
 
+            User user = SessionUtils.getUser(request);
+            if (user== null) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
+
+
             String astaIdParam = request.getParameter("id");
 
 

@@ -64,7 +64,12 @@ public class CreaArticoloAsta extends HttpServlet {
     // GESTISCI ANCHE ALTRE PAGINE COSI
     private void handleCreateArticolo(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            User user = (User) request.getSession().getAttribute("user");
+            User user = SessionUtils.getUser(request);
+            if (user== null) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
+
             String nome = request.getParameter("nome");
             String descrizione = request.getParameter("descrizione");
             String prezzoStr = request.getParameter("prezzo");

@@ -54,7 +54,12 @@ public class Home extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        User user = (User) request.getSession().getAttribute("user");
+        User user = SessionUtils.getUser(request);
+        if (user== null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+
         String username = user.getUsername();
 
         WebContext ctx = new WebContext(

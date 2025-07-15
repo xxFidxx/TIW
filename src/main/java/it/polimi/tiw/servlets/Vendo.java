@@ -59,7 +59,13 @@ public class Vendo extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        User user = (User) request.getSession().getAttribute("user");
+        User user = SessionUtils.getUser(request);
+        if (user== null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+
+
         try {
             List<Asta> asteAperte = astaDao.findAsteByVenditore(user.getUsername(), 0);
             List<Asta> asteChiuse = astaDao.findAsteByVenditore(user.getUsername(), 1);
