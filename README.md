@@ -1,6 +1,7 @@
 # TIW – Online Auction Platform
 
 A Jakarta EE web application that implements an online auction system, built as a university project at Politecnico di Milano.
+Done by students Fidel Guri and Claudio de Blasio
 
 ## Features
 
